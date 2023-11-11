@@ -18,13 +18,12 @@ class CartController extends Controller
      */
     public function index()
     {
-        // tells the view finder to look for `.html` files and run
-        // them through the normal PHP `include` process
-        View::addExtension('html', 'php');
+        $cartId = session(ShoppingCart::SHOPPING_CART_ID, Uuid::uuid4()->toString());
+        $cart = Cart::session($cartId);
 
-        $cart = Cart::session(session(ShoppingCart::SHOPPING_CART_ID,Uuid::uuid4()->toString()));
-        return view('cart.pay',[
-            'cart'=>$cart
+        return view('cart.index',[
+            'cart'=>$cart,
+            'cartId'=>$cartId,
         ]);
     }
 

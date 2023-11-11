@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-            @include('cart.list')
 
+    @include('cart.list')
 
 @endsection
