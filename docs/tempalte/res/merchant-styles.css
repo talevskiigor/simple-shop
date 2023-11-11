@@ -1,0 +1,15 @@
+/*
+Insert custom merchant styles here. 
+Selector specifity and !important declarations must be used to overwrite some properties.
+*/
+
+body#bodyID {
+	background-color: red !important;
+}
+
+.paymentForm .row, .paymentInfo .row {
+    width: 100%;
+    display: flex;
+    margin-bottom: 5px;
+   background-color: pink !important;
+}

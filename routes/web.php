@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['middleware' => ['web']], function () {
+    Route::resource('/', \App\Http\Controllers\HomeController::class);
+    Route::resource('/product', \App\Http\Controllers\ProductController::class);
+    Route::resource('/categories', \App\Http\Controllers\CategoryController::class);
+    Route::resource('/cart', \App\Http\Controllers\CartController::class);
 });
