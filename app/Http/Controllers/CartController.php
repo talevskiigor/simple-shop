@@ -21,6 +21,10 @@ class CartController extends Controller
         $cartId = session(ShoppingCart::SHOPPING_CART_ID, Uuid::uuid4()->toString());
         $cart = Cart::session($cartId);
 
+        if($cart->isEmpty()){
+            return view('cart.not-found');
+        }
+
         return view('cart.index',[
             'cart'=>$cart,
             'cartId'=>$cartId,
