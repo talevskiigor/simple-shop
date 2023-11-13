@@ -12,7 +12,7 @@
             <div class="d-flex justify-content-between align-items-center">
 {{--                <a href="/order/create/{{$item->slug}}" class="btn btn-sm btn-outline-success">Купи</a>--}}
 
-                @if($item->discount & $item->quantity)
+                @if($item->discount & $item->quantity > 0)
                     <div  class="text-muted position-relative">
                        <del><small> {{number_format($item->price,0,',','.')}},<small>oo</small> ден </small></del>
                     </div>
@@ -20,7 +20,7 @@
                         {{number_format($item->price - ($item->price * $item->discount/100),0,',','.')}},<small>oo</small> ден
                     </div>
 
-                @elseif($item->quantity)
+                @elseif($item->quantity > 0)
                     <div  class="text-success position-relative">
                         {{number_format($item->price,0,',','.')}},<small>oo</small> ден
 
@@ -33,7 +33,7 @@
                 @endif
 
 
-                @if($item->quantity)
+                @if($item->quantity > 0)
                     <a href="/product/{{$item->slug}}" class="btn btn-sm btn-outline-primary stretched-link">Види</a>
                 @else
 

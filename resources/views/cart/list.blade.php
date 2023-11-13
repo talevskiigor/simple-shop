@@ -9,9 +9,9 @@
             <div class="card-body">
 {{--                <h5 class="card-title">Special title treatment</h5>--}}
 {{--                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>--}}
-                <table class="table">
+                <table class="table  table-hover">
                     <thead>
-                    <th >
+                    <tr>
                         <td>Р.Бр.</td>
                         <td>Слика</td>
                         <td>Име</td>
@@ -19,7 +19,8 @@
                         <td>Количина</td>
                         <td>Цена</td>
                         <td>Вкупно</td>
-                    </td>
+                        <td></td>
+                    </tr>
                     </thead>
                     <tbody>
 
@@ -35,6 +36,9 @@
 
                             <td> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($item->associatedModel->price) !!}
                             <td> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($item->getPriceSum()) !!}
+                            <td>
+
+                            </td>
                             </td>
                         </tr>
                     @endforeach
