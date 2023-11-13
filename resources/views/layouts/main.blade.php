@@ -100,7 +100,7 @@
                     <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
                         <!-- Left -->
                         <div class="d-none d-lg-block">
-                            <span>Get connected with us on social networks:</span>
+                            <span>Следете не и на социјалните мрежи:</span>
                         </div>
                         <!-- Left -->
 
@@ -152,12 +152,13 @@
                                 <div class="col-md-3 col-lg-4 col-xl-3 mx-auto">
                                     <!-- Content -->
                                     <h6 class="text-uppercase fw-bold">
-                                        <i class="fas fa-gem me-3"></i>Company name
+                                        <img src="/logo/forkids-vertical.png" class="rounded mx-auto d-block" style="max-width:100%" alt="ForKids">
+{{--                                        <i class="fas fa-gem me-3"></i>Company name--}}
                                     </h6>
-                                    <p>
-                                        Here you can use rows and columns to organize your footer content. Lorem ipsum
-                                        dolor sit amet, consectetur adipisicing elit.
-                                    </p>
+{{--                                    <p>--}}
+{{--                                        Here you can use rows and columns to organize your footer content. Lorem ipsum--}}
+{{--                                        dolor sit amet, consectetur adipisicing elit.--}}
+{{--                                    </p>--}}
                                 </div>
                                 <!-- Grid column -->
 
@@ -165,20 +166,13 @@
                                 <div class="col-md-2 col-lg-2 col-xl-2 mx-auto">
                                     <!-- Links -->
                                     <h6 class="text-uppercase fw-bold mb-4">
-                                        Products
+                                        Производи
                                     </h6>
-                                    <p>
-                                        <a href="#!" class="text-reset">Angular</a>
-                                    </p>
-                                    <p>
-                                        <a href="#!" class="text-reset">React</a>
-                                    </p>
-                                    <p>
-                                        <a href="#!" class="text-reset">Vue</a>
-                                    </p>
-                                    <p>
-                                        <a href="#!" class="text-reset">Laravel</a>
-                                    </p>
+                                    @foreach($categories as $category)
+                                        <p>
+                                        <a class="text-reset text-info" href="/categories/{{$category->slug}}">{{$category->name}}</a>
+                                        </p>
+                                    @endforeach
                                 </div>
                                 <!-- Grid column -->
 
@@ -223,6 +217,14 @@
                     <!-- Section: Links  -->
 
                 </footer>
+                <div class="row">
+                    <div class="col col-sm-8 offset-sm-2 text-center">
+                        <hr>
+                        <img src="/logo/mastercard.png" alt="MasterCard" class="img-fluid img-thumbnail rounded mx-auto" style="max-width: 96px">
+                        <img src="/logo/visa.png" alt="Visa" class="img-fluid img-thumbnail rounded mx-auto"  style="max-width: 96px">
+                    </div>
+                </div>
+
                 <!-- Footer -->
             </section>
 
