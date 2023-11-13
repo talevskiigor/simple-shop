@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
@@ -11,7 +12,12 @@ class SearchController extends Controller
      */
     public function index()
     {
-        //
+        $needed = \request()->get('find');
+        $items = Product::search()->get();
+        return view('home.index',[
+            'items' =>$items
+        ]);
+
     }
 
     /**

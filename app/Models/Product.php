@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 
 /**
  * App\Models\Product
@@ -51,6 +52,27 @@ class Product extends Model
 {
     use HasFactory;
 
+    use Searchable;
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+//        $array = $this->toArray();
+
+        // Customize the data array...
+
+//        return $array;
+
+        return [
+            'id' => (int) $this->id,
+            'name' => $this->name,
+            'price' => (float) $this->price,
+        ];
+    }
     protected function image(): Attribute
     {
         return Attribute::make(
