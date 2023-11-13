@@ -17,4 +17,5 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('/product', \App\Http\Controllers\ProductController::class);
     Route::resource('/categories', \App\Http\Controllers\CategoryController::class);
     Route::resource('/cart', \App\Http\Controllers\CartController::class);
+    Route::resource('/order', \App\Http\Controllers\OrderController::class);
 });

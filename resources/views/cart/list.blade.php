@@ -37,28 +37,16 @@
                     @endforeach
                     </tbody>
                     <tfoot>
-                    <tr>
+                    <th>
                         <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td>Total</td>
-                        <td> {!!  \App\helpers\ShoppingCart::formatPriceAsText($cart->getTotal()) !!}
-                    </tr>
+                        <td><strong>Total</strong></td>
+                        <td><strong> {!!  \App\helpers\ShoppingCart::formatPriceAsText($cart->getTotal()) !!}</strong></td>
+                    </th>
                     </tfoot>
                 </table>
-<div class="row pt-5">
-    <div class="col col-sm-9"></div>
-    <div class="col col-sm-3 d-flex flex-row-reverse">
-
-        <form action="{{url('cart')}}" method="POST">
-            <input type="hidden" name=cartId" value="{{$cartId}}">
-            @csrf
-            <button type="submit" class="btn btn-outline-primary btn-lg"><i class="bi bi-cart-plus"></i> Нарачај</button>
-        </form>
-    </div>
-</div>
             </div>
         </div>
 
