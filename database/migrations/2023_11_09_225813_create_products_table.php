@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('model');
             $table->string('image');
             $table->double('price');
+            $table->double('discount')->nullable();
             $table->integer('tax_id');
             $table->integer('quantity');
             $table->boolean('active')->default(true);
