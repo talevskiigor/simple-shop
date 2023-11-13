@@ -5,16 +5,26 @@
     <main>
 
         <div class="row">
-            <div class="col sm-10">
+            <div class="col sm-7">
                 <h1>{{$item->name}} </h1>
             </div>
-            <div class="col-sm-2 text-sm-end">
-                <button type="button" class="btn btn-success position-relative">
-                    {{number_format($item->price,2,',','.')}} ден
+            <div class="col col-sm-2 text-sm-end">
+                <div  class="btn btn-success position-relative">
+                    {{number_format($item->price,2,',','.')}}
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
     -10%
   </span>
-                </button>
+
+                </div>
+
+            </div>
+            <div class="col col-sm-3  text-sm-end">
+                <form action="{{url('cart')}}" method="POST">
+                    <input type="hidden" name="productId" value="{{$item->id}}">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-primary btn-lg"><i class="bi bi-cart-plus"></i> Додај во корпа</button>
+                </form>
+
             </div>
         </div>
 
@@ -50,13 +60,13 @@
                     </button>
                 </div>
                 <p>&nbsp;</p>
+
                 {!! html_entity_decode($item->description) !!}
 
         <div class="row">
             <div class="col-sm-12"><hr></div>
             <div class="col col-sm-6"></div>
             <div class="col col-sm-6">
-                <a class="btn btn-success btn-lg"><i class="bi bi-cash-coin"></i> Купи</a>
                 <form action="{{url('cart')}}" method="POST">
                     <input type="hidden" name="productId" value="{{$item->id}}">
                     @csrf

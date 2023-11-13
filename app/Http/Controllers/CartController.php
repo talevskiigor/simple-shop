@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\helpers\ShoppingCart;
+use App\Helpers\ShoppingCart;
 use App\Models\Product;
 use Cart;
 use Illuminate\Http\Request;
@@ -18,6 +18,7 @@ class CartController extends Controller
      */
     public function index()
     {
+//        session()->flush();
         $cartId = session(ShoppingCart::SHOPPING_CART_ID, Uuid::uuid4()->toString());
         $cart = Cart::session($cartId);
 
@@ -25,6 +26,7 @@ class CartController extends Controller
             return view('cart.not-found');
         }
 
+//        dd($cart->getContent()->first());
         return view('cart.index',[
             'cart'=>$cart,
             'cartId'=>$cartId,
@@ -65,7 +67,7 @@ class CartController extends Controller
             'associatedModel' => $product,
         ]);
 //        dd(\Cart::session(session(\App\helpers\ShoppingCart::SHOPPING_CART_ID))->getTotalQuantity());
-        return back();
+        return redirect('cart');
     }
 
     /**

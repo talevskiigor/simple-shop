@@ -10,12 +10,12 @@
             <p class="card-text mb-4">{{$item->model}}</p>
             <hr>
             <div class="d-flex justify-content-between align-items-center">
-                <a href="/product/{{$item->slug}}" class="btn btn-sm btn-outline-success">Купи</a>
+{{--                <a href="/order/create/{{$item->slug}}" class="btn btn-sm btn-outline-success">Купи</a>--}}
                 <div  class="text-success position-relative">
                     {{number_format($item->price,0,',','.')}},<small>oo</small> ден
 
                 </div>
-                <a href="/product/{{$item->slug}}" class="btn btn-sm btn-outline-primary">Види</a>
+                <a href="/product/{{$item->slug}}" class="btn btn-sm btn-outline-primary stretched-link">Види</a>
 
             </div>
 

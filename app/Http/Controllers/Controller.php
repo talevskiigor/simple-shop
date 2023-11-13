@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\helpers\ShoppingCart;
+use App\Helpers\ShoppingCart;
 use App\Models\Category;
 use Cart;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;

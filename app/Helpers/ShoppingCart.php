@@ -1,10 +1,11 @@
 <?php
 
-namespace App\helpers;
+namespace App\Helpers;
 
 class ShoppingCart
 {
     const SHOPPING_CART_ID = 'shoppingCartId';
+    const ORDER_ID = 'orderId';
 
 
     public static function formatPriceAsText($price){

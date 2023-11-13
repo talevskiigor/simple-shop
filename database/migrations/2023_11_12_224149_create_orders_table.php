@@ -18,11 +18,13 @@ return new class extends Migration
             $table->string('last');
             $table->string('address');
             $table->string('city');
-            $table->text('comment');
+            $table->text('comment')->nullable();
             $table->string('phone');
             $table->string('email')->nullable();
             $table->boolean('finished')->default(false);
             $table->json('items');
+            $table->float('total');
+            $table->string('bank_ref')->nullable(); //cPayPaymentRef
             $table->softDeletes();
             $table->timestamps();
         });

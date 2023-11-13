@@ -93,7 +93,7 @@
                             </div>
                             <div class="col col-sm-6">
                                 <label for="email" required class="form-label">Електронска пошата</label>
-                                <input type="text" class="form-control" value="{{$email}}"  id="email" name="email"
+                                <input type="email" class="form-control" value="{{$email}}"  id="email" name="email"
                                        placeholder="name@example.com">
                                 @error('email')
                                 <div class="alert alert-danger">{{ $message }}</div>

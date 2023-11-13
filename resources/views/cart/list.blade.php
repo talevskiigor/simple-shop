@@ -10,13 +10,13 @@
                 <table class="table">
                     <thead>
                     <tr>
-                    <td>No</td>
-                    <td>Image</td>
-                    <td>Name</td>
-                    <td>Model</td>
-                    <td>Quantity</td>
-                    <td>Price</td>
-                    <td>Total</td>
+                        <td>No</td>
+                        <td>Image</td>
+                        <td>Name</td>
+                        <td>Model</td>
+                        <td>Quantity</td>
+                        <td>Price</td>
+                        <td>Total</td>
                     </tr>
                     </thead>
                     <tbody>
@@ -25,25 +25,26 @@
 
                         <tr>
                             <td>{{$loop->index + 1}}</td>
-                            <td> <img src="{{$item->associatedModel->image}}" style="width: 124px" class="img-fluid" alt="Responsive image"></td>
+                            <td><img src="{{$item->associatedModel->image}}" style="width: 124px" class="img-fluid"
+                                     alt="Responsive image"></td>
                             <td>{{$item->associatedModel->name}}</td>
                             <td>{{$item->associatedModel->model}} <small>({{$item->associatedModel->id}})</small></td>
                             <td>{{$item->quantity}}</td>
 
-                            <td> {!!  \App\helpers\ShoppingCart::formatPriceAsText($item->associatedModel->price) !!}
-                            <td> {!!  \App\helpers\ShoppingCart::formatPriceAsText($item->getPriceSum()) !!}
+                            <td> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($item->associatedModel->price) !!}
+                            <td> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($item->getPriceSum()) !!}
                             </td>
                         </tr>
                     @endforeach
                     </tbody>
                     <tfoot>
                     <th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><strong>Total</strong></td>
-                        <td><strong> {!!  \App\helpers\ShoppingCart::formatPriceAsText($cart->getTotal()) !!}</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>Total</strong></td>
+                    <td><strong> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($cart->getTotal()) !!}</strong></td>
                     </th>
                     </tfoot>
                 </table>
