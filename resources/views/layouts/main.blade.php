@@ -106,24 +106,38 @@
 
                         <!-- Right -->
                         <div>
-                            <a href="" class="me-4 text-reset">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a href="" class="me-4 text-reset">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="" class="me-4 text-reset">
-                                <i class="fab fa-google"></i>
-                            </a>
-                            <a href="" class="me-4 text-reset">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                            <a href="" class="me-4 text-reset">
-                                <i class="fab fa-linkedin"></i>
-                            </a>
-                            <a href="" class="me-4 text-reset">
-                                <i class="fab fa-github"></i>
-                            </a>
+                            <div class="row">
+                                <div class="col col-sm-2">
+                                    <a href="//google.com" target="_blank">
+                                        <i class="bi bi-facebook text-info h1"></i>
+                                    </a>
+                                </div>
+                                <div class="col col-sm-2">
+                                    <a href="//google.com" target="_blank">
+                                        <i class="bi bi-twitter text-info h1"></i>
+                                    </a>
+                                </div>
+                                <div class="col col-sm-2">
+                                    <a href="//google.com" target="_blank">
+                                        <i class="bi bi-google text-info h1"></i>
+                                    </a>
+                                </div>
+                                <div class="col col-sm-2">
+                                    <a href="//google.com" target="_blank">
+                                        <i class="bi bi-instagram text-info h1"></i>
+                                    </a>
+                                </div>
+                                <div class="col col-sm-2">
+                                    <a href="//google.com" target="_blank">
+                                        <i class="bi bi-linkedin text-info h1"></i>
+                                    </a>
+                                </div>
+                                <div class="col col-sm-2">
+                                    <a href="//google.com" target="_blank">
+                                        <i class="bi bi-github text-info h1"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <!-- Right -->
                     </section>
