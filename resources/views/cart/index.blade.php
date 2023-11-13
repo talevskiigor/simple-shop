@@ -3,6 +3,7 @@
 @section('content')
 
     @include('cart.list')
+
     <div class="row pt-5">
         <div class="col col-sm-9"></div>
         <div class="col col-sm-3 d-flex flex-row-reverse">

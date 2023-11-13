@@ -28,16 +28,24 @@
             </div>
         </div>
 
+<div class="row">
+    <div class="col col-sm-8 offset-sm-2">
 
-                <div id="carouselExample" class="carousel slide">
-                    <div class="carousel-indicators">
+                <div id="carouselExample" class="carousel slide" data-interval="500">
+                    @if(!$item->media->all())
+                        <div class="carousel-inner">
+                            <img src="{{$item->image}}" class="d-block w-100" alt="{{$item->name}}">
+                        </div>
+                    @endif
+
+                    <div class="carousel-indicators bg-info" >
                         @foreach($item->media as $media)
                         <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="{{$loop->index}}"
                                 @if($loop->first)
                                 class="active"
                                 aria-current="true"
                                 @endif
-                                aria-label="Slide 1"><slide/button>
+                                aria-label="Slide 1"></button>
                         @endforeach
                     </div>
                     <div class="carousel-inner">
@@ -48,17 +56,20 @@
                         @endforeach
 
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
+                    <button class="carousel-control-prev text-info" type="button" data-bs-target="#carouselExample"
                             data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
+                        <h1><span class=" text-info" aria-hidden="true"><</span></h1>
+                        <span class="visually-hidden">Предходно</span>
                     </button>
                     <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
                             data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <h1><span class=" text-info" aria-hidden="true">></span></h1>
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>
+
+    </div>
+</div>
                 <p>&nbsp;</p>
 
                 {!! html_entity_decode($item->description) !!}

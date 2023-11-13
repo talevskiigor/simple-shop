@@ -3,21 +3,23 @@
 
 
         <div class="card">
-            <h5 class="card-header">Featured</h5>
+            <h5 class="card-header">
+
+                <i class="bi bi-cart4"></i> Кошничка</h5>
             <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+{{--                <h5 class="card-title">Special title treatment</h5>--}}
+{{--                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>--}}
                 <table class="table">
                     <thead>
-                    <tr>
-                        <td>No</td>
-                        <td>Image</td>
-                        <td>Name</td>
-                        <td>Model</td>
-                        <td>Quantity</td>
-                        <td>Price</td>
-                        <td>Total</td>
-                    </tr>
+                    <th >
+                        <td>Р.Бр.</td>
+                        <td>Слика</td>
+                        <td>Име</td>
+                        <td>Модел</td>
+                        <td>Количина</td>
+                        <td>Цена</td>
+                        <td>Вкупно</td>
+                    </td>
                     </thead>
                     <tbody>
 
@@ -43,7 +45,7 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td><strong>Total</strong></td>
+                    <td><strong>Вкупно</strong></td>
                     <td><strong> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($cart->getTotal()) !!}</strong></td>
                     </th>
                     </tfoot>

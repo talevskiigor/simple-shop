@@ -22,6 +22,10 @@ class BankController extends Controller
         $items = [];
         foreach (json_decode($order->items) as $item){
             $items[] = $item;
+            if($product = Product::find($item->id)){
+                $product->quantity = $product->quantity - 1;
+                $product->save();
+            }
         }
 
 

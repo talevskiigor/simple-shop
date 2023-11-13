@@ -37,7 +37,7 @@
                     <a href="/product/{{$item->slug}}" class="btn btn-sm btn-outline-primary stretched-link">Види</a>
                 @else
 
-                    <div href="#" class="text-muted" rel="tooltip"
+                    <div href="#" class="text-danger" rel="tooltip"
                          data-bs-toggle="tooltip" data-bs-title="Јавете се за да проверите дали може да се нарача."
                     >Нема на залиха.</div>
                 @endif

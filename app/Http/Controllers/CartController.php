@@ -18,7 +18,6 @@ class CartController extends Controller
      */
     public function index()
     {
-//        session()->flush();
         $cartId = session(ShoppingCart::SHOPPING_CART_ID, Uuid::uuid4()->toString());
         $cart = Cart::session($cartId);
 
@@ -26,7 +25,6 @@ class CartController extends Controller
             return view('cart.not-found');
         }
 
-//        dd($cart->getContent()->first());
         return view('cart.index',[
             'cart'=>$cart,
             'cartId'=>$cartId,
