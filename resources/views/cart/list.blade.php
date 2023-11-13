@@ -26,7 +26,12 @@
 
                     @foreach($cart->getContent() as $item)
 
-                        <tr>
+                        <tr
+                            @if($item->quantity<=0)
+                            class="table-danger"
+                            rel="tooltip" data-bs-toggle="tooltip" data-bs-title="Избраниот продукт не е веќе на залиха. Јавете се за да проверите дали може да се нарача."
+                            @endif
+                        >
                             <td>{{$loop->index + 1}}</td>
                             <td><img src="{{$item->associatedModel->image}}" style="width: 124px" class="img-fluid"
                                      alt="Responsive image"></td>
@@ -37,7 +42,15 @@
                             <td> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($item->associatedModel->price) !!}
                             <td> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($item->getPriceSum()) !!}
                             <td>
+                                <form action='{{url('cart/' . $item->id)}}' method='post'>
+                                    @csrf
+                                    @method('DELETE')
 
+                                    <button type="submit" value='Pay' class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-clipboard-minus"></i>
+                                        Бриши
+                                    </button>
+                                </form>
                             </td>
                             </td>
                         </tr>

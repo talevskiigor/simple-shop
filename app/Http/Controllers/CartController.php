@@ -21,13 +21,26 @@ class CartController extends Controller
         $cartId = session(ShoppingCart::SHOPPING_CART_ID, Uuid::uuid4()->toString());
         $cart = Cart::session($cartId);
 
-        if($cart->isEmpty()){
+        if ($cart->isEmpty()) {
             return view('cart.not-found');
         }
 
-        return view('cart.index',[
-            'cart'=>$cart,
-            'cartId'=>$cartId,
+        foreach ($cart->getContent() as $item) {
+            $product = Product::find($item->id);
+            if ($product->quantity <= 0) {
+                $cart->update($item->id, [
+                    'quantity' => [
+                        'relative' => false,
+                        'value' => 0
+                    ],
+                ]);
+//                dd($product->id);
+            }
+        }
+
+        return view('cart.index', [
+            'cart' => $cart,
+            'cartId' => $cartId,
         ]);
     }
 
@@ -46,25 +59,32 @@ class CartController extends Controller
     {
 
 
-        if(!$request->session()->has(ShoppingCart::SHOPPING_CART_ID)){
+        if (!$request->session()->has(ShoppingCart::SHOPPING_CART_ID)) {
 
-            $request->session()->put(ShoppingCart::SHOPPING_CART_ID,Uuid::uuid4()->toString());
+            $request->session()->put(ShoppingCart::SHOPPING_CART_ID, Uuid::uuid4()->toString());
         }
-        $cartId = session(ShoppingCart::SHOPPING_CART_ID,Uuid::uuid4()->toString());
+        $cartId = session(ShoppingCart::SHOPPING_CART_ID, Uuid::uuid4()->toString());
 
-//        dd($cartId);
         $id = $request->get('productId');
         $product = Product::findOrFail($id);
 
-        Cart::session($cartId)->add([
-            'id' => $product->id,
-            'name' => $product->name,
-            'price' => $product->price,
-            'quantity' => 1,
-            'attributes' => [],
-            'associatedModel' => $product,
-        ]);
-//        dd(\Cart::session(session(\App\helpers\ShoppingCart::SHOPPING_CART_ID))->getTotalQuantity());
+        if ($product->quantity > 0) {
+            $cart = Cart::session($cartId)->add([
+                'id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'quantity' => 1,
+                'attributes' => [],
+                'associatedModel' => $product,
+            ]);
+            // prevent to always have one item
+            $cart->update($product->id, [
+                'quantity' => [
+                    'relative' => false,
+                    'value' => 1
+                ],
+            ]);
+        }
         return redirect('cart');
     }
 
@@ -97,6 +117,9 @@ class CartController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $cartId = session(ShoppingCart::SHOPPING_CART_ID, Uuid::uuid4()->toString());
+        $cart = Cart::session($cartId);
+        $cart->remove($id);
+        return redirect('cart');
     }
 }
