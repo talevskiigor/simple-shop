@@ -60,17 +60,20 @@
                     <a class="nav-link"><i class="bi bi-megaphone"></i> Контакт</a>
                 </li>
             </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Што сакате да најдете?" aria-label="Search">
+            <form action="{{url('search')}}" class="d-flex" method="GET" role="search">
+                <input class="form-control me-2" id="find" name="find" type="search" placeholder="Што сакате да најдете?" aria-label="Search">
                 <button class="btn btn-outline-primary" type="submit">Барај</button>
             </form>
             <form class="d-flex form-inline">
+                @if(\Cart::session(session(\App\Helpers\ShoppingCart::SHOPPING_CART_ID,Ramsey\Uuid\Uuid::uuid4()->toString()))->isEmpty())
+                @else
+
                 <a href="/cart" class="btn btn-outline-success my-2 my-sm-0" type="submit"><i
                         class="bi bi-cart-check"></i> Кошница
                     <span
                         class="badge rounded-pill bg-danger">{{\Cart::session(session(\App\Helpers\ShoppingCart::SHOPPING_CART_ID,Ramsey\Uuid\Uuid::uuid4()->toString()))->getTotalQuantity()}}</span>
                 </a>
-
+                @endif
             </form>
         </div>
     </div>

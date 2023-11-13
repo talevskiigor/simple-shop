@@ -18,9 +18,13 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('/categories', \App\Http\Controllers\CategoryController::class);
     Route::resource('/cart', \App\Http\Controllers\CartController::class);
     Route::resource('/order', \App\Http\Controllers\OrderController::class);
+    Route::resource('/search',\App\Http\Controllers\SearchController::class);
+
+
 
     Route::post('/bank/ok', [\App\Http\Controllers\BankController::class,'ok']);
     Route::post('/bank/fail',[\App\Http\Controllers\BankController::class,'fail']);
+
 });
 
 
