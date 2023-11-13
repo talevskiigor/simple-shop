@@ -92,13 +92,13 @@
                         <div class="alert alert-success" role="alert">
                             Ќе бидете пренасочени на страница на банката каде треба да ја извршите уплатата.
                         </div>
-                        @include('order.pay-button')
+{{--                        @include('order.pay-button')--}}
                         <div class="row mb-1">
                             <div class="col col-sm-9"></div>
                             <div class="col col-sm-3 d-flex flex-row-reverse">
                                 <form action='https://www.cpay.com.mk/client/Page/default.aspx?xml_id=/mk-MK/.loginToPay/.simple/' method='post'>
                                     @foreach(\App\Classes\CaSys::get($order) as $name => $value)
-                                        <input id='{{$name}}' name='{{$name}}' value='{{$value}}' type='text' />
+                                        <input id='{{$name}}' name='{{$name}}' value='{{$value}}' type='hidden' />
                                     @endforeach
                                 <button type="submit" value='Pay' class="btn btn-outline-primary btn-lg"><i
                                         class="bi bi-caret-right-square"></i> Плати

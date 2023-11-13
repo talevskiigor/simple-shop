@@ -40,7 +40,7 @@ class CategoryController extends Controller
     {
         $category = Category::with('product')->where('slug',$slug)->first();
         $items = $category->product;
-        return view('category.index',[
+        return view('home.index',[
             'items' =>$items
         ]);
 
