@@ -76,7 +76,7 @@ class Product extends Model
     protected function image(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) =>'/image/' . $value
+            get: fn (string $value) => '/image/' . $value
         );
     }
 

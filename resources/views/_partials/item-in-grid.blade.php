@@ -1,6 +1,6 @@
 <div class="col-lg-3 mb-3 d-flex align-items-stretch">
     <div class="card">
-        <img src="{{ $item->image }}" class="card-img-top" alt="Card Image">
+        <img src="{{  \App\Helpers\Image::get($item->image,256) }}" class="card-img-top img-thumbnail" style="max-height: 256px" alt="Card Image">
         @if($item->discount && $item->quantity)
             <span
                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">-{{$item->discount}}%  </span>

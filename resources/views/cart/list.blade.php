@@ -15,10 +15,9 @@
                         <td>Р.Бр.</td>
                         <td>Слика</td>
                         <td>Име</td>
-                        <td>Модел</td>
-                        <td>Количина</td>
-                        <td>Цена</td>
-                        <td>Вкупно</td>
+                        <td>Кол.</td>
+                        <td class="text-end">Цена</td>
+                        <td class="text-end">Вкупно</td>
                         <td></td>
                     </tr>
                     </thead>
@@ -33,22 +32,23 @@
                             @endif
                         >
                             <td>{{$loop->index + 1}}</td>
-                            <td><img src="{{$item->associatedModel->image}}" style="width: 124px" class="img-fluid"
+                            <td><img src="{{  \App\Helpers\Image::get( $item->associatedModel->image,128) }}" style="width: 124px" class="img-fluid"
                                      alt="Responsive image"></td>
-                            <td>{{$item->associatedModel->name}}</td>
-                            <td>{{$item->associatedModel->model}} <small>({{$item->associatedModel->id}})</small></td>
+                            <td>
+                                {{$item->associatedModel->name}}<br>
+                            {{$item->associatedModel->model}} <small>({{$item->associatedModel->id}})</small>
+                            </td>
                             <td>{{$item->quantity}}</td>
 
-                            <td> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($item->associatedModel->price) !!}
-                            <td> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($item->getPriceSum()) !!}
-                            <td>
+                            <td class="text-end"> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($item->associatedModel->price) !!}
+                            <td class="text-end"> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($item->getPriceSum()) !!}
+                            <td class="text-end">
                                 <form action='{{url('cart/' . $item->id)}}' method='post'>
                                     @csrf
                                     @method('DELETE')
 
                                     <button type="submit" value='Pay' class="btn btn-outline-danger btn-sm">
-                                        <i class="bi bi-clipboard-minus"></i>
-                                        Бриши
+                                        X
                                     </button>
                                 </form>
                             </td>

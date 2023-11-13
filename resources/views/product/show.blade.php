@@ -34,7 +34,7 @@
                 <div id="carouselExample" class="carousel slide" data-interval="500">
                     @if(!$item->media->all())
                         <div class="carousel-inner">
-                            <img src="{{$item->image}}" class="d-block w-100" alt="{{$item->name}}">
+                            <img src="{{  \App\Helpers\Image::get($item->image,768) }}" class="d-block w-100" alt="{{$item->name}}">
                         </div>
                     @endif
 
@@ -51,7 +51,7 @@
                     <div class="carousel-inner">
                         @foreach($item->media as $media)
                             <div class="carousel-item @if($loop->first) active @endif">
-                                <img src="{{$media->path}}" class="d-block w-100" alt="{{$media->name}}">
+                                <img src="{{  \App\Helpers\Image::get($item->image,768) }}" class="d-block w-100" alt="{{$media->name}}">
                             </div>
                         @endforeach
 
