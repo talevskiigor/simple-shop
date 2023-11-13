@@ -95,10 +95,12 @@ class OCSeeder extends Seeder
                 'd.description',
                 'p.price',
                 'p.product_id',
-                'p.image'
+                'p.image',
+                'p.quantity'
             ]);
 
         foreach ($items as $item) {
+//            dd($item);
             $product = Product::factory()->create(
                 [
                     'id' => $item->product_id,
@@ -108,8 +110,9 @@ class OCSeeder extends Seeder
                     'model' => $item->model,
                     'price' => $item->price,
                     'image' => $item->image,
+                    'discount'=>0,
                     'tax_id' => 1,
-                    'quantity' => 5,
+                    'quantity' => $item->quantity,
                 ]
             );
 

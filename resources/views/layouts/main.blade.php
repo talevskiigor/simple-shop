@@ -61,7 +61,7 @@
                 </li>
             </ul>
             <form action="{{url('search')}}" class="d-flex" method="GET" role="search">
-                <input class="form-control me-2" id="find" name="find" type="search" placeholder="Што сакате да најдете?" aria-label="Search">
+                <input class="form-control me-2" value="{{request()->get('find')}}" id="find" name="find" type="search" placeholder="Што сакате да најдете?" aria-label="Search">
                 <button class="btn btn-outline-primary" type="submit">Барај</button>
             </form>
             <form class="d-flex form-inline">

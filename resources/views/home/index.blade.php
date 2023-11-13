@@ -8,7 +8,8 @@
 
 
 
-            @include('_partials.grid')
+                @include('_partials.grid')
+
 
 
 @endsection
