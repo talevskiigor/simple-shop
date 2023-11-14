@@ -25,7 +25,7 @@ class OCSeeder extends Seeder
 
         // ------------------
         $img_product = DB::connection('oc')
-            ->table('oc.product_to_category')
+            ->table('product_to_category')
             ->get();
 
         foreach ($img_product as $img) {
@@ -40,7 +40,7 @@ class OCSeeder extends Seeder
 
         // ------------------
         $img_product = DB::connection('oc')
-            ->table('oc.product_image')
+            ->table('product_image')
             ->get();
 
         foreach ($img_product as $img) {
