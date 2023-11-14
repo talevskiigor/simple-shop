@@ -23,15 +23,16 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/media-resize/{slug?}', function(?string $slug = null) {
 
 
-        $w = request('w', null);
-        $h = request('h',null);
+        $w = request('w', 'null');
+        $h = request('h','null');
         $q = request('q',100);
 
         $file = public_path($slug);
         $newExtension='webp';
         $name = basename($file, '.'. explode('.',$file)[1],);
         $newFile = sprintf('%s/%s-%sX_%s_%s.%s', dirname( $file),$name,$w,$h,$q,$newExtension);
-
+        $newFile = str_replace('image','image/cache',$newFile);
+        
         if(File::exists($newFile)){
             $img = Image::make($newFile);
         }else {
