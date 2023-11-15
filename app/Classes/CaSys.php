@@ -13,7 +13,7 @@ class CaSys
         $pass = 'TEST_PASS';
 
         $price = (int)($order->total * 100);
-        $price = 100;
+//        $price = 100;
 
         $items = [
             'AmountToPay' => $price,
