@@ -12,7 +12,7 @@
                 <div  class="btn btn-success position-relative">
                     {{number_format($item->price,2,',','.')}}
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-    -10%
+    Ново
   </span>
 
                 </div>

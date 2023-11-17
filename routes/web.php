@@ -27,13 +27,11 @@ Route::group(['middleware' => ['web']], function () {
         $q = request('q',100);
 
         $file = public_path('media/'.$slug);
-//        dd($file);
         $newExtension='webp';
 
         $name = basename($file, '.'. explode('.',$file)[1],);
         $newFile = sprintf('%s/%s-%sX_%s_%s.%s', dirname( $file),$name,$w,$h,$q,$newExtension);
         $newFile = str_replace('/var/www/html/public/media','/var/www/html/public/cached-media',$newFile);
-//dd($newFile);
         if(File::exists($newFile)){
             $img = Image::make($newFile);
         }else {
