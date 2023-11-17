@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Image;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,11 @@ class HomeController extends Controller
     public function index()
     {
         $items = Product::paginate();
+
+        $item  = $items->items();
+        $img = $item[0]->image;
+        dd(Image::get($img,256));
+        dd($item->image);
         return view('home.index',[
             'items' =>$items
         ]);

@@ -73,12 +73,12 @@ class Product extends Model
             'price' => (float) $this->price,
         ];
     }
-    protected function image(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $value) => '/image/' . $value
-        );
-    }
+//    protected function image(): Attribute
+//    {
+//        return Attribute::make(
+//            get: fn (string $value) => '/image/' . $value
+//        );
+//    }
 
 
 

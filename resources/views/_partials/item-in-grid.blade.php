@@ -10,7 +10,6 @@
             <p class="card-text mb-4">{{$item->model}}</p>
             <hr>
             <div class="d-flex justify-content-between align-items-center">
-{{--                <a href="/order/create/{{$item->slug}}" class="btn btn-sm btn-outline-success">Купи</a>--}}
 
                 @if($item->discount & $item->quantity > 0)
                     <div  class="text-muted position-relative">
