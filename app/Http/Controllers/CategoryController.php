@@ -40,6 +40,12 @@ class CategoryController extends Controller
     {
         $category = Category::with('product')->where('slug',$slug)->first();
         $items = $category->product;
+
+//        return view('helpers.gallery',[
+//            'items' =>$items
+//        ]);
+//
+
         return view('home.index',[
             'items' =>$items
         ]);

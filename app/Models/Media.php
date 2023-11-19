@@ -42,12 +42,12 @@ class Media extends Model
 {
     use HasFactory;
 
-    protected function path(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $value) =>'/image/' . $value
-        );
-    }
+//    protected function path(): Attribute
+//    {
+//        return Attribute::make(
+//            get: fn (string $value) =>'/image/' . $value
+//        );
+//    }
 
     public function product():BelongsToMany
     {

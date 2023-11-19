@@ -13,7 +13,7 @@
 
                 @if($item->discount & $item->quantity > 0)
                     <div  class="text-muted position-relative">
-                        <del><small> {{number_format($item->price,0,',','.')}},<small>oo</small> ден </small></del>
+                       <del><small> {{number_format($item->price,0,',','.')}},<small>oo</small> ден </small></del>
                     </div>
                     <div  class="text-success position-relative">
                         {{number_format($item->price - ($item->price * $item->discount/100),0,',','.')}},<small>oo</small> ден

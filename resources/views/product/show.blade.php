@@ -39,11 +39,11 @@ Share::page('http://jorenvanhocht.be')
     <div class="col col-sm-8 offset-sm-2">
 
                 <div id="carouselExample" class="carousel slide" data-interval="500">
-                    @if(!$item->media->all())
+                    @if(!count($item->media->all()))
                         <div class="carousel-inner">
                             <img src="{{  \App\Helpers\Image::get($item->image,768) }}" class="d-block w-100" alt="{{$item->name}}">
                         </div>
-                    @endif
+                    @else
 
                     <div class="carousel-indicators bg-info" >
                         @foreach($item->media as $media)
@@ -58,7 +58,7 @@ Share::page('http://jorenvanhocht.be')
                     <div class="carousel-inner">
                         @foreach($item->media as $media)
                             <div class="carousel-item @if($loop->first) active @endif">
-                                <img src="{{  \App\Helpers\Image::get($item->image,768) }}" class="d-block w-100" alt="{{$media->name}}">
+                                <img src="{{  \App\Helpers\Image::get($media->path,768) }}" class="d-block w-100" alt="{{$media->name}}">
                             </div>
                         @endforeach
 
@@ -73,6 +73,7 @@ Share::page('http://jorenvanhocht.be')
                         <h1><span class=" text-info" aria-hidden="true">></span></h1>
                         <span class="visually-hidden">Next</span>
                     </button>
+                    @endif
                 </div>
 
     </div>

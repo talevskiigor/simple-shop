@@ -29,7 +29,6 @@ Route::group(['middleware' => ['web']], function () {
         return redirect(route('dashboard'));
     });
     Route::get('/media-resize/{slug?}', function (?string $slug = null) {
-
         $w = request('w', 'null');
         $h = request('h', 'null');
         $q = request('q', 100);
@@ -45,10 +44,8 @@ Route::group(['middleware' => ['web']], function () {
         } else {
             $d = dirname($newFile);
             if (!File::isDirectory($d)) {
-
                 File::makeDirectory($d, 777, true);
             }
-//            dd($d);
             $img = Image::make($file)->resize($w, $h, function ($constraint) {
                 $constraint->aspectRatio();
             });

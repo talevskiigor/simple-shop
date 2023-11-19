@@ -11,12 +11,14 @@ use Database\Factories\PageFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Termwind\Components\Raw;
 
 class OCSeeder extends Seeder
 {
 
     public function run(): void
     {
+
 
         DB::table('products')->truncate();
         DB::table('media')->truncate();
@@ -126,12 +128,32 @@ class OCSeeder extends Seeder
 
         foreach ($pages as $page) {
             Page::factory()->create([
-                    'id'=>$page->information_id,
+                'id' => $page->information_id,
                 'title' => $page->title,
-                'slug'=>Str::of($page->title)->slug(),
+                'slug' => Str::of($page->title)->slug(),
                 'body' => $page->description,
             ]);
         }
+
+        DB::table('products')
+            ->update(['image' => DB::raw("REPLACE(image , 'catalog/', 'images/')")]);
+
+        DB::table('media')
+            ->update(['path' => DB::raw("REPLACE(path , 'catalog/', 'images/')")]);
+
+
+        $data = DB::table('products')
+            ->join('category_product','products.id','category_product.product_id')
+            ->where('category_product.category_id',63)
+            ->get('id');
+        $ids = [];
+        foreach ($data->all() as $i){
+            $ids[]=$i->id;
+        }
+        $s=DB::table('products')
+            ->whereIn('id', $ids)
+            ->update(['discount'=>15]);
+
 
     }
 }
