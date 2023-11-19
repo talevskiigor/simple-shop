@@ -34,7 +34,7 @@
 <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
-            <img src="{{  \App\Helpers\Image::get( '/logo/forkids.png',256) }}"  alt="Bootstrap" height="60">
+            <img src="{{  \App\Helpers\Image::get( 'images/forkids-logo-h.png',256) }}"  alt="Bootstrap" height="60">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -156,7 +156,7 @@
                                 <div class="col-md-3 col-lg-4 col-xl-3 mx-auto">
                                     <!-- Content -->
                                     <h6 class="text-uppercase fw-bold">
-                                        <img src="{{  \App\Helpers\Image::get( '/logo/forkids-vertical.png',320) }}"  class="rounded mx-auto d-block" style="max-width:100%" alt="ForKids">
+                                        <img src="{{  \App\Helpers\Image::get( 'images/forkids-logo-v.png',320) }}"  class="rounded mx-auto d-block" style="max-width:100%" alt="ForKids">
 {{--                                        <i class="fas fa-gem me-3"></i>Company name--}}
                                     </h6>
 {{--                                    <p>--}}
@@ -224,8 +224,8 @@
                 <div class="row">
                     <div class="col col-sm-8 offset-sm-2 text-center">
                         <hr>
-                        <img src="{{  \App\Helpers\Image::get( '/logo/mastercard.png',128) }}" alt="MasterCard" class="img-fluid img-thumbnail rounded mx-auto" style="max-width: 96px">
-                        <img src="{{  \App\Helpers\Image::get( '/logo/visa.png',128) }}" alt="Visa" class="img-fluid img-thumbnail rounded mx-auto"  style="max-width: 96px">
+                        <img src="{{  \App\Helpers\Image::get( 'images/mastercard.png',128) }}" alt="MasterCard" class="img-fluid img-thumbnail rounded mx-auto" style="max-width: 96px">
+                        <img src="{{  \App\Helpers\Image::get( 'images/visa.png',128) }}" alt="Visa" class="img-fluid img-thumbnail rounded mx-auto"  style="max-width: 96px">
                     </div>
                 </div>
 

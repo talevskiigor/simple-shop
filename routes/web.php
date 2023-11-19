@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,9 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('/order', \App\Http\Controllers\OrderController::class);
     Route::resource('/search',\App\Http\Controllers\SearchController::class);
 
+    Route::get('login',function(){
+        return redirect(route('dashboard'));
+    });
     Route::get('/media-resize/{slug?}', function(?string $slug = null) {
 
         $w = request('w', 'null');
@@ -56,3 +60,16 @@ Route::group(['middleware' => ['web']], function () {
 });
 
 
+
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->prefix('admin')->name('dashboard');
+
+Route::group(['prefix' => 'admin', 'middleware' => ['auth']],function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';

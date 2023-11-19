@@ -2,9 +2,6 @@
 
 @section('content')
 
-    @extends('layouts.main')
-
-    @section('content')
 
         <div class="row">
             <div class="col col-sm-8 offset-sm-2">
@@ -116,4 +113,3 @@
 
     @endsection
 
-@endsection
