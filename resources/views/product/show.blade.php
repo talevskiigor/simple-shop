@@ -10,10 +10,15 @@
             </div>
             <div class="col col-sm-2 text-sm-end">
                 <div  class="btn btn-success position-relative">
-                    {{number_format($item->price,2,',','.')}}
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-    Ново
+                    @if($item->discount & $item->quantity > 0)
+                    <del>{{number_format($item->price,2,',','.')}}</del>
+                    @endif
+                    {{number_format($item->getPrice(),0,',','.')}},<small>oo</small> ден
+                        @if($item->discount & $item->quantity > 0)
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+-{{$item->discount}}%
   </span>
+                        @endif
 
                 </div>
 

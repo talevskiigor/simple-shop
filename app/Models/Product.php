@@ -80,7 +80,9 @@ class Product extends Model
 //        );
 //    }
 
-
+public function getPrice(){
+        return $this->price - ($this->price * $this->discount/100);
+}
 
     public function media(): BelongsToMany
     {
