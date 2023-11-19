@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Media;
 use App\Models\Page;
 use App\Models\Product;
+use App\Models\User;
 use Carbon\Carbon;
 use Database\Factories\PageFactory;
 use Illuminate\Database\Seeder;
@@ -26,7 +27,14 @@ class OCSeeder extends Seeder
         DB::table('media_product')->truncate();
         DB::table('category_product')->truncate();
         DB::table('pages')->truncate();
+        DB::table('users')->truncate();
 
+
+        $admin = User::findOrNew(1);
+        $admin->name = 'Admin';
+        $admin->email = 'admin@domain.tld';
+        $admin->password = '$2y$12$mcDk87oJeR6hE2BVPRVEVOXKNWh7PnXTNgt1PnGUwcfz7jcKLaASu';
+        $admin->save();
 
         // ------------------
         $img_product = DB::connection('oc')
