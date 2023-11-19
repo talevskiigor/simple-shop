@@ -29,7 +29,7 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        Mail::to('igor.talevski@gmail.com')->send(new ContactRequested($request->all()));
+        Mail::to('info@forkids.mk')->send(new ContactRequested($request->all()));
         return redirect()->back();
     }
 

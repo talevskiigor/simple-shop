@@ -39,7 +39,7 @@ return [
             'transport' => 'smtp',
             'host' => 'mail.smtp2go.com',
             'port' => 2525,
-            'from' => array('address' => 'info@forkids.mk', 'name' => 'For Kids (MK)'),
+            'from' => array('address' => env('MAIL_FROM_ADDRESS'), 'name' => env('MAIL_FROM_NAME')),
             'encryption' => 'tls',
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
