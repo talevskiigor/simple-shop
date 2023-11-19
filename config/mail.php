@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('MAIL_MAILER', 'smtp'),
+    'default' => env('MAIL_MAILER', 'smtp2go'),
 
     /*
     |--------------------------------------------------------------------------
@@ -34,6 +34,18 @@ return [
     */
 
     'mailers' => [
+        'smtp2go' =>[
+            'driver' => 'smtp',
+            'transport' => 'smtp',
+            'host' => 'mail.smtp2go.com',
+            'port' => 2525,
+            'from' => array('address' => 'info@forkids.mk', 'name' => 'For Kids (MK)'),
+            'encryption' => 'tls',
+            'username' => env('MAIL_USERNAME'),
+            'password' => env('MAIL_PASSWORD'),
+            'sendmail' => '/usr/sbin/sendmail -bs',
+            'pretend' => false,
+        ],
         'smtp' => [
             'transport' => 'smtp',
             'url' => env('MAIL_URL'),

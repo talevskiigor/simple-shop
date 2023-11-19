@@ -4,8 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\Media;
+use App\Models\Page;
 use App\Models\Product;
 use Carbon\Carbon;
+use Database\Factories\PageFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -21,6 +23,7 @@ class OCSeeder extends Seeder
         DB::table('categories')->truncate();
         DB::table('media_product')->truncate();
         DB::table('category_product')->truncate();
+        DB::table('pages')->truncate();
 
 
         // ------------------
@@ -30,10 +33,10 @@ class OCSeeder extends Seeder
 
         foreach ($img_product as $img) {
             DB::table('category_product')->insert([
-                'product_id'=>$img->product_id,
-                'category_id'=>$img->category_id,
-                'created_at'=>Carbon::now(),
-                'updated_at'=>Carbon::now(),
+                'product_id' => $img->product_id,
+                'category_id' => $img->category_id,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
         }
 
@@ -45,10 +48,10 @@ class OCSeeder extends Seeder
 
         foreach ($img_product as $img) {
             DB::table('media_product')->insert([
-                'product_id'=>$img->product_id,
-                'media_id'=>$img->product_image_id,
-                'created_at'=>Carbon::now(),
-                'updated_at'=>Carbon::now(),
+                'product_id' => $img->product_id,
+                'media_id' => $img->product_image_id,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
         }
 
@@ -110,18 +113,24 @@ class OCSeeder extends Seeder
                     'model' => $item->model,
                     'price' => $item->price,
                     'image' => $item->image,
-                    'discount'=>0,
+                    'discount' => 0,
                     'tax_id' => 1,
                     'quantity' => $item->quantity,
                 ]
             );
+        }
 
-//            dd($item);
+        $pages = DB::connection('oc')
+            ->table('information_description')
+            ->get();
 
-
-
-            $imgs = DB::connection('oc')->table('product_image')->where('product_id', $item->product_id)->get();
-
+        foreach ($pages as $page) {
+            Page::factory()->create([
+                    'id'=>$page->information_id,
+                'title' => $page->title,
+                'slug'=>Str::of($page->title)->slug(),
+                'body' => $page->description,
+            ]);
         }
 
     }

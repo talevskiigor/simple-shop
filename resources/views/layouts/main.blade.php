@@ -45,9 +45,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/"><i class="bi bi-house-door"></i> Почеток</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bi bi-question-circle"></i> За нас</a>
-                </li>
+{{--                <li class="nav-item">--}}
+{{--                    <a class="nav-link" href="#"><i class="bi bi-question-circle"></i> За нас</a>--}}
+{{--                </li>--}}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle ацтиве" aria-current="page" href="#" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
@@ -61,7 +61,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link"><i class="bi bi-megaphone"></i> Контакт</a>
+                    <a class="nav-link" href="{{url('contact')}}" ><i class="bi bi-megaphone"></i> Контакт</a>
                 </li>
             </ul>
             <form action="{{url('search')}}" class="d-flex" method="GET" role="search">
@@ -111,36 +111,36 @@
                         <!-- Right -->
                         <div>
                             <div class="row">
-                                <div class="col col-sm-2">
-                                    <a href="//google.com" target="_blank">
+                                <div class="col col-sm-6">
+                                    <a href="https://www.facebook.com/profile.php?id=61552760302043" target="_blank">
                                         <i class="bi bi-facebook text-info h1"></i>
                                     </a>
                                 </div>
-                                <div class="col col-sm-2">
-                                    <a href="//google.com" target="_blank">
-                                        <i class="bi bi-twitter text-info h1"></i>
-                                    </a>
-                                </div>
-                                <div class="col col-sm-2">
-                                    <a href="//google.com" target="_blank">
-                                        <i class="bi bi-google text-info h1"></i>
-                                    </a>
-                                </div>
-                                <div class="col col-sm-2">
-                                    <a href="//google.com" target="_blank">
+{{--                                <div class="col col-sm-2">--}}
+{{--                                    <a href="{{url('')}}" target="_blank">--}}
+{{--                                        <i class="bi bi-twitter text-info h1"></i>--}}
+{{--                                    </a>--}}
+{{--                                </div>--}}
+{{--                                <div class="col col-sm-2">--}}
+{{--                                    <a href="{{url('')}}" target="_blank">--}}
+{{--                                        <i class="bi bi-google text-info h1"></i>--}}
+{{--                                    </a>--}}
+{{--                                </div>--}}
+                                <div class="col col-sm-6">
+                                    <a href="https://www.instagram.com/forkids.mk/" target="_blank">
                                         <i class="bi bi-instagram text-info h1"></i>
                                     </a>
                                 </div>
-                                <div class="col col-sm-2">
-                                    <a href="//google.com" target="_blank">
-                                        <i class="bi bi-linkedin text-info h1"></i>
-                                    </a>
-                                </div>
-                                <div class="col col-sm-2">
-                                    <a href="//google.com" target="_blank">
-                                        <i class="bi bi-github text-info h1"></i>
-                                    </a>
-                                </div>
+{{--                                <div class="col col-sm-2">--}}
+{{--                                    <a href="{{url('')}}" target="_blank">--}}
+{{--                                        <i class="bi bi-linkedin text-info h1"></i>--}}
+{{--                                    </a>--}}
+{{--                                </div>--}}
+{{--                                <div class="col col-sm-2">--}}
+{{--                                    <a href="{{url('')}}" target="_blank">--}}
+{{--                                        <i class="bi bi-github text-info h1"></i>--}}
+{{--                                    </a>--}}
+{{--                                </div>--}}
                             </div>
                         </div>
                         <!-- Right -->
@@ -184,34 +184,20 @@
                                 <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
                                     <!-- Links -->
                                     <h6 class="text-uppercase fw-bold mb-4">
-                                        Useful links
+                                        Корисни информации
                                     </h6>
-                                    <p>
-                                        <a href="#!" class="text-reset">Pricing</a>
-                                    </p>
-                                    <p>
-                                        <a href="#!" class="text-reset">Settings</a>
-                                    </p>
-                                    <p>
-                                        <a href="#!" class="text-reset">Orders</a>
-                                    </p>
-                                    <p>
-                                        <a href="#!" class="text-reset">Help</a>
-                                    </p>
+                                    @foreach($pages as $page)
+                                        <p>
+                                            <a href="{{url('pages/'.$page->slug)}}" class="text-reset">{{$page->title}}</a>
+                                        </p>
+
+                                    @endforeach
                                 </div>
                                 <!-- Grid column -->
 
                                 <!-- Grid column -->
                                 <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-                                    <!-- Links -->
-                                    <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
-                                    <p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>
-                                    <p>
-                                        <i class="fas fa-envelope me-3"></i>
-                                        info@example.com
-                                    </p>
-                                    <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
-                                    <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
+                                    @include('_partials.company')
                                 </div>
                                 <!-- Grid column -->
                             </div>
