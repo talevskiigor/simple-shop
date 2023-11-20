@@ -28,6 +28,15 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('login', function () {
         return redirect(route('dashboard'));
     });
+
+    Route::get('update',function(){
+        $cmd = 'db:seed --class=OCSeeder --force';
+        \Illuminate\Support\Facades\Artisan::call($cmd);
+        return \Carbon\Carbon::now()->toString();
+        return redirect('/');
+    });
+
+
     Route::get('/media-resize/{slug?}', function (?string $slug = null) {
         $w = request('w', 'null');
         $h = request('h', 'null');

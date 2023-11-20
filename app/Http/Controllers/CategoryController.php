@@ -39,6 +39,7 @@ class CategoryController extends Controller
     public function show(string $slug)
     {
         $category = Category::with('product')->where('slug',$slug)->first();
+
         $items = $category->product;
 
 //        return view('helpers.gallery',[

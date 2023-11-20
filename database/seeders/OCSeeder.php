@@ -20,15 +20,16 @@ class OCSeeder extends Seeder
     public function run(): void
     {
 
-
-        DB::table('products')->truncate();
-        DB::table('media')->truncate();
-        DB::table('categories')->truncate();
-        DB::table('media_product')->truncate();
-        DB::table('category_product')->truncate();
-        DB::table('pages')->truncate();
-        DB::table('users')->truncate();
-
+        if (false) {
+            DB::table('products')->truncate();
+            DB::table('media')->truncate();
+            DB::table('categories')->truncate();
+            DB::table('media_product')->truncate();
+            DB::table('category_product')->truncate();
+            DB::table('pages')->truncate();
+            DB::table('users')->truncate();
+            dd(0);
+        }
 
         $admin = User::findOrNew(1);
         $admin->name = 'Admin';
@@ -42,14 +43,17 @@ class OCSeeder extends Seeder
             ->get();
 
         foreach ($img_product as $img) {
-            DB::table('category_product')->insert([
+            DB::table('category_product')->updateOrInsert([
                 'product_id' => $img->product_id,
                 'category_id' => $img->category_id,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
             ]);
         }
-
+        DB::table('category_product')->update(
+            [
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]
+        );
 
         // ------------------
         $img_product = DB::connection('oc')
@@ -57,13 +61,18 @@ class OCSeeder extends Seeder
             ->get();
 
         foreach ($img_product as $img) {
-            DB::table('media_product')->insert([
+            DB::table('media_product')->updateOrInsert([
                 'product_id' => $img->product_id,
                 'media_id' => $img->product_image_id,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
             ]);
         }
+        DB::table('media_product')->update(
+            [
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+
+            ]
+        );
 
 
         // ------------------
@@ -75,11 +84,15 @@ class OCSeeder extends Seeder
                 'cd.category_id',
             ]);
         foreach ($cats as $cat) {
-            Category::factory()->create([
-                'id' => $cat->category_id,
-                'name' => $cat->name,
-                'slug' => Str::of($cat->name)->slug(),
-            ]);
+            $category = Category::findOrNew($cat->category_id);
+            $category->fill(
+                [
+                    'id' => $cat->category_id,
+                    'name' => $cat->name,
+                    'slug' => Str::of($cat->name)->slug(),
+                ]
+            )->save();
+
         }
 // ------------------
         $imgs = DB::connection('oc')
@@ -87,14 +100,17 @@ class OCSeeder extends Seeder
             ->get();
 
         foreach ($imgs as $img) {
-            $media = Media::factory()->create([
-                'id' => $img->product_image_id,
-                'name' => basename($img->image),
-                'path' => $img->image,
-                'file' => basename($img->image),
-                'type' => 'image'
+            $media = Media::findOrNew($img->product_image_id);
+            $media->fill(
+                [
+                    'id' => $img->product_image_id,
+                    'name' => basename($img->image),
+                    'path' => $img->image,
+                    'file' => basename($img->image),
+                    'type' => 'image'
 
-            ]);
+                ]
+            )->save();
         }
 // ----------------
 
@@ -114,7 +130,8 @@ class OCSeeder extends Seeder
 
         foreach ($items as $item) {
 //            dd($item);
-            $product = Product::factory()->create(
+            $product = Product::findOrNew($item->product_id);
+            $product->fill(
                 [
                     'id' => $item->product_id,
                     'slug' => Str::of($item->name)->slug(),
@@ -127,21 +144,25 @@ class OCSeeder extends Seeder
                     'tax_id' => 1,
                     'quantity' => $item->quantity,
                 ]
-            );
+            )->save();
         }
 
-        $pages = DB::connection('oc')
+        $items = DB::connection('oc')
             ->table('information_description')
             ->get();
 
-        foreach ($pages as $page) {
-            Page::factory()->create([
-                'id' => $page->information_id,
-                'title' => $page->title,
-                'slug' => Str::of($page->title)->slug(),
-                'body' => $page->description,
-            ]);
+        foreach ($items as $item) {
+            $page = Page::findOrNew($item->information_id);
+            $page->fill(
+                [
+                    'id' => $item->information_id,
+                    'title' => $item->title,
+                    'slug' => Str::of($item->title)->slug(),
+                    'body' => $item->description,
+                ]
+            );
         }
+
 
         DB::table('products')
             ->update(['image' => DB::raw("REPLACE(image , 'catalog/', 'images/')")]);
@@ -150,17 +171,18 @@ class OCSeeder extends Seeder
             ->update(['path' => DB::raw("REPLACE(path , 'catalog/', 'images/')")]);
 
 
+        // Set discount
         $data = DB::table('products')
-            ->join('category_product','products.id','category_product.product_id')
-            ->where('category_product.category_id',63)
+            ->join('category_product', 'products.id', 'category_product.product_id')
+            ->where('category_product.category_id', 63)
             ->get('id');
         $ids = [];
-        foreach ($data->all() as $i){
-            $ids[]=$i->id;
+        foreach ($data->all() as $i) {
+            $ids[] = $i->id;
         }
-        $s=DB::table('products')
+        DB::table('products')
             ->whereIn('id', $ids)
-            ->update(['discount'=>15]);
+            ->update(['discount' => 15]);
 
 
     }

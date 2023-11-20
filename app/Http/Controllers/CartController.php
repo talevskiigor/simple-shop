@@ -26,7 +26,9 @@ class CartController extends Controller
         }
 
         foreach ($cart->getContent() as $item) {
+
             $product = Product::find($item->id);
+
             if ($product->quantity <= 0) {
                 $cart->update($item->id, [
                     'quantity' => [
