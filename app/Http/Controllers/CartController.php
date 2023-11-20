@@ -69,14 +69,27 @@ class CartController extends Controller
         $product = Product::findOrFail($id);
 
         if ($product->quantity > 0) {
-            $cart = Cart::session($cartId)->add([
+            $item = [
                 'id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
                 'quantity' => 1,
                 'attributes' => [],
                 'associatedModel' => $product,
-            ]);
+            ];
+
+            if ( $product->discount) {
+                // Let's create first our condition instance
+                $saleCondition = new \Darryldecode\Cart\CartCondition(array(
+                    'name' => 'SALE 15%',
+                    'type' => 'sale',
+                    'value' => '-15%',
+                ));
+                $item['conditions']= $saleCondition;
+            }
+
+
+            $cart = Cart::session($cartId)->add($item);
             // prevent to always have one item
             $cart->update($product->id, [
                 'quantity' => [

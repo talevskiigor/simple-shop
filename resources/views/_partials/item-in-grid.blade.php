@@ -33,7 +33,7 @@
 
 
                 @if($item->quantity > 0)
-                    <a href="/product/{{$item->slug}}" class="btn btn-sm btn-outline-primary stretched-link">Види</a>
+                    <a href="/product/{{$item->slug}}" class=" btn btn-sm btn-outline-primary stretched-link">Види</a>
                 @else
 
                     <div href="#" class="text-danger"

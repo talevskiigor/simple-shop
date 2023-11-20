@@ -7,41 +7,45 @@
 
                 <i class="bi bi-cart4"></i> Кошничка</h5>
             <div class="card-body">
-{{--                <h5 class="card-title">Special title treatment</h5>--}}
-{{--                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>--}}
+                {{--                <h5 class="card-title">Special title treatment</h5>--}}
+                {{--                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>--}}
                 <table class="table  table-hover">
                     <thead>
                     <tr>
-                        <td>Р.Бр.</td>
-                        <td>Слика</td>
-                        <td>Име</td>
-                        <td>Кол.</td>
-                        <td class="text-end">Цена</td>
-                        <td class="text-end">Вкупно</td>
-                        <td></td>
+{{--                        <th scope="col">#</th>--}}
+                        <th scope="col">Слика</th>
+                        <th scope="col">Име</th>
+                        <th scope="col">Кол.</th>
+{{--                        <th scope="col" class="text-end">Цена</th>--}}
+                        <th scope="col" class="text-end">Попуст</th>
+                        <th scope="col" class="text-end">Вкупно</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
 
                     @foreach($cart->getContent() as $item)
 
-                        <tr
+                        <tr>
                             @if($item->quantity<=0)
-                            class="table-danger"
-                            rel="tooltip" data-bs-toggle="tooltip" data-bs-title="Избраниот продукт не е веќе на залиха. Јавете се за да проверите дали може да се нарача."
+                                class="table-danger"
+                                rel="tooltip" data-bs-toggle="tooltip" data-bs-title="Избраниот продукт не е веќе на
+                                залиха. Јавете се за да проверите дали може да се нарача."
                             @endif
-                        >
-                            <td>{{$loop->index + 1}}</td>
-                            <td><img src="{{  \App\Helpers\Image::get( $item->associatedModel->image,128) }}" style="width: 124px" class="img-fluid"
+                            >
+{{--                            <th scope="row">{{$loop->index + 1}}</th>--}}
+                            <td><img src="{{  \App\Helpers\Image::get( $item->associatedModel->image,128) }}"
+                                     style="width: 124px" class="img-fluid"
                                      alt="Responsive image"></td>
                             <td>
                                 {{$item->associatedModel->name}}<br>
-                            {{$item->associatedModel->model}} <small>({{$item->associatedModel->id}})</small>
+                                {{$item->associatedModel->model}} <small>({{$item->associatedModel->id}})</small>
                             </td>
                             <td>{{$item->quantity}}</td>
 
-                            <td class="text-end"> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($item->associatedModel->price) !!}
-                            <td class="text-end"> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($item->getPriceSum()) !!}
+{{--                            <td class="text-end"> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($item->associatedModel->price) !!}</td>--}}
+                            <td class="text-end">-{{$item->associatedModel->discount}}%</td>
+                            <td class="text-end"> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($item->getPriceSum()) !!}</td>
                             <td class="text-end">
                                 <form action='{{url('cart/' . $item->id)}}' method='post'>
                                     @csrf
@@ -52,19 +56,26 @@
                                     </button>
                                 </form>
                             </td>
-                            </td>
                         </tr>
+
                     @endforeach
                     </tbody>
                     <tfoot>
-                    <th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><strong>Вкупно</strong></td>
-                    <td><strong> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($cart->getTotal()) !!}</strong></td>
-                    </th>
+                    <tr>
+                        <td colspan="3" class="text-end">Вкупно</td>
+                        <td colspan="2" class="text-end text-danger"> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($cart->getSubTotalWithoutConditions()) !!}</td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="3" class="text-end">Попуст</td>
+                        <td colspan="2" class="text-end text-primary"> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($cart->getTotal() - $cart->getSubTotalWithoutConditions()) !!}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="text-end">За наплата</th>
+                        <th colspan="2" class="text-end text-success"> {!!  \App\Helpers\ShoppingCart::formatPriceAsText($cart->getTotal()) !!}</th>
+                    </tr>
+
+
                     </tfoot>
                 </table>
             </div>

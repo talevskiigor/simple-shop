@@ -10,7 +10,7 @@ class ShoppingCart
 
     public static function formatPriceAsText($price){
 
-        return html_entity_decode(number_format((float)$price,0,',','.') .' <small>oo</small> ден');
+        return html_entity_decode(number_format((float)$price,0,',','.') .'<small>.oo</small> <small>ден</small>');
     }
 
 }
