@@ -29,7 +29,14 @@ Route::group(['middleware' => ['web']], function () {
         return redirect(route('dashboard'));
     });
 
-    Route::get('update',function(){
+    Route::get('admin', function () {
+        return redirect(route('dashboard'));
+    });
+    Route::get('dashboard', function () {
+        return redirect(route('dashboard'));
+    });
+
+    Route::get('update', function () {
         $cmd = 'db:seed --class=OCSeeder --force';
         \Illuminate\Support\Facades\Artisan::call($cmd);
         return \Carbon\Carbon::now()->toString();
