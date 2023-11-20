@@ -150,7 +150,6 @@ class OCSeeder extends Seeder
         $items = DB::connection('oc')
             ->table('information_description')
             ->get();
-
         foreach ($items as $item) {
             $page = Page::findOrNew($item->information_id);
             $page->fill(
@@ -160,7 +159,7 @@ class OCSeeder extends Seeder
                     'slug' => Str::of($item->title)->slug(),
                     'body' => $item->description,
                 ]
-            );
+            )->save();
         }
 
 
