@@ -13,6 +13,7 @@ class ContactController extends Controller
      */
     public function index()
     {
+
         return view('helpers.contact-form');
     }
 
@@ -30,7 +31,8 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         Mail::to('info@forkids.mk')->send(new ContactRequested($request->all()));
-        return redirect()->back();
+        return view('mails.thanks');
+//        return redirect()->back();
     }
 
     /**
