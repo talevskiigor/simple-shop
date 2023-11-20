@@ -31,8 +31,8 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         Mail::to('info@forkids.mk')->send(new ContactRequested($request->all()));
-        return view('mails.thanks');
-//        return redirect()->back();
+
+        return redirect('/contact/thanks');
     }
 
     /**
@@ -40,7 +40,7 @@ class ContactController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('mails.thanks');
     }
 
     /**
