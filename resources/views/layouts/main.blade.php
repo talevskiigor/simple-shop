@@ -53,8 +53,9 @@
                        data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-shop"></i> Производи
                     </a>
+
                     <ul class="dropdown-menu">
-                        @foreach($categories as $category)
+                        @foreach($categories ?? [] as $category)
                             <li><a class="dropdown-item" href="/categories/{{$category->slug}}">{{$category->name}}</a>
                             </li>
                         @endforeach
@@ -78,7 +79,16 @@
                         class="badge rounded-pill bg-danger">{{\Cart::session(session(\App\Helpers\ShoppingCart::SHOPPING_CART_ID,Ramsey\Uuid\Uuid::uuid4()->toString()))->getTotalQuantity()}}</span>
                 </a>
                 @endif
+
             </form>
+            @if(Illuminate\Support\Facades\Auth::check())
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url('/admin')}}"><i class="fa-solid fa-gear"></i> Admin </a>
+                    </li>
+                </ul>
+            @endif
+
         </div>
     </div>
 </nav>
@@ -172,7 +182,7 @@
                                     <h6 class="text-uppercase fw-bold mb-4">
                                         Производи
                                     </h6>
-                                    @foreach($categories as $category)
+                                    @foreach($categories ?? [] as $category)
                                         <p>
                                         <a class="text-reset text-info" href="/categories/{{$category->slug}}">{{$category->name}}</a>
                                         </p>
@@ -186,7 +196,7 @@
                                     <h6 class="text-uppercase fw-bold mb-4">
                                         Корисни информации
                                     </h6>
-                                    @foreach($pages as $page)
+                                    @foreach($pages ?? [] as $page)
                                         <p>
                                             <a href="{{url('pages/'.$page->slug)}}" class="text-reset">{{$page->title}}</a>
                                         </p>

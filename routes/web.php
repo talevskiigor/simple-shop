@@ -31,6 +31,9 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/categories/{slug?}', function (string|null $slug) {
 
         $category = Category::with('product')->where('slug', $slug)->first();
+        if(!$category){
+            return view('404');
+        }
         $items = $category->product;
 
         return view('home', [

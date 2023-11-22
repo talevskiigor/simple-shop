@@ -31,10 +31,10 @@
         $("[rel='tooltip']").tooltip();
     });
 </script>
-<nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
+<nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary justify-content-end">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img src="{{  \App\Helpers\Image::get( '/logo/forkids.png',256) }}"  alt="Bootstrap" height="60">
+        <a class="navbar-brand" href="{{url('/admin')}}">
+            <img src="{{  \App\Helpers\Image::get( '/images/forkids-logo-h.png',256) }}"  alt="Bootstrap" height="60">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/"><i class="bi bi-house-door"></i> Home </a>
+                    <a class="nav-link text-success" href="/"><i class="bi bi-house-door"></i> Home </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#"><i class="bi bi-question-circle"></i> TODO</a>
@@ -51,16 +51,22 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle ацтиве" aria-current="page" href="#" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-shop"></i> TODO
+                        <i class="fa-solid fa-sitemap"></i> Catalog
                     </a>
                     <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/categories/TODO">TODO}}</a></li>
+                            <li><a class="dropdown-item" href="/categories/TODO"><i class="fa-solid fa-warehouse"></i> Products</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#"><i class="bi bi-question-circle"></i> TODO</a>
                 </li>
             </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-danger" href="{{url('/admin/logout')}}"><i class="fa-solid fa-person-walking-arrow-right"></i> Exit </a>
+                </li>
+            </ul>
+
 
         </div>
     </div>
