@@ -38,13 +38,7 @@ class ProductController extends Controller
      */
     public function show(string $slug)
     {
-
-//        $media = Media::first();
-        $item = Product::where('slug', $slug)->with('media')->with('category')->first();
-        //dd($item->media->first()->path);
-        return view('product.show',[
-            'item'=> $item
-        ]);
+//
     }
 
     /**

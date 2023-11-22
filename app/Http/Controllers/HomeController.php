@@ -13,15 +13,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $items = Product::all();
-
-
-//        return view('helpers.gallery',[
-//            'items' =>$items
-//        ]);
-        return view('home.index',[
-            'items' =>$items
-        ]);
+//        dd(1);
     }
 
     /**

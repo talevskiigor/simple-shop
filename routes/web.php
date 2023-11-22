@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\PageController;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 
@@ -15,24 +17,59 @@ use App\Http\Controllers\ProfileController;
 |
 */
 Route::group(['middleware' => ['web']], function () {
-    Route::resource('/', \App\Http\Controllers\HomeController::class);
-    Route::resource('/product', \App\Http\Controllers\ProductController::class);
-    Route::resource('/categories', \App\Http\Controllers\CategoryController::class);
-    Route::resource('/cart', \App\Http\Controllers\CartController::class);
-    Route::resource('/order', \App\Http\Controllers\OrderController::class);
-    Route::resource('/search', \App\Http\Controllers\SearchController::class);
 
-    Route::resource('/pages', \App\Http\Controllers\PageController::class);
+    Route::get('/', function () {
+
+        $items = Product::all();
+
+        return view('home', [
+            'items' => $items
+        ]);
+
+    });
+
+    Route::get('/categories/{slug?}', function (string|null $slug) {
+
+        $category = Category::with('product')->where('slug', $slug)->first();
+        $items = $category->product;
+
+        return view('home', [
+            'items' => $items
+        ]);
+
+    });
+
+    Route::get('/product/{slug?}', function (string|null $slug) {
+        $item = Product::where('slug', $slug)->with('media')->with('category')->first();
+        return view('product', [
+            'item' => $item
+        ]);
+
+    });
+
+    Route::get('search', function () {
+        $needed = \request()->get('find');
+        $items = Product::search($needed)->get();
+        return view('home', [
+            'items' => $items
+        ]);
+
+    });
+
+    Route::get('/page/{slug?}', function (string|null $slug) {
+        $page = \App\Models\Page::where('slug', $slug)->first();
+        return view('helpers.page', ['page' => $page]);
+
+    });
+    Route::resource('/order', \App\Http\Controllers\OrderController::class);
+    Route::resource('/cart', \App\Http\Controllers\CartController::class);
+
+
+
     Route::resource('/contact', \App\Http\Controllers\ContactController::class);
 
-    Route::get('login', function () {
-        return redirect(route('dashboard'));
-    });
 
     Route::get('admin', function () {
-        return redirect(route('dashboard'));
-    });
-    Route::get('dashboard', function () {
         return redirect(route('dashboard'));
     });
 
@@ -40,7 +77,6 @@ Route::group(['middleware' => ['web']], function () {
         $cmd = 'db:seed --class=OCSeeder --force';
         \Illuminate\Support\Facades\Artisan::call($cmd);
         return \Carbon\Carbon::now()->toString();
-        return redirect('/');
     });
 
 
@@ -77,16 +113,7 @@ Route::group(['middleware' => ['web']], function () {
 });
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->prefix('admin')->name('dashboard');
 
-Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::resource('pages', PageController::class);
-});
 
 require __DIR__ . '/auth.php';
+require __DIR__ . '/admin.php';

@@ -12,12 +12,7 @@ class SearchController extends Controller
      */
     public function index()
     {
-        $needed = \request()->get('find');
-        $items = Product::search($needed)->get();
-        return view('home.index',[
-            'items' =>$items
-        ]);
-
+     //
     }
 
     /**

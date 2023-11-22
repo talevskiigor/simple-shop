@@ -21,9 +21,6 @@ class CartController extends Controller
         $cartId = session(ShoppingCart::SHOPPING_CART_ID, Uuid::uuid4()->toString());
         $cart = Cart::session($cartId);
 
-        if ($cart->isEmpty()) {
-            return view('cart.not-found');
-        }
 
         foreach ($cart->getContent() as $item) {
 
@@ -36,11 +33,10 @@ class CartController extends Controller
                         'value' => 0
                     ],
                 ]);
-//                dd($product->id);
             }
         }
 
-        return view('cart.index', [
+        return view('cart', [
             'cart' => $cart,
             'cartId' => $cartId,
         ]);
@@ -80,14 +76,14 @@ class CartController extends Controller
                 'associatedModel' => $product,
             ];
 
-            if ( $product->discount) {
+            if ($product->discount) {
                 // Let's create first our condition instance
                 $saleCondition = new \Darryldecode\Cart\CartCondition(array(
                     'name' => 'SALE 15%',
                     'type' => 'sale',
                     'value' => '-15%',
                 ));
-                $item['conditions']= $saleCondition;
+                $item['conditions'] = $saleCondition;
             }
 
 

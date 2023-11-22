@@ -38,9 +38,7 @@ class PageController extends Controller
      */
     public function show($slug)
     {
-        $page = \App\Models\Page::where('slug', $slug)->first();
-        return view('helpers.page', ['page' => $page]);
-
+     //
     }
 
     /**
