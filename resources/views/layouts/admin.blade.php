@@ -28,6 +28,7 @@
 <body>
 <script type="text/javascript">
     $(function () {
+        $("[data-bs-toggle='tooltip']").tooltip();
         $("[rel='tooltip']").tooltip();
     });
 </script>
