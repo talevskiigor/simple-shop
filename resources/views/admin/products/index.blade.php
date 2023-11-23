@@ -8,27 +8,29 @@
 
     <div class="row">
         <div class="col col-sm-12">
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover table-bordered">
                 <thead>
-                <tr>
+                <tr class="table-secondary">
                     <th scope="row">ID</th>
                     <th scope="row">Image</th>
                     <th scope="row">Name</th>
+                    <th scope="row">Model</th>
                     <th scope="row">Quantity</th>
                     <th scope="row">Discount</th>
                     <th scope="row">Price</th>
-                    <th></th>
+                    <th scope="row">Action</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($products as $item)
                     <tr @if(!$item->quantity) class="table-danger" @endif>
                         <td scope="row">{{$item->id}}</td>
-                        <td><img src="{{\App\Helpers\Image::get($item->image,128)}}"></td>
-                        <td>{{$item->name}} <br>{{$item->model}}</td>
-                        <td>{{$item->quantity}}</td>
-                        <td>{{$item->discount?$item->discount.'%':''}}</td>
-                        <td class="text-end">{{number_format($item->price,2)}}</td>
+                        <td><img src="{{\App\Helpers\Image::get($item->image,64)}}"></td>
+                        <td>{{$item->name}}</td>
+                        <td nowrap="">{{$item->model}}</td>
+                        <td class="text-end">{{$item->quantity}}</td>
+                        <td class="text-end">{{$item->discount?$item->discount.'%':''}}</td>
+                        <td nowrap="" class="text-end">{{number_format($item->price,2)}}</td>
                         <td>
                             <div class="row">
                                 <div class="col col-sm-4">
@@ -43,7 +45,7 @@
                                     <a class="btn btn-sm btn-primary"
                                        data-bs-toggle="tooltip" data-bs-placement="top"
                                        data-bs-title="Edit item..."
-                                       href="#"><i class="fa-solid fa-pen-to-square"></i></a>
+                                       href="{{url('/admin/product/'.$item->id.'/edit')}}"><i class="fa-solid fa-pen-to-square"></i></a>
 
                                 </div>
                                 <div class="col col-sm-4">

@@ -54,6 +54,7 @@ class Product extends Model
 
     use Searchable;
 
+    protected $guarded = [];
     /**
      * Get the indexable data array for the model.
      *

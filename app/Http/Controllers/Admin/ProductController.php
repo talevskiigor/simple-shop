@@ -51,7 +51,11 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+
+//dd($product->toArray());
+        return view('admin.products.edit',[
+            'item'=>$product,
+        ]);
     }
 
     /**
@@ -59,7 +63,9 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        $product->fill($request->all(['name','description']));
+        $product->save();
+        return redirect('/admin/product');
     }
 
     /**
