@@ -32,7 +32,7 @@ Route::group(['middleware' => ['web']], function () {
 
         $category = Category::with('product')->where('slug', $slug)->first();
         if(!$category){
-            return view('404');
+            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
         }
         $items = $category->product;
 

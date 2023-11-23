@@ -13,6 +13,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth','verified']], functio
 //    });
     //->middleware(['auth', 'verified'])->prefix('admin')->name('dashboard');
 
+    Route::resource('/product', \App\Http\Controllers\Admin\ProductController::class);
+
+    Route::resource('/orders', \App\Http\Controllers\Admin\OrdersController::class);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -21,7 +24,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth','verified']], functio
 
 
     Route::resource('/categories', \App\Http\Controllers\CategoryController::class);
-    Route::resource('/product', \App\Http\Controllers\ProductController::class);
     Route::resource('/search', \App\Http\Controllers\SearchController::class);
     Route::resource('/pages', \App\Http\Controllers\PageController::class);
 });

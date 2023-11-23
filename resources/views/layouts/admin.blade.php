@@ -54,11 +54,11 @@
                         <i class="fa-solid fa-sitemap"></i> Catalog
                     </a>
                     <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/categories/TODO"><i class="fa-solid fa-warehouse"></i> Products</a></li>
+                            <li><a class="dropdown-item" href="/admin/product"><i class="fa-solid fa-warehouse"></i> Products</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bi bi-question-circle"></i> TODO</a>
+                    <a class="nav-link" href="/admin/orders"><i class="fa-solid fa-money-bill-transfer"></i> Orders</a>
                 </li>
             </ul>
             <ul class="navbar-nav">
