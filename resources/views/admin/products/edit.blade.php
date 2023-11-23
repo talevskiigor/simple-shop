@@ -24,7 +24,7 @@
 @endsection
 
 @section('content')
-    <form class="delete{{$item->id}}"
+    <form class="delete{{$item->id}} "
           action='{{url('/admin/product/' . $item->id)}}' method='post'>
         @csrf
         @method('patch')
@@ -44,15 +44,82 @@
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+<div class="row">
+    <div class="col col-sm-12">
+        @if ($errors->any())
+            <div class="alert alert-danger mt-5">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
+
+    </div>
+</div>
             <div class="row">
-                <div class="col col-sm-12">
+                <div class="col col-sm-8">
+
+
                     <div class="mt-5">
                         <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{$item->name}}">
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{$item->name}}">
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        @error('name')
+                        <div id="validationServer05Feedback" class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+
+                        @enderror
+
                     </div>
 
                 </div>
+                <div class="col col-sm-4">
+                    <div class="mt-5">
+                        <label for="model" class="form-label">Model</label>
+                        <input type="text" class="form-control is-invalid" id="model" name="model" value="{{$item->model}}">
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div id="validationServer05Feedback" class="invalid-feedback">
+                            Please provide a valid zip.
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col col-sm-4">
+                    <div class="mt-5">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="price" name="price" value="{{old('price',$item->price)}}">
+                    </div>
+
+                </div>
+                <div class="col col-sm-4">
+                    <div class="mt-5">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" value="{{old('quantity', $item->quantity)}}">
+                    </div>
+
+                </div>
+                <div class="col col-sm-4">
+
+                        <label for="discount" class="form-label">Discount</label>
+                    <div class="input-group has-validation">
+                        <input type="number" class="form-control" id="discount" name="discount" aria-describedby="validationServer05Feedback" required value="{{old('discount',$item->discount)}}">
+                        <div id="validationServer05Feedback" class="invalid-feedback">
+                            Please provide a valid zip.
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
         <div class="tab-pane fade" id="description-tab-pane" role="tabpanel" aria-labelledby="description-tab" tabindex="0">
@@ -77,6 +144,8 @@
 
             </div>
         </div>
+
+
     </form>
 @endsection
 
