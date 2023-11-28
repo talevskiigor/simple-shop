@@ -193,6 +193,7 @@ return [
         'Cart' => Darryldecode\Cart\Facades\CartFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Share' => Jorenvh\Share\ShareFacade::class,
+        'Img' => \App\Helpers\Image::class,
     ])->toArray(),
 
 ];

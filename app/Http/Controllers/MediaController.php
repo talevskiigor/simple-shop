@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Image;
 use App\Http\Requests\StoreMediaRequest;
 use App\Http\Requests\UpdateMediaRequest;
 use App\Models\Media;
+use Illuminate\Support\Facades\File;
 
 class MediaController extends Controller
 {
@@ -13,7 +15,32 @@ class MediaController extends Controller
      */
     public function index()
     {
-        //
+        $mediaDir = public_path('media/images');
+
+        $files = array_diff(scandir($mediaDir), array('..', '.','.gitignore'));
+        $data = [];
+        foreach ($files as $file){
+            try {
+                $fileObject = new \SplFileObject($mediaDir . DIRECTORY_SEPARATOR . $file);
+                // dd($fileObject->getFileInfo());
+                if(Image::isImage($fileObject->getPathname())){
+                    $data[] = $fileObject;
+                }else {
+//                    dump($fileObject);
+                }
+
+//                dump($data[0]->getPathname());
+//                Image::get($data[0]->getPathname());
+//                dd($data[0]->getPath());
+            }catch (\Throwable $e){
+                // Silent for now.
+            }
+
+        }
+//        dd($data);
+        return view('admin.media.index',[
+            'files'=>$data
+        ]);
     }
 
     /**

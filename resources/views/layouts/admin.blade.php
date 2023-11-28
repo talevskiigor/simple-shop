@@ -7,23 +7,12 @@
     <title>For Kids</title>
     <script src="https://cdn.tiny.cloud/1/igiumwfn853nug6696l525uqn8vng1ivpgi1qru02lo4kv22/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-{{--        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>--}}
-
-{{--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"--}}
-{{--            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"--}}
-{{--            crossorigin="anonymous"></script>--}}
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-            crossorigin="anonymous"></script>
     <!-- Place the first <script> tag in your HTML's <head> -->
 
-
-
+    @vite(['resources/js/app.js', 'resources/scss/app.scss'])
     <script src="{{ asset('js/share.js') }}"></script>
     <script src="https://kit.fontawesome.com/d770150ff4.js" crossorigin="anonymous"></script>
 </head>
@@ -51,6 +40,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#"><i class="bi bi-question-circle"></i> TODO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('media.index')}}"><i class="fa-regular fa-images"></i> Media</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle ацтиве" aria-current="page" href="#" role="button"

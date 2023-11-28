@@ -89,6 +89,7 @@ Route::group(['middleware' => ['web']], function () {
         $q = request('q', 100);
 
         $file = public_path('media/' . $slug);
+        $originFile = $file;
         $newExtension = 'webp';
 
         $name = basename($file, '.' . explode('.', $file)[1],);
@@ -97,14 +98,19 @@ Route::group(['middleware' => ['web']], function () {
         if (File::exists($newFile)) {
             $img = Image::make($newFile);
         } else {
-            $d = dirname($newFile);
-            if (!File::isDirectory($d)) {
-                File::makeDirectory($d, 777, true);
+            try {
+                $d = dirname($newFile);
+                if (!File::isDirectory($d)) {
+                    File::makeDirectory($d, 777, true);
+                }
+                $img = Image::make($file)->resize($w, $h, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $img->save($newFile, 50, $newExtension);
+            }catch (Throwable $e){
+                return redirect(url('media/' . $slug));
+                return (Image::make($originFile))->response();
             }
-            $img = Image::make($file)->resize($w, $h, function ($constraint) {
-                $constraint->aspectRatio();
-            });
-            $img->save($newFile, 50, $newExtension);
 
         }
         return $img->response();

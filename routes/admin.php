@@ -7,6 +7,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth','verified']], functio
 
 
     Route::resource('/', \App\Http\Controllers\HomeController::class);
+    Route::resource('/media', \App\Http\Controllers\MediaController::class);
 
 //    Route::get('/dashboard', function () {
 //        return view('dashboard');
