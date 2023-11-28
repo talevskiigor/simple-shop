@@ -62,7 +62,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        $product->fill($request->all(['name','model','description']));
+        $product->fill($request->all(['name','description','model','price','discount','quantity']));
         $product->save();
         return redirect('/admin/product');
     }
