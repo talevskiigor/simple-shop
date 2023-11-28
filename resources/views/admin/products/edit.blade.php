@@ -118,7 +118,7 @@
 
                 <div class="row">
                     <div class="col col-sm-12">
-                        <textarea>{!! html_entity_decode($item->description) !!}</textarea>
+                        <textarea name="description" id="description" >{!! html_entity_decode($item->description) !!}</textarea>
                     </div>
                 </div>
             </div>
