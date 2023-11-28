@@ -1,6 +1,9 @@
 import './bootstrap';
 
 // import 'tinymce/tinymce';
+// import tinymce from 'tinymce/tinymce';
+// import 'tinymce/plugins';
+
 // import 'tinymce/skins/ui/oxide/skin.min.css';
 // import 'tinymce/skins/content/default/content.min.css';
 // import 'tinymce/skins/content/default/content.css';
