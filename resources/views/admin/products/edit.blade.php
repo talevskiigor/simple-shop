@@ -75,6 +75,14 @@
                     </div>
                 </div>
 
+
+                <div class="row p-3">
+                    <div class="col-md-12">
+                            <x-tail-image-picker  :value="$item->name" label="Name" name="name" id="name" ></x-tail-image-picker>
+                    </div>
+                </div>
+
+
                 <div class="row p-3">
                     <div class="col-md-12">
                             <x-tail-forms-input-text  :value="$item->name" label="Name" name="name" id="name" ></x-tail-forms-input-text>
