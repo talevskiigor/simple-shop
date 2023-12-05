@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
 
 /**
@@ -70,7 +70,8 @@ class Product extends Model
 
         return [
             'id' => (int) $this->id,
-            'name' => $this->name,
+            'name' => Str::ascii( $this->name),
+            'description' => Str::ascii( $this->description),
             'price' => (float) $this->price,
         ];
     }

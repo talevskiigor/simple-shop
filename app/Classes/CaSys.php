@@ -10,7 +10,7 @@ class CaSys
 
     public static function get(Order $order): array
     {
-        $pass = 'TEST_PASS';
+        // $pass = 'TEST_PASS';
 
         $pass = 'SmZfYVa9vK2wwFCU4hJSZQ6mTBMRthBA';
 

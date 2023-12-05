@@ -51,8 +51,9 @@ Route::group(['middleware' => ['web']], function () {
     });
 
     Route::get('search', function () {
-        $needed = \request()->get('find');
-        $items = Product::search($needed)->get();
+        $needed =  \request()->get('find');
+
+        $items = Product::search(Str::ascii($needed))->get();
         return view('home', [
             'items' => $items
         ]);
