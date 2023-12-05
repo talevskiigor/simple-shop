@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Database\Factories\PageFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Termwind\Components\Raw;
 
@@ -34,8 +35,9 @@ class OCSeeder extends Seeder
         $admin = User::findOrNew(1);
         $admin->name = 'Admin';
         $admin->email = 'admin@domain.tld';
-        $admin->password = '$2y$12$mcDk87oJeR6hE2BVPRVEVOXKNWh7PnXTNgt1PnGUwcfz7jcKLaASu';
+        $admin->password =  Hash::make( 'n1mdak0rg@9814K1D5');
         $admin->save();
+
 
         // ------------------
         $img_product = DB::connection('oc')
@@ -168,6 +170,7 @@ class OCSeeder extends Seeder
 
         DB::table('media')
             ->update(['path' => DB::raw("REPLACE(path , 'catalog/', 'images/')")]);
+
 
 
         // Set discount

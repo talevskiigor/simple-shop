@@ -13,6 +13,7 @@
             <div  class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3" >
                 <div class="card h-100" >
                     <div class="card-header">
+                        {!! dump($file) !!}
                        <small> {{$file->getBasename()}}</small>
                     </div>
                     <div class="card-body text-center ">
