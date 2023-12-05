@@ -60,7 +60,7 @@ Route::group(['middleware' => ['web']], function () {
 
     });
 
-    Route::get('/page/{slug?}', function (string|null $slug) {
+    Route::get('/pages/{slug?}', function (string|null $slug) {
         $page = \App\Models\Page::where('slug', $slug)->first();
         return view('helpers.page', ['page' => $page]);
 
