@@ -12,6 +12,8 @@ class CaSys
     {
         $pass = 'TEST_PASS';
 
+        $pass = 'SmZfYVa9vK2wwFCU4hJSZQ6mTBMRthBA';
+
         $price = (int)($order->total * 100);
 //        $price = 100;
 
