@@ -29,14 +29,12 @@
                     @csrf
                     <button type="submit" class="btn btn-outline-primary btn-lg"><i class="bi bi-cart-plus"></i> Додај во корпа</button>
                 </form>
-{{-- <div class="h1">{!!
-Share::page('http://jorenvanhocht.be')
-    ->facebook()
-	->twitter()
-	->linkedin('Extra linkedin summary can be passed here')
-	->whatsapp();
-!!}
-</div> --}}
+{{--<div class="row" style="list-style-type: none">{!!--}}
+{{--//Share::page(url('/product/' . $item->slug))--}}
+{{--Share::page('https://forkids.mk/product/' . $item->slug, null, ['title'=>'sss ssksk k'], '<h1>', '</h1>')--}}
+{{--    ->facebook();--}}
+{{--!!}--}}
+{{--</div>--}}
             </div>
         </div>
 
