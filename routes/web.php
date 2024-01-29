@@ -48,7 +48,7 @@ Route::group(['middleware' => ['web']], function () {
             'item' => $item
         ]);
 
-    });
+    })->name('product.show');
 
     Route::get('search', function () {
         $needed =  \request()->get('find');

@@ -13,6 +13,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Sitemap\Sitemap;
 use Termwind\Components\Raw;
 
 class OCSeeder extends Seeder
@@ -171,6 +172,12 @@ class OCSeeder extends Seeder
         DB::table('media')
             ->update(['path' => DB::raw("REPLACE(path , 'catalog/', 'images/')")]);
 
+        Sitemap::create(env('APP_URL'))
+            ->add(url(''))
+            ->add(url('contact'))
+            ->add(Page::all())
+            ->add(Product::all())
+            ->writeToDisk('public', 'sitemap.xml');
 
 
 //        // Set discount

@@ -1,2 +1,7 @@
+User-agent: Googlebot
+Disallow: /admin/
+
 User-agent: *
-Disallow:
+Allow: /
+
+Sitemap: https://forkids.mk/sitemap.xml
