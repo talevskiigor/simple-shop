@@ -52,7 +52,7 @@
                 All rights reserved.<br>
                 Copyright © {{\Carbon\Carbon::now()->year}} <a class="text-reset fw-bold"
                                                                href="https://forkids.mk/">ForKids.MK</a><br>
-                Powered by: <a class="text-reset fw-bold" href=mailto:igor.talevslo+forkids@gmail.com">I.T.</a>
+                Powered by: <a class="text-reset fw-bold" href=mailto:igor.talevski+forkids@gmail.com">I.T.</a>
             </div>
             <!-- Copyright -->
 
