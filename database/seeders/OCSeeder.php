@@ -173,18 +173,18 @@ class OCSeeder extends Seeder
 
 
 
-        // Set discount
-        $data = DB::table('products')
-            ->join('category_product', 'products.id', 'category_product.product_id')
-            ->where('category_product.category_id', 63)
-            ->get('id');
-        $ids = [];
-        foreach ($data->all() as $i) {
-            $ids[] = $i->id;
-        }
-        DB::table('products')
-            ->whereIn('id', $ids)
-            ->update(['discount' => 15]);
+//        // Set discount
+//        $data = DB::table('products')
+//            ->join('category_product', 'products.id', 'category_product.product_id')
+//            ->where('category_product.category_id', 63)
+//            ->get('id');
+//        $ids = [];
+//        foreach ($data->all() as $i) {
+//            $ids[] = $i->id;
+//        }
+//        DB::table('products')
+//            ->whereIn('id', $ids)
+//            ->update(['discount' => 15]);
 
 
     }
