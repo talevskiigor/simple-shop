@@ -20,7 +20,7 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/', function () {
 
-        $items = Product::all();
+        $items = Product::where('quantity','>',0)->get();
 
         return view('home', [
             'items' => $items
@@ -31,6 +31,11 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/categories/{slug?}', function (string|null $slug) {
 
         $category = Category::with('product')->where('slug', $slug)->first();
+
+        $category = Category::with(['product' => function ($query) {
+            $query->where('quantity','>',0);
+        }])->where('slug', $slug)->first();
+
         if(!$category){
             throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
         }
@@ -90,12 +95,14 @@ Route::group(['middleware' => ['web']], function () {
         $q = request('q', 100);
 
         $file = public_path('media/' . $slug);
+        dump($file);
         $originFile = $file;
         $newExtension = 'webp';
 
         $name = basename($file, '.' . explode('.', $file)[1],);
         $newFile = sprintf('%s/%s-%sX_%s_%s.%s', dirname($file), $name, $w, $h, $q, $newExtension);
         $newFile = str_replace('/var/www/html/public/media', '/var/www/html/public/cached-media', $newFile);
+        dump($newFile);
         if (File::exists($newFile)) {
             $img = Image::make($newFile);
         } else {

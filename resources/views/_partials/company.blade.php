@@ -13,7 +13,7 @@
 
 
 <p><i class="fas fa-envelope me-3"></i> info@forkids.mk </p>
-<p><i class="fas fa-phone me-3"></i>+ 389 78 349 644</p>
+<p><i class="fas fa-phone me-3"></i>+ 389 78 642 662</p>
 <p class="text-muted">
     Ж-ск: 200004127389762 <a href="https://www.stb.com.mk/" class="text-reset" target="_blank">СTБ</a><br>
     ЕМБС: 7731482<br>
