@@ -16,6 +16,7 @@ return [
                  */
                 'include' => [
                     base_path(),
+                    '/var/www/forkids.mk/image/catalog',
                 ],
 
                 /*
