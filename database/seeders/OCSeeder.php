@@ -179,10 +179,10 @@ class OCSeeder extends Seeder
             ->add(Product::all())
             ->writeToDisk('public', 'sitemap.xml');
 
-        File::copyDirectory(
-            "/var/www/forkids.mk/image/catalog",
-            "/var/www/html/simple-shop/public/media/images"
-        );
+//        File::copyDirectory(
+//            "/var/www/forkids.mk/image/catalog",
+//            "/var/www/html/simple-shop/public/media/images"
+//        );
 
 
 //        // Set discount

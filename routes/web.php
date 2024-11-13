@@ -95,27 +95,26 @@ Route::group(['middleware' => ['web']], function () {
         $q = request('q', 100);
 
         $file = public_path('media/' . $slug);
-        dump($file);
-        $originFile = $file;
         $newExtension = 'webp';
 
         $name = basename($file, '.' . explode('.', $file)[1],);
         $newFile = sprintf('%s/%s-%sX_%s_%s.%s', dirname($file), $name, $w, $h, $q, $newExtension);
-        $newFile = str_replace('/var/www/html/public/media', '/var/www/html/public/cached-media', $newFile);
-        dump($newFile);
+        $newFile = str_replace('media', 'cached-media', $newFile);
+//        dump($newFile);
         if (File::exists($newFile)) {
             $img = Image::make($newFile);
         } else {
             try {
                 $d = dirname($newFile);
                 if (!File::isDirectory($d)) {
-                    File::makeDirectory($d, 777, true);
+                    File::makeDirectory($d,493,true);
                 }
                 $img = Image::make($file)->resize($w, $h, function ($constraint) {
                     $constraint->aspectRatio();
                 });
                 $img->save($newFile, 50, $newExtension);
             }catch (Throwable $e){
+                Log::error($e);
                 return redirect(url('media/' . $slug));
                 return (Image::make($originFile))->response();
             }

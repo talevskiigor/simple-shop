@@ -25,13 +25,13 @@
                 @foreach($products as $item)
                     <tr @if(!$item->quantity) class="table-danger" @endif>
                         <td scope="row">{{$item->id}}</td>
-                        <td><img src="{{\App\Helpers\Image::get($item->image,64)}}"></td>
+                        <td><img class="img-thumbnail" src="{{\App\Helpers\Image::get($item->image,92)}}"></td>
                         <td>{{$item->name}}</td>
                         <td nowrap="">{{$item->model}}</td>
                         <td class="text-end">{{$item->quantity}}</td>
                         <td class="text-end">{{$item->discount?$item->discount.'%':''}}</td>
                         <td nowrap="" class="text-end">{{number_format($item->price,2)}}</td>
-                        <td>
+                        <td nowrap="">
                             <div class="row">
                                 <div class="col col-sm-4">
                                     <a class="btn btn-sm btn-success"

@@ -69,7 +69,7 @@
 </nav>
 
 <hr class="hr" style="margin-top: 86px">
-<div class="container">
+<div class="container-fluid">
     {{-- nav bar END   --}}
     @yield('content')
 </div>
