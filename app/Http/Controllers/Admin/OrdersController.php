@@ -13,7 +13,7 @@ class OrdersController extends Controller
      */
     public function index()
     {
-        $items = Order::orderBy('updated_at','DESC')->get();
+        $items = Order::with('paymentAttempts')->orderBy('updated_at','DESC')->get();
         foreach ($items as $item){
             $item->items = json_decode($item->items);
         }

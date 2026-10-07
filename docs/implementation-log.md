@@ -69,3 +69,13 @@ Actual rendered card titles match for `трицикл` / `tricikl` / `ТРИЦИ
 Deployment lessons: the packaged app root must be mode 0755, while the archive and recovery data remain private. `scripts/package-release` now enforces that mode. In an SSH heredoc, noninteractive `docker compose exec -T` commands must receive `</dev/null` unless intentionally reading input, otherwise they may consume the remaining deployment script. Both issues were corrected and staging returned to service. The preceding feature app is additionally retained at `/srv/forkids-staging/backups/20261007-post-feature-0b96a50/app`; the final follow-up did not change the database schema or catalog data.
 
 Remaining work is owner acceptance, replacement/recovery of the ten missing originals, provider-approved payment hardening/verification, and a separately planned production cutover. Customer accounts/social login and durable anonymous carts remain later phases.
+
+### Payment testing, mail copies, backups and suggestions — October 7, 2026 UTC
+
+Owner authorization extends staging to real-card one-denar tests, application mail copies to `igor.talevski+forkids@gmail.com`, scheduled backups and live navigation suggestions. See [the operating guide](payments-backups-search.md). Earlier blanket sandbox-payment/mail/scheduler statements describe the previous release. Production remains unchanged.
+
+Implemented immutable payment attempts, optional one-denar total override without catalog/order-price changes, environment-owned merchant credentials, signed return verification, duplicate handling and explicit admin reconciliation. The documented bank response does not independently sign result routing; returns do not auto-fulfill orders. Test confirmations do not decrement stock. Normal admin-confirmed payments update stock atomically once.
+
+Global mail BCC preserves recipients and avoids duplicates. Backup jobs are explicit, isolated and encrypted on staging with a dedicated host cron/retention configuration. Live suggestions support Cyrillic/Latin, thumbnails, six-result popup, keyboard selection/completion and stale-request cancellation. Local DB-only backup execution passed. Deployment, provider-form and encrypted restore evidence follow after verification.
+
+Local verification: 74 tests / 386 assertions pass; route compilation and Composer strict validation pass. Frontend build succeeds. Browser QA confirmed six Cyrillic/Latin suggestions, all-results link, popup layout and Down/Tab name completion. The local forward migration and database-only backup both completed without changing catalog data.

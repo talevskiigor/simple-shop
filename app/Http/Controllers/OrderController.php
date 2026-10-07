@@ -71,13 +71,25 @@ class OrderController extends Controller
         $data['items'] = $cart->getContent()->toJson();
         $data['total'] = $cart->getTotal();
         $order = Order::where('finished', false)->find($request->session()->get(ShoppingCart::ORDER_ID));
+        if ($order && $order->paymentAttempts()->exists()) {
+            // Keep any order already sent to the bank immutable. Corrections use a new order.
+            foreach ($data as $key => $value) {
+                $matches = $key === 'total'
+                    ? (int) round((float) $order->total * 100) === (int) round((float) $value * 100)
+                    : (string) $order->$key === (string) $value;
+                if (!$matches) { $order = null; break; }
+            }
+        }
         $order = $order ?? new Order;
         $order->fill($data)->save();
         $request->session()->put(ShoppingCart::ORDER_ID, $order->id);
+        $gateway = app(\App\Services\Payments\Cpay::class);
+        $attempt = $gateway->enabled() ? $gateway->prepare($order) : null;
 
         return view('order.confirm', [
             'cart' => $cart,
-            'order' => $order
+            'order' => $order,
+            'attempt' => $attempt,
         ]);
 
     }

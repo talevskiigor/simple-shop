@@ -79,9 +79,14 @@ src="https://www.facebook.com/tr?id=1766783437487841&ev=PageView&noscript=1"
                     <a class="nav-link" href="{{url('contact')}}" ><i class="bi bi-megaphone"></i> Контакт</a>
                 </li>
             </ul>
-            <form action="{{url('search')}}" class="d-flex" method="GET" role="search">
-                <input class="form-control me-2" value="{{request()->get('find')}}" id="find" name="find" type="search" placeholder="Што сакате да најдете?" aria-label="Search">
+            <form action="{{url('search')}}" class="d-flex store-search" method="GET" role="search" data-live-search data-suggestions="{{ url('search/suggest') }}">
+                <input class="form-control me-2" value="{{request()->get('find')}}" id="find" name="find" type="search" maxlength="200" placeholder="Што сакате да најдете?" aria-label="Search" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="search-results">
                 <button class="btn btn-outline-primary" type="submit">Барај</button>
+                <div class="search-popup shadow" data-search-popup hidden>
+                    <div class="small text-muted px-3 py-2" data-search-status role="status" aria-live="polite"></div>
+                    <div id="search-results" role="listbox" aria-label="Предлози за производи"></div>
+                    <a class="d-block px-3 py-2 border-top" data-search-all href="{{ url('search') }}">Прикажи ги сите резултати</a>
+                </div>
             </form>
             <form class="d-flex form-inline">
                 @if(\Cart::session(session(\App\Helpers\ShoppingCart::SHOPPING_CART_ID,Ramsey\Uuid\Uuid::uuid4()->toString()))->isEmpty())

@@ -2,12 +2,16 @@
 
 return [
 
+    'enabled' => (bool) env('BACKUPS_ENABLED', false),
+    'time' => env('BACKUP_TIME', '03:15'),
+    'timezone' => env('BACKUP_TIMEZONE', 'Europe/Skopje'),
+
     'backup' => [
         /*
          * The name of this application. You can use this name to monitor
          * the backups.
          */
-        'name' => '_backups/forkids',
+        'name' => env('BACKUP_NAME', 'forkids'),
 
         'source' => [
             'files' => [
@@ -31,7 +35,6 @@ return [
                     base_path('vendor'),
                     base_path('node_modules'),
                     public_path('cached-media'),
-                    public_path('build'),
                 ],
 
                 /*
@@ -159,10 +162,7 @@ return [
             /*
              * The disk names on which the backups will be stored.
              */
-            'disks' => [
-                'local',
-                'google',
-            ],
+            'disks' => array_filter(explode(',', env('BACKUP_DISKS', 'backups'))),
         ],
 
         /*
@@ -221,7 +221,7 @@ return [
         'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
 
         'mail' => [
-            'to' => 'igor.talevski@gmail.com',
+            'to' => env('BACKUP_NOTIFICATION_EMAIL', 'igor.talevski+forkids@gmail.com'),
 
             'from' => [
                 'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
@@ -264,11 +264,11 @@ return [
      */
     'monitor_backups' => [
         [
-            'name' => env('APP_NAME', 'laravel-backup'),
-            'disks' => ['local'],
+            'name' => env('BACKUP_NAME', 'forkids'),
+            'disks' => array_filter(explode(',', env('BACKUP_DISKS', 'backups'))),
             'health_checks' => [
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 5000,
+                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 2,
+                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 8500,
             ],
         ],
 
@@ -277,8 +277,8 @@ return [
             'name' => 'name of the second app',
             'disks' => ['local', 's3'],
             'health_checks' => [
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 5000,
+                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 2,
+                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 8500,
             ],
         ],
         */
@@ -307,33 +307,33 @@ return [
              * of that day will be kept. Older backups within the same day will be removed.
              * If you create backups only once a day, no backups will be removed yet.
              */
-            'keep_daily_backups_for_days' => 16,
+            'keep_daily_backups_for_days' => 14,
 
             /*
              * After the "keep_daily_backups_for_days" period is over, the most recent backup
              * of that week will be kept. Older backups within the same week will be removed.
              * If you create backups only once a week, no backups will be removed yet.
              */
-            'keep_weekly_backups_for_weeks' => 8,
+            'keep_weekly_backups_for_weeks' => 4,
 
             /*
              * After the "keep_weekly_backups_for_weeks" period is over, the most recent backup
              * of that month will be kept. Older backups within the same month will be removed.
              */
-            'keep_monthly_backups_for_months' => 4,
+            'keep_monthly_backups_for_months' => 2,
 
             /*
              * After the "keep_monthly_backups_for_months" period is over, the most recent backup
              * of that year will be kept. Older backups within the same year will be removed.
              */
-            'keep_yearly_backups_for_years' => 2,
+            'keep_yearly_backups_for_years' => 0,
 
             /*
              * After cleaning up the backups remove the oldest backup until
              * this amount of megabytes has been reached.
              * Set null for unlimited size.
              */
-            'delete_oldest_backups_when_using_more_megabytes_than' => 3000,
+            'delete_oldest_backups_when_using_more_megabytes_than' => 8000,
         ],
 
         /*

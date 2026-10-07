@@ -1,68 +1,20 @@
 <?php
-
 namespace App\Http\Controllers;
-
-use App\Helpers\ShoppingCart;
-use App\Models\Order;
-use App\Models\Product;
-use Cart;
+use App\Models\PaymentAttempt;
+use App\Services\Payments\Cpay;
 use Illuminate\Http\Request;
-use Ramsey\Uuid\Uuid;
-
-class BankController extends Controller
-{
-    public function ok(Request $request)
-    {
-
-        $ref = $request->get('cPayPaymentRef');
-        $order = Order::find($request->get('Details2'));
-        $order->bank_ref = $ref;
-        $order->finished=1;
-        $order->save();
-        $items = [];
-        foreach (json_decode($order->items) as $item){
-            $items[] = $item;
-            if($product = Product::find($item->id)){
-                $product->quantity = $product->quantity - 1;
-                $product->save();
-            }
-        }
-
-
-        return view('bank.ok',[
-            'order'=>$order,
-            'items'=>$items,
-            ]);
-
-
-        dd($request->all());
+class BankController extends Controller {
+    public function ok(Request $request) { return $this->receive($request, true); }
+    public function fail(Request $request) { return $this->receive($request, false); }
+    private function receive(Request $request, bool $success) {
+        // Use untrimmed POST values: byte/character fidelity is required for the signature.
+        $raw = []; parse_str($request->getContent(), $raw);
+        if (!$raw && app()->environment('testing')) $raw = $request->post();
+        $attempt = app(Cpay::class)->receive($raw, (string) $request->query('token'), $success);
+        return redirect('/payment/result/'.$attempt->return_token, 303);
     }
-    public function fail(Request $request)
-    {
-        $order = Order::find($request->get('Details2'));
-        $uuid = Uuid::uuid4()->toString();
-        if(!$request->session()->has(ShoppingCart::SHOPPING_CART_ID)){
-            $request->session()->put(ShoppingCart::SHOPPING_CART_ID, $uuid);
-        }
-        $cartId = session(ShoppingCart::SHOPPING_CART_ID, $uuid);
-        $items = json_decode($order->items);
-        foreach ($items as $item){
-            $product = Product::find($item->associatedModel->id);
-            Cart::session($cartId)->add([
-                'id' => $item->id,
-                'name' => $item->name,
-                'price' => $item->price,
-                'quantity' => 1,
-                'attributes' => [],
-                'associatedModel' => $product,
-            ]);
-
-        }
-
-        return view('bank.fail',[
-
-        ]);
-
+    public function result(string $token) {
+        $attempt = PaymentAttempt::where('return_token', $token)->firstOrFail();
+        return response()->view('bank.result', compact('attempt'))->header('Cache-Control', 'no-store')->header('Referrer-Policy', 'no-referrer');
     }
-
 }

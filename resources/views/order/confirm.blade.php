@@ -86,24 +86,30 @@
                             </div>
                         </div>
 
-                        @if(config('store.sandbox'))
+                        @if(!$attempt)
                             <div class="alert alert-warning" role="status">Test environment: payments are disabled.</div>
                         @else
+                        @if($attempt->is_test)
+                        <div class="alert alert-warning">Пробно плаќање со реална картичка: ќе се наплати <strong>1 денар вкупно</strong>. Реалната вредност и производите се зачувани; нема испорака или промена на залиха.</div>
+                        @endif
                         <div class="alert alert-success" role="alert">
                             Ќе бидете пренасочени на страница на банката каде треба да ја извршите уплатата.
                         </div>
-{{--                        @include('order.pay-button')--}}
                         <div class="row mb-1">
                             <div class="col col-sm-9"></div>
                             <div class="col col-sm-3 d-flex flex-row-reverse">
-                                <form action='https://www.cpay.com.mk/client/Page/default.aspx?xml_id=/mk-MK/.loginToPay/.simple/' method='post'>
-                                    @foreach(\App\Classes\CaSys::get($order) as $name => $value)
+                                @if(in_array($attempt->status, ['returned_success', 'confirmed']))
+                                    <a href="{{ url('/payment/result/'.$attempt->return_token) }}" class="btn btn-outline-primary">Резултат од плаќањето</a>
+                                @else
+                                <form action='{{ config('payments.url') }}' method='post' accept-charset="UTF-8">
+                                    @foreach(app(\App\Services\Payments\Cpay::class)->form($attempt) as $name => $value)
                                         <input id='{{$name}}' name='{{$name}}' value='{{$value}}' type='hidden' />
                                     @endforeach
                                 <button type="submit" value='Pay' class="btn btn-outline-primary btn-lg"><i
                                         class="bi bi-caret-right-square"></i> Плати
                                 </button>
                                 </form>
+                                @endif
                             </div>
                         </div>
 

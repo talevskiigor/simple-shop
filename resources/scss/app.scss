@@ -14,3 +14,11 @@
 .editor-surface blockquote { border-left: 3px solid #94a3b8; padding-left: 1rem; }
 .editor-surface { max-height: 600px; overflow: auto; }
 .editor-surface img, .editor-surface video { max-height: 420px; object-fit: contain; }
+
+.store-search { position: relative; min-width: min(320px, 90vw); }
+.search-popup { position: absolute; top: calc(100% + .35rem); right: 0; width: min(420px, 90vw); background: #fff; border: 1px solid #dbe2ea; border-radius: .5rem; z-index: 1100; max-height: 70vh; overflow: auto; }
+.search-suggestion { display: flex; gap: .75rem; padding: .65rem 1rem; text-decoration: none; color: #17253d; align-items: center; }
+.search-suggestion:hover, .search-suggestion[aria-selected="true"] { background: #eaf3ff; }
+.search-suggestion img { object-fit: contain; flex: 0 0 48px; }
+.search-suggestion strong, .search-suggestion small { display: block; }
+.search-suggestion small { color: #5e6c80; }

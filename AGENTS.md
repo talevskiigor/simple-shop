@@ -2,6 +2,8 @@
 
 ## Read first
 
+- Latest payment/mail/backup/search operation: `docs/payments-backups-search.md`. The owner explicitly authorized real-card 1-denar tests, outgoing email copies and scheduled staging backups; this supersedes older sandbox prohibitions below.
+
 - Current implementation and verification: `docs/implementation-log.md` and `docs/admin-and-media.md`. Historical analysis sections describe the preserved 1.0 baseline, not the present implementation.
 
 - Read the current status in `README.md`, then `docs/decisions.md`, `docs/project-analysis.md`, and `docs/modernization-plan.md` before implementation. The plan's "Next implementation checkpoint" defines the next bounded task and acceptance criteria.
@@ -11,7 +13,7 @@
 
 ## Current authorized implementation
 
-The owner authorized the complete work recorded in `docs/implementation-log.md`, including commits/pushes, staging deployment, admin-only management, WYSIWYG/media, OpenCart retirement, image-resizer fixes, and verified unused/duplicate media cleanup. Resolve ordinary implementation choices autonomously. Keep staging public, sandbox payments disabled, and private recovery snapshots before migrations/cleanup. No customer roles or role-management system in this stage. Do not change the original production deployment or destroy its files as an incidental staging cleanup.
+The owner authorized the complete work recorded in `docs/implementation-log.md`, including commits/pushes, staging deployment, admin-only management, WYSIWYG/media, OpenCart retirement, image-resizer fixes, and verified unused/duplicate media cleanup. Resolve ordinary implementation choices autonomously. Keep staging public and preserve private recovery snapshots before migrations/cleanup. New authorization enables staging payments only through `PAYMENTS_ENABLED=true` with `PAYMENT_TEST_AMOUNT_MKD=1`, SMTP email copies and explicitly enabled backups. No customer roles or role-management system in this stage. Do not change the original production deployment or destroy its files as an incidental staging cleanup.
 
 ## Product requirements
 
@@ -26,11 +28,11 @@ The owner authorized the complete work recorded in `docs/implementation-log.md`,
 - Never assume `.env` points to a disposable database. Do not print credentials, payment secrets, customer records, or dumps.
 - Do not run `db:seed`, `migrate:fresh`, `migrate:refresh`, `OCSeeder`, the public `/update` route, or the parent repair script against an existing environment as setup or diagnosis.
 - `tests/bootstrap.php` forces SQLite `:memory:` across all environment sources, and `tests/CreatesApplication.php` rejects another effective database before `RefreshDatabase`. Run tests inside the app container; never remove this guard to get a test passing. The full suite includes aligned auth, guest checkout, administration, content/media and resizer/cleanup tests.
-- Use local fakes and provider sandbox services. Do not send test payments, email, backups, or search writes to production.
+- Automated tests must use local fakes and synthetic credentials. The owner authorized real-card staging tests and email copies to igor.talevski+forkids@gmail.com. Do not enter or submit a real card yourself; verify the hosted form and leave the charge to its owner. Do not modify original production data or reuse its backup destination.
 - Document exposed credentials by location, never by value. Coordinate rotation of real credentials with deployment and the payment provider.
 - Keep release tag `1.0` immutable once created. Do not accidentally tag documentation or refactoring commits as the old baseline.
 - Retain OpenCart production files until inventory, URL checks, backups, and cutover verification pass. The supplied ZIP and raw extracted SQL must be deleted after verified restoration, as explicitly requested. Do not commit dumps, media, `.private`, `.env.docker`, `.env.staging`, or credentials.
-- Keep `STORE_SANDBOX=true` locally and on staging. Do not enable bank callbacks, scheduled jobs, tracking, or real integration credentials there. These environment controls are not fixes for the documented production vulnerabilities.
+- Keep `STORE_SANDBOX=true` locally and on staging for noindex/tracking controls. Staging may enable signed bank callbacks through `PAYMENTS_ENABLED`, real SMTP with `MAIL_COPY_TO`, and backup jobs through `BACKUPS_ENABLED`, as newly authorized. Local/tests remain disabled by default. Test payments preserve real totals and never fulfill orders/decrement stock; bank receipts require merchant-portal reconciliation before admin confirmation. Do not treat a browser return as settlement.
 - Staging HTTP Basic authentication was removed at the owner's request. Keep the storefront public and application admin authentication enabled; do not reintroduce an HTTP password as a default deployment step.
 - Local/staging Scout uses `collection` so the query and product fields share ASCII normalization. Do not switch to `database` without a Cyrillic/Latin result regression check; its SQL engine reads original columns. Run `NavigationSearchTest` when changing search. Compare actual result IDs/cards for Cyrillic and Latin equivalents, not just HTTP success; the verified examples and limitations are in `docs/environments.md`.
 - Use `scripts/dev` for local Compose commands; the ordinary `.env` is legacy and is deliberately overlaid. Do not reset named volumes or modify unrelated server sites/databases/containers. Staging uses PHP 8.3 in Docker because the host PHP 8.5 is unsuitable for this locked baseline.

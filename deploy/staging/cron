@@ -1,0 +1,2 @@
+# Laravel scheduler for this staging application only. PHP runs inside its container.
+* * * * * root /usr/bin/flock -n /run/lock/forkids-staging-scheduler.lock /usr/bin/docker compose -f /srv/forkids-staging/compose.yaml exec -T --user www-data app php artisan schedule:run >> /var/log/forkids-staging-scheduler.log 2>&1

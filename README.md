@@ -1,6 +1,6 @@
 # Simple Shop
 
-A simple Laravel 13 store with native administrator management, products/categories, rich-text pages, image/video media library, Cyrillic/Latin search and guest checkout. The existing CaSys/cPay integration remains disabled in isolated local/staging environments pending provider acceptance.
+A simple Laravel 13 store with native administrator management, products/categories, rich-text pages, image/video media library, Cyrillic/Latin search and guest checkout. CaSys/cPay supports explicitly enabled real-card 1-denar staging tests with signed return verification and administrator reconciliation.
 
 ## Local development
 
@@ -20,7 +20,7 @@ For an empty installation, run forward migrations and `php artisan admin:manage`
 - Admin: `/admin/login` on either environment
 - Credentials in this workspace: `.private/access-credentials.json`; never commit or paste its contents into chat.
 
-Both environments disable real payments/callbacks, imports, scheduled tasks, outgoing mail, and tracking. Staging is separate from production and uses its own database, `stg_forkids`.
+Local disables external integrations by default. Staging explicitly enables 1-denar payment tests, outgoing email with owner BCC, and daily encrypted backups; tracking/import remain disabled. Staging is separate from production and uses its own database, `stg_forkids`.
 
 ## Current status and next work
 
@@ -30,11 +30,13 @@ The recovered catalog contains 220 products, 15 categories and four pages. Local
 
 Search supports **Macedonian Cyrillic and equivalent Latin text** (`трицикл` / `tricikl`, `количка` / `kolicka`, `коцки` / `kocki`) using Scout's collection engine and shared normalization. Keep matching-result regression checks when changing search drivers.
 
-Staging is public, without HTTP Basic authentication. Management requires administrator login. Sandbox controls disable real payments/callbacks, outgoing mail, tracking and scheduled tasks. Production is unchanged. This release deliberately starts new JSON sessions; existing sessions/carts reset during this staging upgrade.
+Staging is public, without HTTP Basic authentication. Management requires administrator login. Current payment/mail/backup settings are documented in [the operations guide](docs/payments-backups-search.md); older blanket sandbox prohibitions are superseded by the owner’s new request. Production is unchanged. This release deliberately starts new JSON sessions; existing sessions/carts reset during this staging upgrade.
 
 **Next:** owner acceptance testing on staging using the [admin and media guide](docs/admin-and-media.md), recovery/replacement of the ten missing originals, then payment-provider verification and production-cutover planning. Customer accounts/social login and longer-lived guest carts remain later work.
 
 ## Project documentation
+
+- [Payment testing, mail copies, scheduled backups and live search](docs/payments-backups-search.md): configuration, bank verification and daily operation.
 
 - [Admin, editor and media guide](docs/admin-and-media.md): daily management, image delivery, cleanup and recovery.
 - [Implementation log](docs/implementation-log.md): completed checkpoints and release evidence.

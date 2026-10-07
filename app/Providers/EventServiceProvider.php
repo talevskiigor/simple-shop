@@ -15,6 +15,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
+        \Illuminate\Mail\Events\MessageSending::class => [\App\Listeners\CopyOutgoingMail::class],
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],

@@ -17,7 +17,9 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'first' => 'Test', 'last' => 'Customer', 'address' => 'Test address',
+            'city' => 'Skopje', 'phone' => '070000000', 'email' => 'customer@example.test',
+            'items' => '[]', 'total' => 1000, 'finished' => false,
         ];
     }
 }

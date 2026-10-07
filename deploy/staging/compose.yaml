@@ -12,6 +12,7 @@ services:
       - ./media:/var/www/html/public/media/images
       - ./cached-media:/var/www/html/public/cached-media
       - /run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock
+      - ./scheduled-backups:/var/www/html/storage/app/backups
       - runtime:/var/www/html/storage
       - bootstrap_cache:/var/www/html/bootstrap/cache
     restart: unless-stopped

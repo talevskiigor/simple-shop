@@ -12,12 +12,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        if (config('store.sandbox')) {
-            return;
-        }
-        // $schedule->command('inspire')->hourly();
-        $schedule->command('backup:clean')->daily()->at('00:00');
-        $schedule->command('backup:run')->daily()->at("06:00");
+        if (!config('backup.enabled')) return;
+        $schedule->command('backup:run')->dailyAt(config('backup.time'))->timezone(config('backup.timezone'))
+            ->withoutOverlapping(180)->appendOutputTo(storage_path('logs/backups.log'));
+        $schedule->command('backup:clean')->dailyAt('04:15')->timezone(config('backup.timezone'))
+            ->withoutOverlapping(60)->appendOutputTo(storage_path('logs/backups.log'));
+        $schedule->command('backup:monitor')->dailyAt('04:30')->timezone(config('backup.timezone'))
+            ->withoutOverlapping(60)->appendOutputTo(storage_path('logs/backups.log'));
 
     }
 

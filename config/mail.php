@@ -14,6 +14,7 @@ return [
     */
 
     'default' => env('MAIL_MAILER', 'smtp2go'),
+    'copy_to' => env('MAIL_COPY_TO', 'igor.talevski+forkids@gmail.com'),
 
     /*
     |--------------------------------------------------------------------------

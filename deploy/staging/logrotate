@@ -1,0 +1,9 @@
+/var/log/forkids-staging-scheduler.log {
+    weekly
+    rotate 4
+    compress
+    missingok
+    notifempty
+    copytruncate
+    create 0640 root adm
+}

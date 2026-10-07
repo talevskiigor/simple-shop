@@ -65,6 +65,17 @@ class NavigationSearchTest extends TestCase
             ->assertDontSee('Сет коцки');
     }
 
+    public function test_live_suggestions_match_cyrillic_and_latin_and_hide_private_products(): void
+    {
+        Product::factory()->create(['name' => 'Hidden tricikl', 'active' => false]);
+        $a = $this->getJson('/search/suggest?'.http_build_query(['find' => 'три']))->assertOk()->assertJsonCount(1, 'items')->json();
+        $b = $this->getJson('/search/suggest?find=tri')->assertOk()->json();
+        $this->assertSame($a, $b);
+        $this->assertSame('Трицикл Playtime', $a['items'][0]['name']);
+        $this->getJson('/search/suggest?find=t')->assertOk()->assertJsonCount(0, 'items');
+        $this->getJson('/search/suggest?find[]=bad')->assertUnprocessable();
+    }
+
     public function test_unmatched_search_shows_the_empty_state(): void
     {
         $this->get('/search?find=nonexistent-product')

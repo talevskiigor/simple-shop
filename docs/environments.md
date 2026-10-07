@@ -1,6 +1,6 @@
 # Local and staging environments
 
-Current operating guide for the completed October 7, 2026 staging release. Deployment history and checks are in [implementation-log.md](implementation-log.md); daily use and acceptance steps are in [admin-and-media.md](admin-and-media.md).
+Current base-environment guide. The subsequent [payment/mail/backup/search update](payments-backups-search.md) supersedes older claims below that all payments, mail and scheduled jobs are disabled. Deployment history and checks are in [implementation-log.md](implementation-log.md); daily use and acceptance steps are in [admin-and-media.md](admin-and-media.md).
 
 Implemented October 6, 2026, America/Phoenix (October 7 UTC), after the owner authorized using then deleting `ForKIDS.zip`, replacing the old Docker setup, and creating staging at `forkids.tail.mk`.
 

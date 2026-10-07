@@ -1,5 +1,7 @@
 # Native administration and media
 
+> The subsequent [payment testing and operations update](payments-backups-search.md) enables explicit 1-denar staging tests, mail copies, backups and live search. Its current instructions supersede older payment-disabled statements in this initial admin guide.
+
 ## Daily management
 
 Open `/admin/login` and use an explicitly provisioned administrator. There is one account type and no roles system. Public registration is removed. Existing restored accounts do not automatically gain access. The restored `admin@forkids.test` is explicitly authorized separately in each sandbox; its passwords are in the existing private credential file.

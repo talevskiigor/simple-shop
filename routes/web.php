@@ -13,6 +13,7 @@ Route::get('/categories/{slug}', function (string $slug) {
 Route::get('/product/{slug}', function (string $slug) {
     return view('product', ['item' => Product::where('active', true)->where('slug', $slug)->with(['media', 'category'])->firstOrFail()]);
 })->name('product.show');
+Route::get('/search/suggest', [\App\Http\Controllers\SearchController::class, 'suggest'])->middleware('throttle:120,1');
 Route::get('/search', function (Request $request) {
     $data = $request->validate(['find' => 'nullable|string|max:200']);
     return view('home', ['items' => Product::search(Str::ascii(trim($data['find'] ?? '')))->query(fn ($query) => $query->where('active', true))->get()]);
@@ -39,6 +40,7 @@ Route::get('/media/{slug}', function (string $slug) {
 })->where('slug', '.*');
 Route::post('/bank/ok', [\App\Http\Controllers\BankController::class, 'ok']);
 Route::post('/bank/fail', [\App\Http\Controllers\BankController::class, 'fail']);
+Route::get('/payment/result/{token}', [\App\Http\Controllers\BankController::class, 'result'])->where('token', '[a-f0-9]{64}');
 
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';

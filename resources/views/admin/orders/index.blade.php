@@ -49,7 +49,23 @@
 
 
                         </td>
-                        <td>{{$item->finished?'Success':'Failed'}} {{$item->bank_ref?:''}}</td>
+                        <td>
+                            {{ $item->finished ? 'Confirmed' : 'Not confirmed' }} {{ $item->bank_ref ?: '' }}
+                            @foreach($item->paymentAttempts as $attempt)
+                            <div class="border-top mt-2 pt-2 small">
+                                <strong>{{ $attempt->is_test ? 'TEST — no fulfillment' : 'Payment' }}</strong><br>
+                                {{ number_format($attempt->amount_minor / 100, 2) }} MKD · {{ $attempt->status }}<br>
+                                Reference: {{ $attempt->reference }}<br>Bank: {{ $attempt->bank_reference ?: 'Pending' }}
+                                @if($attempt->status === 'returned_success')
+                                <form action="{{ url('/admin/payments/'.$attempt->id.'/confirm') }}" method="POST" class="mt-2">
+                                    @csrf
+                                    <label><input type="checkbox" name="bank_verified" value="1" required> I checked this reference and amount as successful in the cPay merchant portal.</label>
+                                    <button class="btn btn-sm btn-outline-success mt-1">Confirm {{ $attempt->is_test ? 'test payment' : 'payment and stock' }}</button>
+                                </form>
+                                @endif
+                            </div>
+                            @endforeach
+                        </td>
 
                         <td class="text-end">
                             {{$item->updated_at}}<br>

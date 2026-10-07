@@ -11,6 +11,7 @@ Route::prefix('admin')->middleware(['auth', 'admin', 'auth.session'])->group(fun
     Route::resource('pages', PageController::class)->except('show');
     Route::resource('media', MediaLibraryController::class)->parameters(['media' => 'media'])->only(['index', 'store', 'update', 'destroy']);
     Route::resource('users', AdministratorController::class)->except('show');
+    Route::post('payments/{attempt}/confirm', [\App\Http\Controllers\Admin\PaymentController::class, 'confirm']);
     Route::get('orders', [OrdersController::class, 'index'])->name('orders.index');
     Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');

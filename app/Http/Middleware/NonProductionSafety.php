@@ -14,12 +14,14 @@ class NonProductionSafety
             return $next($request);
         }
 
-        // The legacy importer and callbacks mutate data without adequate verification.
-        $response = $request->is('update', 'bank', 'bank/*', 'admin/register')
+        $blocked = $request->is('update', 'admin/register')
+            || ($request->is('bank', 'bank/*') && !config('payments.enabled'));
+        $response = $blocked
             ? response('Not Found', 404)
             : $next($request);
         $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
-        $response->headers->set('Content-Security-Policy', "form-action 'self'; frame-src 'none'");
+        $bank = config('payments.enabled') ? ' https://www.cpay.com.mk' : '';
+        $response->headers->set('Content-Security-Policy', "form-action 'self'{$bank}; frame-src 'none'");
 
         return $response;
     }
