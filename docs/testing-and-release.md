@@ -1,5 +1,7 @@
 # Simple Shop testing and release guide
 
+> **Latest indexing release:** 77 tests / 411 assertions pass locally and on the deployed store, including sitemap visibility, public/private indexing headers and 1-denar checkout with `forkids.mk` callback URLs. The owner will complete the real-bank acceptance test manually. See the latest entry in [implementation-log.md](implementation-log.md).
+
 > **October 7 modernization update:** Laravel 13, native administrator/content/media management, server-sanitized visual editing, resizer repair and OpenCart retirement are implemented. The earlier baseline/next-step sections below are historical. Current status, executed tests, cleanup results and deployment evidence are authoritative in [implementation-log.md](implementation-log.md) and [admin-and-media.md](admin-and-media.md). Payment-provider acceptance and production rollout remain separate.
 
 The current full suite passes locally, on staging and in CI: **61 tests / 309 assertions**, including commerce, authentication/authorization, Cyrillic search, native content/media and resizer/cleanup behavior. CI installs locked dependencies, builds assets, runs the isolated suite and Composer/npm audits. Feature release `0b96a50` passed its initial checks; follow-up `42144f7` passed [CI](https://github.com/talevskiigor/simple-shop/actions/runs/37593499019) and the full staging suite, including the sold-out/hidden search case. Deployment history is in [implementation-log.md](implementation-log.md).
