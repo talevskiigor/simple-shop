@@ -26,3 +26,7 @@ Update this file at every release checkpoint with versions, commits, tests, depl
 ### Framework checkpoint: Laravel 11.57 / PHPUnit 11.5.57
 
 46 tests / 158 assertions pass. Kept the existing application structure; updated Sanctum middleware, cart 4.2.6, backup 9, collision 8 and IDE helper 3; removed unused Breeze scaffolding and Doctrine DBAL. Existing Sanctum migration is already owned by the app. Reviewed migration type/modifier changes: no affected column-change calls. This intermediate release is local only: Composer's advisory block required a one-command override for Laravel 11; no persistent security-ignore setting was added. Continue directly to supported framework versions before deployment.
+
+### Framework checkpoint: Laravel 12.69.3 / Carbon 3.14.2
+
+46 tests / 158 assertions pass with security blocking enabled and no Composer security advisories. Existing explicit filesystem/session settings and legacy application structure retained. Next, replace the unsupported cart dependency before Laravel 13.
