@@ -41,7 +41,11 @@ Test procedure:
 
 The bank may require `forkids.tail.mk` to be registered/allowed for the merchant. Never bypass its domain checks or spoof the production referrer. A successfully generated form is not evidence of a completed card payment. The release log records how far the hosted-bank check reached.
 
+**Current acceptance blocker (October 7, 2026):** the hosted check reached `https://vpos.cpay.com.mk/mk-MK/ErrorHandle/Error`, displaying a generic processing error before card entry. The public legacy gateway forwards to `https://vpos.cpay.com.mk/mk-MK`; a diagnostic confirmed every signed field survives unchanged, with the provider adding `isSimple` and `OriginalReferrer`. This does not identify the underlying merchant/configuration error. Obtain the current **Redirect code template**, **Redirect Integration Specification**, and provider error details through the merchant portal, and check that the staging domain is approved. Do not claim a successful real payment until the owner completes and reconciles one. No card was entered or charged during developer verification.
+
 References: [cPay's published amount/redirect specification](https://www.cpay.com.mk/repository/documents/cPay_Merchant_Params.pdf), [cPay-authored v2.9 specification mirrored on Scribd](https://www.scribd.com/document/526497083/cPay-Merchant-integration-specification-v2-9), [merchant portal](https://merchant.cpay.com.mk/en-US). Reconcile against the bank's current merchant documentation before production.
+
+The provider's [current merchant-module instructions](https://merchant.cpay.com.mk/repository/documents/Instructions%20for%20Merchant%20Module-EN.pdf) explain downloading the merchant-specific integration documents under **Documentation** after login.
 
 ## Copies of outgoing email
 
@@ -64,6 +68,8 @@ BACKUP_ARCHIVE_PASSWORD=private-generated-password
 The dedicated server cron entry in `/etc/cron.d/forkids-staging` invokes Laravel's scheduler every minute inside the PHP container. Jobs run at **03:15 backup, 04:15 retention cleanup, 04:30 health check**, Europe/Skopje. Locks prevent overlapping execution. The application default leaves scheduling disabled until explicitly configured. Templates are `deploy/staging/cron` and `deploy/staging/logrotate`.
 
 Encrypted ZIP archives live at `/srv/forkids-staging/scheduled-backups/forkids-staging`, mounted at `storage/app/backups`; permissions are private and the directory is outside the web root. The decryption password is in the private credentials file under `staging_backup_archive_password`. They include the database, application/configuration and original media, including future uploads. They exclude runtime sessions/logs, Git, private workspace data, dependency directories and regenerable image derivatives. Compiled frontend assets are included. Recover Composer dependencies from the committed lockfile; the release marker and deploy templates are backed up with source.
+
+The host `secrets/` directory remains private. Its mounted `app.env` must be owned by `root:1000` with mode `0640`, so the container's `www-data` group can read it for encrypted backup; the mount remains read-only. Root-only `0600` still permits injected environment variables but makes full-file ZIP creation fail. Keep backup destination directories `0700`, archives `0600`, and the host scheduler/logrotate files `root:root 0644`.
 
 Retention keeps all backups for seven days, daily copies for fourteen days, weekly for four weeks and monthly for two months, capped at 8 GB. The newest backup is retained. These scheduled copies are on the staging host; independent off-host disaster recovery remains to be configured separately. Existing pre-deployment/manual recovery snapshots are outside this retention policy and are not removed.
 

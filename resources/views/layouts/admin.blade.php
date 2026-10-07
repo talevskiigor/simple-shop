@@ -16,7 +16,19 @@
 </div><div class="navbar-nav align-items-lg-center gap-2"><a class="nav-link" href="/" target="_blank" rel="noopener">View store ↗</a><a class="nav-link" href="{{ route('profile.edit') }}">My account</a><form method="post" action="{{ route('logout') }}">@csrf<button class="btn btn-outline-light btn-sm">Sign out</button></form></div>
 </div></div></nav>
 <main class="container-fluid px-lg-5 py-4">
-@if(config('store.sandbox'))<div class="alert alert-info py-2 small">Staging / test store · Payments and outgoing email are disabled.</div>@endif
+@if(config('store.sandbox'))
+<div class="alert alert-info py-2 small">
+    Staging / test store ·
+    @if(!config('payments.enabled'))
+        Payments disabled.
+    @elseif((string) config('payments.test_amount_mkd') === '1')
+        Real-card tests enabled: 1 denar per order, without fulfillment or stock changes.
+    @else
+        Real payments enabled at normal order totals.
+    @endif
+    Outgoing email: {{ in_array(config('mail.default'), ['log', 'array'], true) ? 'disabled' : 'enabled' }}.
+</div>
+@endif
 @if(session('status'))<div role="status" class="alert alert-success">{{ session('status') }}</div>@endif
 @if($errors->any())<div role="alert" class="alert alert-danger"><strong>Please check these details:</strong><ul class="mb-0">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
 @yield('content')
