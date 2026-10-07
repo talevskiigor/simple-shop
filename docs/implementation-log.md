@@ -1,5 +1,21 @@
 # Modernization implementation log
 
+## Public-domain cutover and backup verification — October 7, 2026
+
+The owner authorized replacing the staging hostname with `forkids.mk`, adding `www.forkids.mk`, and verifying scheduled backups. They expressly required email configuration to remain unchanged. The existing deployment/database/media were retained; original production files and data were not modified.
+
+Cloudflare's existing **USA-HOME** tunnel now publishes `forkids.mk` and `www.forkids.mk` to the existing Apache service. Its prior twelve routes were preserved. The apex DNS record already targeted this tunnel; only the existing `www` DNS record required a change to a proxied tunnel CNAME. Email Routing, MX/TXT records and SMTP2GO-related CNAME records were left intact. The server environment was changed only at `APP_URL=https://forkids.mk`; all remaining lines, including all mail settings, were compared and preserved.
+
+The tracked Apache template uses the apex domain with aliases for `www` and the old staging hostname. Both aliases return 308 for GET/HEAD and preserve the requested path/query. Other methods still reach the app, preserving old signed bank POST callback endpoints. Apache configuration validation passed, the app was recreated, and application caches were cleared. There were no migrations, order changes or media changes.
+
+Verification: public HTTPS storefront rendered with new-domain links; public `www` and old-host login URLs redirected to the same new-domain path/query. Origin checks returned 200 for home/login, 302 from unauthenticated admin management to `https://forkids.mk/admin/login`, and 308 for both aliases' search URL with its query intact. An unsigned POST to the old bank callback returned 422 without redirect. One-denar payment mode and noindex/tracking controls remain enabled; the earlier provider acceptance blocker is not resolved by these checks.
+
+Before the cutover, encrypted full backup `ForKIDS-Staging_2026-10-07-16-44-35.zip` completed at **339,948,107 bytes**. All **627** file entries decrypted with AES-256; all **306** original-media hashes and the environment file matched. The contained database restored successfully into a new disposable database: products 220, categories 15, pages 4, orders 89, users 11, media 316 and payment attempts 2, matching all seven source counts. The disposable database and decrypted temporary files were then removed. Existing encrypted backups and recovery snapshots were retained.
+
+The cron service is active, `/etc/cron.d/forkids-staging` is installed with its every-minute scheduler command, and recent cron journal entries confirm actual invocations. The exact scheduler command also succeeded manually after container recreation. Daily jobs remain **03:15 backup, 04:15 retention, 04:30 health check, Europe/Skopje**. Backup health passed. Cron/logrotate files remain root-owned 0644, with the environment root:1000 0640 and archives private. Same-host storage is verified; an independent off-host backup is still not configured.
+
+Private configuration rollback copies are in `/srv/forkids-staging/backups/20261007-domain-cutover`; the initial full-file backup also preserves source and database/media. Runtime paths, `stg_forkids`, backup directory/archive names, scheduler names and cookies/session configuration were not renamed. New-domain visitors receive fresh hostname-specific cookies.
+
 ## Authorized scope — October 7, 2026
 
 The owner authorized implementation, decisions where requirements are unclear, commits, pushes, and staging deployment for the environment checkpoint, regression tests/CI, Laravel upgrade, admin-only management, WYSIWYG editing, image/video media library, OpenCart removal, and removal of unused/duplicate media after reviewing/fixing image resizing. Production deployment and irreversible deletion of original production systems are outside this staging rollout.

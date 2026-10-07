@@ -2,6 +2,8 @@
 
 ## Read first
 
+- October 7 domain cutover: the deployed store now uses `https://forkids.mk`; `www.forkids.mk` and `forkids.tail.mk` redirect browser GET/HEAD requests there. The existing `/srv/forkids-staging`, Compose name, database, cron and backup destinations remain in use. Read the current domain section in `docs/environments.md`. The owner expressly requires email configuration and email DNS records to remain unchanged. This hostname change does not authorize silently disabling the existing 1-denar payment mode or noindex controls.
+
 - Latest payment/mail/backup/search operation: `docs/payments-backups-search.md`. The owner explicitly authorized real-card 1-denar tests, outgoing email copies and scheduled staging backups; this supersedes older sandbox prohibitions below.
 
 - Current implementation and verification: `docs/implementation-log.md` and `docs/admin-and-media.md`. Historical analysis sections describe the preserved 1.0 baseline, not the present implementation.

@@ -16,11 +16,11 @@ scripts/dev --profile tools run --rm node
 For an empty installation, run forward migrations and `php artisan admin:manage` inside the app container. This workspace already has a recovered, anonymized database/media copy; do not reimport or reset it. See [Environments](docs/environments.md).
 
 - Local store: <http://localhost:8088>
-- Staging: <https://forkids.tail.mk> (public storefront; admin login required for management)
+- Public store: <https://forkids.mk> (`www.forkids.mk` and `forkids.tail.mk` redirect here; admin login required for management)
 - Admin: `/admin/login` on either environment
 - Credentials in this workspace: `.private/access-credentials.json`; never commit or paste its contents into chat.
 
-Local disables external integrations by default. Staging explicitly enables 1-denar payment tests, outgoing email with owner BCC, and daily encrypted backups; tracking/import remain disabled. Staging is separate from production and uses its own database, `stg_forkids`.
+Local disables external integrations by default. The deployed store explicitly enables 1-denar payment tests, outgoing email with owner BCC, and daily encrypted backups; tracking/import remain disabled. The October 7 domain cutover keeps the existing `/srv/forkids-staging` deployment and `stg_forkids` database. It does not change payment mode, noindex controls or mail settings. See [domain operation](docs/environments.md#public-domain-cutover--october-7-2026).
 
 ## Current status and next work
 
@@ -30,7 +30,7 @@ The recovered catalog contains 220 products, 15 categories and four pages. Local
 
 Search supports **Macedonian Cyrillic and equivalent Latin text** (`трицикл` / `tricikl`, `количка` / `kolicka`, `коцки` / `kocki`) using Scout's collection engine and shared normalization. Keep matching-result regression checks when changing search drivers.
 
-Staging is public, without HTTP Basic authentication. Management requires administrator login. Current payment/mail/backup settings are documented in [the operations guide](docs/payments-backups-search.md); older blanket sandbox prohibitions are superseded by the owner’s new request. Production is unchanged. This release deliberately starts new JSON sessions; existing sessions/carts reset during this staging upgrade.
+The deployed storefront is public, without HTTP Basic authentication. Management requires administrator login. Current payment/mail/backup settings are documented in [the operations guide](docs/payments-backups-search.md); older blanket sandbox prohibitions are superseded by the owner’s new request. The original production server files and database remain untouched; the public domains now serve this deployment. The earlier framework release started new JSON sessions; the domain change also requires visitors to establish cookies on the new hostname.
 
 **Next:** owner acceptance testing on staging using the [admin and media guide](docs/admin-and-media.md), recovery/replacement of the ten missing originals, then payment-provider verification and production-cutover planning. Customer accounts/social login and longer-lived guest carts remain later work.
 

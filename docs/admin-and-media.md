@@ -59,7 +59,7 @@ The public `/update` importer, `OCSeeder`, OpenCart database connection/environm
 
 ## Next acceptance stage
 
-Start at <https://forkids.tail.mk/admin/login>. Credentials are in `.private/access-credentials.json`; local and staging passwords differ. The storefront has no HTTP password prompt. This is the deployed acceptance environment; edits persist in its separate database/media storage.
+Start at <https://forkids.mk/admin/login> after the October 7 domain cutover. Credentials are in `.private/access-credentials.json`; local and deployed passwords differ. The storefront has no HTTP password prompt. Edits persist in the same existing database/media storage. The newer operations guide supersedes the historical payment-disabled acceptance steps below.
 
 1. Create a category and product with Macedonian text, price/discount and stock. Upload two images, change their order, and verify the cover/product page. Hide the product and confirm it disappears from search and its direct URL.
 2. Edit a product description and a page with headings, links, a library image and a short MP4/WebM. Save the page as draft, then publish and verify its footer link and playback.

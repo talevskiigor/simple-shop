@@ -7,12 +7,28 @@ Implemented October 6, 2026, America/Phoenix (October 7 UTC), after the owner au
 ## What runs where
 
 - **Local:** `http://localhost:8088`, Compose project `forkids-local`, PHP/Apache app and MariaDB containers. Only the app's port is published, bound to localhost. Database: `local_forkids`.
-- **Staging:** `https://forkids.tail.mk`, SSH `italevski@server.tail.mk`, root `/srv/forkids-staging`. An exact-host Apache vhost proxies to the PHP container at `127.0.0.1:8086`. The existing Cloudflare tunnel supplies public HTTPS. The storefront is publicly accessible. The owner requested removal of the staging HTTP password prompt; application admin authentication remains enabled.
+- **Deployed store:** `https://forkids.mk`, SSH `italevski@server.tail.mk`, root `/srv/forkids-staging`. `www.forkids.mk` and the previous `forkids.tail.mk` redirect browser requests to the main domain. An exact-host Apache vhost proxies to the PHP container at `127.0.0.1:8086`. The existing Cloudflare tunnel supplies public HTTPS. The storefront is publicly accessible; application admin authentication remains enabled.
 - **Staging database:** `stg_forkids`, account `stg_forkids` restricted to that database on localhost. PHP connects through the server MariaDB Unix socket, mounted into the container. No new database network listener was exposed.
 - **Current runtime:** PHP 8.3.35, Laravel 13.35.0, MariaDB 11.8.9 locally / 11.8.6 on staging, Node 24 for asset builds. The server's existing PHP 8.5 and other sites were retained. Docker was installed on the server; both PHP 8.3 runtimes passed the release suite.
 - **Runtime image identities:** both environments use the tag `forkids-runtime:php8.3`. The verified local image ID is `sha256:ef519c014d342c4ca23e3563d040e6e69614979e436c5cc4f35ca27657532f62`; the running staging image ID is `sha256:7f501a68c4e0c3fa747f6d2b14f98b39db01d8199cb3f52f250267d514791333`. These are distinct builds, both checked with PHP 8.3.35 and the full suite. A shared tag does not prove identical image bytes; inspect and record the running image digest on each future release.
 
-The restored baseline has been upgraded through Laravel 11 and 12 to 13, with updated lockfiles and native administration/media. The production store and its payment configuration were not deployed or modified.
+The restored baseline has been upgraded through Laravel 11 and 12 to 13, with updated lockfiles and native administration/media. The original production server files and database were not modified; the October 7 domain cutover makes this deployment available through the public store domain.
+
+## Public-domain cutover — October 7, 2026
+
+The owner authorized switching `forkids.tail.mk` to `forkids.mk` and adding `www.forkids.mk`, with email configuration explicitly preserved.
+
+- Cloudflare Tunnel **USA-HOME** (`4ed6ca22-1c8e-44ff-b57d-f4801567c7c7`) has two additional published applications, `forkids.mk` and `www.forkids.mk`, both pointing to `http://127.0.0.1:80`. All pre-existing tunnel routes remain intact.
+- The apex CNAME already pointed to that tunnel and was retained. The existing `www` CNAME was changed from DNS-only `forkids.mk` to the proxied tunnel target. No MX, TXT, mail-service CNAME, Email Routing or SMTP setting was changed.
+- `/etc/apache2/sites-available/020-forkids.tail.mk.conf` remains the enabled filename. Its primary `ServerName` is now `forkids.mk`, with `www.forkids.mk` and `forkids.tail.mk` aliases. The tracked template is `deploy/staging/apache.conf`.
+- GET/HEAD requests to either alias receive permanent **308** redirects to `https://forkids.mk`, preserving path and query. POST requests remain proxied so pending payment attempts with old signed callback URLs can still reach the application. Invalid unsigned callbacks continue to be rejected.
+- Only `APP_URL` changed in the deployed environment, to `https://forkids.mk`; all other environment lines were compared and preserved. The app container was recreated and caches cleared. `APP_ENV=staging`, `STORE_SANDBOX=true`, `PAYMENT_TEST_AMOUNT_MKD=1` and the existing mail settings remain effective. This is a domain cutover, not evidence of completed bank acceptance or normal-price payment activation.
+- Existing database, media, Compose project, runtime volumes, backup archive name/directory, cron and logrotate names are retained. Renaming these would add migration risk without changing the public URL. Visitors establish fresh hostname-specific cookies; old cookies are not transferred.
+- Configuration rollback copies are private under `/srv/forkids-staging/backups/20261007-domain-cutover`. Restore its `app.env` and Apache configuration, recreate only this app, clear caches, validate Apache and reload if reverting the public hostname. Preserve newer orders and media; no database restoration is required for a hostname rollback.
+
+Verified: public HTTPS storefront at the main domain, public HTTPS alias/old-host redirects preserving a login path and query, origin home/login 200, anonymous admin management redirect to the new login URL, and rejected old-host unsigned callback without redirect. The existing cron service invokes the scheduler every minute; backup/retention/monitor times remain 03:15/04:15/04:30 Europe/Skopje. A fresh full backup passed AES decryption, all original-media hashes and an isolated database restore; see the implementation log.
+
+The historical initial-environment procedure below must be read with this section and the newer payment/mail/backup guide. In particular, its old statements that scheduling and payments are disabled no longer describe the deployed environment.
 
 ## Credentials and private data
 

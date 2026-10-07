@@ -2,7 +2,7 @@
 
 ## Authorized operating changes
 
-The owner requested real-card tests because there is no bank sandbox merchant. This supersedes the earlier blanket staging payment/mail/scheduler prohibition. Keep `STORE_SANDBOX=true` for noindex/tracking containment; enable each authorized integration independently. The original production site is unchanged.
+The owner requested real-card tests because there is no bank sandbox merchant. This supersedes the earlier blanket staging payment/mail/scheduler prohibition. Keep `STORE_SANDBOX=true` for noindex/tracking containment; enable each authorized integration independently. The October 7 domain cutover serves this deployment at `https://forkids.mk`, with `www.forkids.mk` and the old hostname redirecting browser navigation. Original production files/data remain untouched. The domain change preserved all mail configuration and mail DNS records, and retained 1-denar payment mode.
 
 Staging admin credentials remain in `.private/access-credentials.json`, email `admin@forkids.test`. They were supplied directly to the owner on request; never commit them.
 
