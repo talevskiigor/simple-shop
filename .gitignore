@@ -18,3 +18,11 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# Private environment files, backup imports, and local credentials
+/ForKIDS.zip
+/.private/
+/.env.docker
+/.env.staging
+/public/media/images/
+*.sql.gz

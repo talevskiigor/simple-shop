@@ -10,6 +10,7 @@ class CaSys
 
     public static function get(Order $order): array
     {
+        abort_if(config('store.sandbox'), 503, 'Payments are disabled in this test environment.');
         // $pass = 'TEST_PASS';
 
         $pass = 'SmZfYVa9vK2wwFCU4hJSZQ6mTBMRthBA';

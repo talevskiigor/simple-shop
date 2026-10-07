@@ -1,6 +1,6 @@
 # Simple Shop testing and release guide
 
-Use an isolated environment to establish behavior before upgrading or migrating this production store. The existing checkout is not configured as a safe disposable test environment. The release-baseline example documents the baseline preparation; it was not executed during the initial analysis. The later publication status is recorded below.
+Use an isolated environment to establish behavior before upgrading or migrating this production store. The new container/test setup provides isolation; the legacy application `.env` must still be treated as potentially live. The release-baseline example documents the baseline preparation; it was not executed during the initial analysis. The later publication status is recorded below.
 
 ## What was verified during analysis
 
@@ -14,6 +14,28 @@ On October 6, 2026, America/Phoenix:
 
 No feature tests, migrations, seeding, live database queries, payment requests, uploads, emails, backups, deployment, or Git release operations were performed.
 
+## Environment implementation checks
+
+Run the new safety tests with:
+
+```bash
+scripts/dev exec --user www-data app vendor/bin/phpunit --filter 'NavigationSearchTest|NonProductionSafetyTest'
+scripts/dev exec --user www-data app php artisan schedule:list
+scripts/dev exec --user www-data app php scripts/inspect-copy.php
+```
+
+The first command forces a SQLite in-memory database independently of `.env.docker` and container process variables. The second must show no scheduled tasks while sandbox mode is active. The third is a read-only restored-copy inventory, restricted to the two named sandbox databases; it reports counts and catalog paths, never customer records or passwords.
+
+The targeted safety suite passes (six tests, 13 assertions). The navigation-search regression suite adds ten cases; running both passes 16 tests with 54 assertions. Search verification must assert matching product IDs/cards for Cyrillic and Latin queries; an HTTP 200 alone missed the original environment-driver regression. The [search verification record](environments.md#cyrillic-and-latin-navigation-search) includes the exact query pairs, snapshot counts, browser button/Enter checks, and driver limitations. Composer installation from the existing lockfile and the Node 24 frontend build pass. The npm install reported 13 advisories (two moderate, ten high, one critical); dependencies were deliberately not changed during environment setup. Do not interpret successful builds as security clearance. See [Environments](environments.md) for the restore, deployment, and smoke-check record. Full commerce/auth regression coverage and payment-provider acceptance remain pending.
+
+## Current acceptance checks and remaining work
+
+The staging storefront is public at the owner's request. Verify `/` and `/admin/login` return 200 without an HTTP authentication challenge, and `/admin/product` redirects an anonymous visitor to `/admin/login`. The management route is singular `product`. `/update`, `/admin/register`, and payment callbacks remain blocked in sandbox mode; `/bank/ok` was checked with POST and returned 404. The HTTP-authentication removal did not enable real payment submission or scheduled tasks.
+
+Existing evidence covers restored-copy row counts/media hashes, the locked dependency install and asset build, navigation search results, environment safety, and manual guest/admin smoke checks. It does not establish a passing full legacy suite, correct bank callback verification, or complete staff authorization.
+
+The [next implementation checkpoint](modernization-plan.md#next-implementation-checkpoint) defines the work to add synthetic catalog/cart/guest-order fixtures and CI before the first framework upgrade. Preserve each verified behavior with assertions on product IDs, cart contents, order data, redirects, or payment suppression as applicable; a successful page response alone is insufficient. Documentation-only updates do not require rerunning unchanged application tests; the recorded test counts describe the last executed checks.
+
 ## Safe local and CI environment
 
 1. Use a disposable checkout/container with its own environment file and empty bootstrap caches. Do not copy production `.env`, cached configuration, storage logs, or credentials into it.
@@ -24,7 +46,7 @@ No feature tests, migrations, seeding, live database queries, payment requests, 
 6. Create dedicated synthetic fixtures/factories for products, categories, media, pages, carts, orders, and staff. Current product/order factories are empty. Do not reuse `DatabaseSeeder` or `OCSeeder` for routine testing.
 7. Install dependencies from lockfiles, build assets, and run the agreed suite. Add CI with the same isolation, runtime versions, lint/build steps, commerce tests, and advisory checks. Record tool/package versions with results.
 
-Do not run the current full feature suite against the ordinary local configuration: `phpunit.xml` comments out DB isolation and most feature tests use `RefreshDatabase`. The parent `repair.sh` also clears queues and caches; it is not a setup script.
+The initial `phpunit.xml` omitted DB isolation. This has now been replaced by forced test settings and an effective-database guard in `CreatesApplication`; keep both when changing test infrastructure. Legacy authentication tests still use routes that do not match the `/admin` prefix, so the full suite is not an established passing baseline. The parent `repair.sh` also clears queues and caches; it is not a setup script.
 
 ## Regression coverage
 

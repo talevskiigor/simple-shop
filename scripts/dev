@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+project_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+if [[ ! -f "$project_dir/.env.docker" ]]; then
+    echo 'Run scripts/init-local to create isolated local settings.' >&2
+    exit 1
+fi
+exec docker compose --project-directory "$project_dir" --env-file "$project_dir/.env.docker" -f "$project_dir/compose.yaml" "$@"

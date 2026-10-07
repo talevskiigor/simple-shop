@@ -1,0 +1,64 @@
+name: forkids-local
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: forkids-runtime:php8.3
+    env_file: .env.docker
+    ports:
+      - "127.0.0.1:${APP_PORT:-8088}:80"
+    volumes:
+      - .:/var/www/html
+      - ./.env.docker:/var/www/html/.env:ro
+      - vendor:/var/www/html/vendor
+      - runtime:/var/www/html/storage
+      - bootstrap_cache:/var/www/html/bootstrap/cache
+    tmpfs:
+      - /var/www/html/.private
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mariadb:11.8
+    environment:
+      MARIADB_DATABASE: ${DB_DATABASE:?Run scripts/init-local first}
+      MARIADB_USER: ${DB_USERNAME:?Run scripts/init-local first}
+      MARIADB_PASSWORD: ${DB_PASSWORD:?Run scripts/init-local first}
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/database_root_password
+    secrets:
+      - database_root_password
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+
+  node:
+    image: node:24-bookworm-slim
+    profiles: [tools]
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    environment:
+      npm_config_cache: /tmp/npm-cache
+    tmpfs:
+      - /var/www/html/.private
+    command: ["sh", "-c", "npm ci && npm run build"]
+
+volumes:
+  database:
+  vendor:
+  runtime:
+  bootstrap_cache:
+
+secrets:
+  database_root_password:
+    file: ./.private/database-root-password

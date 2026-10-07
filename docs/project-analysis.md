@@ -4,6 +4,14 @@ This existing Laravel store should be modernized incrementally. The storefront a
 
 Reviewed October 6, 2026, America/Phoenix, against `develop` at `93d6e04d9efb3a905097c1973edad74813549e34`. The working tree was initially clean. Local `origin/develop` points to the same commit; the remote was not refreshed. No local tags existed. Production functionality is reported by the owner; deployed source, runtime, and database parity remain unverified.
 
+## Subsequent environment evidence
+
+After the initial analysis, the owner supplied the October 6, 2026 backup and authorized local/staging restoration. Its 198 compared application, route, configuration, migration, view, and dependency-manifest files matched this source baseline. The database contains 220 products, 15 categories, 1,806 media rows, four pages, 86 orders, and 11 users. Copies have anonymized customer data and new credentials. All 384 supplied original media files were recovered; ten referenced filenames were absent. See [Environments](environments.md) for details.
+
+PHP 8.3 containers now run the locked Laravel 10 application locally and on staging. The server has Apache, MariaDB 11.8, and PHP 8.5; the staging container avoids changing its existing PHP/sites. OpenCart, payment, public staff-registration, tracking, and scheduled-backup paths are contained only in these sandbox environments. The findings below still describe the legacy production code paths unless explicitly superseded; this environment work is not a production security remediation or a Laravel upgrade.
+
+Current follow-ups: navigation search now uses Scout's `collection` driver locally/on staging, applying the same ASCII transliteration to query and model fields. Cyrillic/Latin result parity is verified; see [search details](environments.md#cyrillic-and-latin-navigation-search). Staging HTTP Basic authentication was removed at the owner's request; the storefront is public and app management still requires login. F07's unsafe test configuration has been addressed with forced SQLite isolation and an effective-database guard. The combined search/safety suite passes 16 tests with 54 assertions; broader commerce/auth and payment-provider coverage remains pending.
+
 ## Architecture and source map
 
 The application is a server-rendered Laravel monolith with Blade, Bootstrap 5, Axios, jQuery, and Vite. Public browsing largely uses route closures; cart, checkout, callbacks, contact, and administration use controllers. A separate frontend application is unnecessary for the stated requirements.
@@ -43,7 +51,7 @@ Home/category pages show products with quantity greater than zero. Products have
 
 Product pages show related media, falling back to the primary image only when no related media exists. The primary image is therefore not automatically part of a populated gallery. Descriptions and page bodies are decoded and rendered as raw HTML. Pages use `/pages/{slug}`. Content and configured locale are Macedonian; payment currency is MKD.
 
-Search uses Scout/Meilisearch and transliterates indexed names/descriptions with `Str::ascii`. Search does not apply the stock filter used on home/category pages. The active flag is not consistently enforced. Product/page lookups may return null rather than a deliberate 404. Lists are unpaginated. `SharedVariables` loads every category and page on every web request, including callbacks and image requests handled by Laravel.
+The inspected production-oriented configuration uses Scout/Meilisearch and transliterates indexed names/descriptions with `Str::ascii`. Local/staging now use the collection driver as described above. Search does not apply the stock filter used on home/category pages. The active flag is not consistently enforced. Product/page lookups may return null rather than a deliberate 404. Lists are unpaginated. `SharedVariables` loads every category and page on every web request, including callbacks and image requests handled by Laravel.
 
 ### Cart and guest checkout
 
@@ -131,7 +139,7 @@ Locked versions, with installed direct Composer versions matching the lockfile:
 
 Numerous locked packages constrain Illuminate to Laravel 10/11. Updating only the framework requirement cannot resolve the upgrade. The cart root requirement is an unbounded `*`.
 
-Local tools: PHP 8.4.22, Composer 2.7.7, Node 18.17.1, npm 10.9.8. These are not verified live versions. Surrounding Docker files use Ubuntu 22.04, distro PHP, a PHP 8.1 Xdebug path, MariaDB `lts-jammy`, Apache, and Meilisearch 1.4. They sit outside this application's Git root and need their own versioning/update plan.
+Local tools: PHP 8.4.22, Composer 2.7.7, Node 18.17.1, npm 10.9.8. These are not verified live versions. The old surrounding Docker files inspected at that time used Ubuntu 22.04, distro PHP, a PHP 8.1 Xdebug path, MariaDB `lts-jammy`, Apache, and Meilisearch 1.4. They have since been replaced by the application-owned setup in [Environments](environments.md); the outer repository has separate pending cleanup/wrapper changes.
 
 Laravel 10 security support ended February 4, 2025; Laravel 11 ended March 12, 2026. Laravel 12 receives security fixes until February 24, 2027. Laravel 13 requires PHP 8.3+ and receives security fixes until March 17, 2028. Target 13, with 12 only as a temporary fallback. [Laravel support policy](https://laravel.com/framework/docs/13.x/releases)
 
@@ -158,7 +166,7 @@ Priorities express potential impact from code evidence, not confirmed exploitati
 
 - **F05 Payment/stock consistency:** duplicate success callbacks reduce stock repeatedly; no atomic transaction or concurrency protection exists.
 - **F06 Stale checkout/pricing:** order reuse depends only on changed totals, completed orders remain reusable, and any discount becomes 15% in the cart.
-- **F07 Unsafe test defaults:** feature tests use `RefreshDatabase` while database overrides are commented out; seeders are destructive.
+- **F07 Unsafe test defaults (addressed in the working branch):** the baseline used `RefreshDatabase` with database overrides commented out. The new test bootstrap forces SQLite `:memory:` and verifies the effective connection before destructive test traits run. Legacy seeders remain destructive and are still excluded from setup/tests.
 - **F08 HTML/media boundaries:** server-side sanitization and bounded image path/size processing are absent.
 - **F09 Unsupported dependencies:** framework and package upgrades are necessary. Package age alone is not a specific vulnerability finding.
 - **F10 Cutover/restore gaps:** database import does not make media independent; backups require adjustment for new storage and proof of restoration.

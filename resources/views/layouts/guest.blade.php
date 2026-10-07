@@ -25,6 +25,7 @@
     <script src="{{ asset('js/share.js') }}"></script>
     <script src="https://kit.fontawesome.com/d770150ff4.js" crossorigin="anonymous"></script>
 <!-- Meta Pixel Code -->
+@unless(config('store.sandbox'))
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -41,6 +42,7 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=1766783437487841&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
+@endunless
 </head>
 <body>
 <script type="text/javascript">

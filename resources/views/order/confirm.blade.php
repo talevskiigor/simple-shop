@@ -86,6 +86,9 @@
                             </div>
                         </div>
 
+                        @if(config('store.sandbox'))
+                            <div class="alert alert-warning" role="status">Test environment: payments are disabled.</div>
+                        @else
                         <div class="alert alert-success" role="alert">
                             Ќе бидете пренасочени на страница на банката каде треба да ја извршите уплатата.
                         </div>
@@ -104,6 +107,8 @@
                             </div>
                         </div>
 
+                        @endif
+
                     </div>
                 </div>
 
@@ -112,4 +117,3 @@
         </div>
 
     @endsection
-

@@ -1,8 +1,26 @@
 # Simple Shop modernization plan
 
-Upgrade the existing Laravel application, complete native store administration, and retire OpenCart after a verified data/media cutover. Preserve guest checkout and the functioning payment integration throughout. This is a proposed implementation sequence; this analysis phase changes documentation only.
+Upgrade the existing Laravel application, complete native store administration, and retire OpenCart after a verified data/media cutover. Preserve guest checkout and the functioning payment integration throughout. This is the implementation sequence; current progress is recorded below.
 
-**Publication progress:** the owner authorized publishing the documentation. Tag `1.0` and branch `codex/refactor-simple-store` now preserve/start from the inspected source baseline, which matches remote `develop`. Production parity and the remaining Phase 0 environment/test work are still pending. No application implementation has started.
+**Current progress:** tag `1.0` and branch `codex/refactor-simple-store` are published. The owner then authorized the isolated Docker environment, restored database/media, and staging deployment. Those Phase 0 foundations are implemented as documented in [Environments](environments.md), including payment/import containment, a database guard for tests, and corrected Cyrillic/Latin navigation search. Staging is public after the requested HTTP-password removal; admin authentication remains enabled. The search/safety suite passes 16 tests with 54 assertions. Laravel remains 10.31.0 with unchanged lockfiles. The broader commerce regression suite, critical production findings, and current production deployment verification remain open.
+
+**Next step:** establish a reviewed checkpoint for the pending environment work, add focused catalog/cart/guest-order regression tests using synthetic fixtures, then begin the Laravel 10 → 11 dependency upgrade in a separate change. Recover the ten missing image originals alongside that work; do not rerun the importer.
+
+## Next implementation checkpoint
+
+This is the next bounded development task. The current request documents it; it does not start the framework upgrade.
+
+1. **Checkpoint the working environment.** Review and commit the Docker, sandbox, search, access, and documentation changes on `codex/refactor-simple-store` as their own checkpoint before dependency changes. Tag `1.0` remains immutable. At this handoff these changes are deployed to staging but not yet committed/pushed. Review the outer repository's Docker cleanup/wrappers separately. Exclude `.env*` secrets, `.private`, dumps, and media from every commit.
+2. **Add the missing commerce regression coverage.** Use synthetic fixtures and the existing SQLite guard. Cover home/category/product/page rendering and preserved URLs, stock visibility, guest cart add/remove and session continuity, the current one-unit rule, valid/invalid guest delivery details, and order confirmation with payment disabled. Preserve the 16 existing search/safety cases. Align the applicable legacy auth tests with `/admin/...`, and record intentionally unsupported flows explicitly. Track the known pricing, stale-order, callback, and authorization defects separately; do not encode them as correct business behavior merely to obtain a green suite.
+3. **Add a repeatable CI check for that baseline.** Install dependencies from the current locks, build assets on Node 24, and run the agreed isolated tests on the recorded PHP runtime. Use no restored customer data, production secrets, seeders, bank requests, or external search writes. Record any legacy test exceptions instead of claiming the entire old suite passes.
+4. **Begin Laravel 10 → 11 in its own change.** Recheck the official upgrade guide and current package constraints when implementation starts. Resolve compatible framework, Scout, auth, test, and cart versions without ignoring platform requirements. Keep the existing application structure, guest checkout, media URLs, Cyrillic/Latin search, and sandbox protections. Update lockfiles only in this upgrade change; leave GUI/social features for later phases.
+5. **Rehearse on the restored staging copy.** Verify the selected tests and build, check applicable migration changes before running them, then check real catalog pages/images, equivalent Cyrillic/Latin result sets, anonymous cart/checkout, and administrator login. Record before/after row counts and unresolved media gaps. Keep real payments and import/scheduled tasks disabled. This is not authorization to deploy to production.
+
+**Acceptance for the baseline checkpoint:** a reviewable environment commit, deterministic synthetic fixtures, a documented passing test command/CI job, and explicit unresolved legacy failures. **Acceptance for the Laravel 11 checkpoint:** reproducible dependency installation, passing agreed regression/build checks, preserved catalog/search/cart behavior on staging, and no unexplained database/media change. Record the release and rollback evidence in [Testing and release](testing-and-release.md).
+
+Work that can proceed alongside the tests: obtain the ten missing image originals from a later authorized live-media copy and obtain the cPay sandbox/protocol details needed for payment work. Neither is required to start isolated fixtures and framework compatibility analysis; both matter before production cutover.
+
+After Laravel 11, continue the separately verified 12 → 13 path below, resolving the cart-package constraint before 13. Complete staff authorization and checkout/payment integrity before broad admin rollout, then implement product/category/page management, WYSIWYG editing, and the shared image/video library. Retire OpenCart only after native authoring, media reconciliation, independent backups, and cutover acceptance. Durable guest carts, optional accounts, Google/Facebook login, and social features follow that foundation.
 
 ## Scope and architecture decisions
 
@@ -17,10 +35,10 @@ Upgrade the existing Laravel application, complete native store administration, 
 
 **Purpose:** preserve the current application and make further work testable without live effects.
 
-1. Verify the exact deployed commit, current remote `develop`, and environment inventory. Candidate baseline is `93d6e04d9efb3a905097c1973edad74813549e34`.
-2. Create annotated tag **`1.0`** on that verified pre-refactoring commit and create **`codex/refactor-simple-store`** from it. Do not put later documentation, dependency, or refactoring commits under the old baseline tag. Preserve existing branch work. Follow the release guide's conflict checks.
-3. Record runtime/build versions, web document root, DB version, search version, scheduled tasks, worker processes, disk mappings, backup destinations, and payment callback setup.
-4. Create a disposable test environment with synthetic products/categories/pages/orders, fake mail/search/storage/payment integrations, and an explicit database safety guard. Correct the existing test paths. Do not use the default seeder or OpenCart importer to populate it.
+1. Baseline source/backup comparison is recorded; current production deployment and runtime parity still need verification. The immutable baseline is `93d6e04d9efb3a905097c1973edad74813549e34`.
+2. **Completed:** annotated tag `1.0` and branch `codex/refactor-simple-store` were created/published from that baseline. Do not recreate or move the tag, or discard the pending environment work.
+3. **Local/staging recorded:** runtime/build versions, document root, databases, search configuration, disk mappings, and disabled integrations are in [Environments](environments.md). Current production workers, scheduler, backup operation, and callbacks still need confirmation.
+4. **Partially completed:** Docker environments, sanitized restored copies, isolated SQLite tests, synthetic search fixtures, and the effective-database guard are implemented. Add the remaining commerce fixtures and correct applicable legacy test paths. Do not use the default seeder or OpenCart importer.
 5. Add regression tests for browse, stock visibility, cart, guest details, price/discount calculation, provider request fields, and successful/failed callbacks. Add separate failing regression cases for F01–F08 rather than treating those defects as intended behavior.
 6. Review immediate production containment for public import, public registration into management, diagnostics, and embedded credentials. Make any implemented containment a small tested change with coordinated deployment. Keep this distinct from redesigning the shop.
 

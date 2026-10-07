@@ -2,10 +2,10 @@
 
 ## Read first
 
-- Read `docs/decisions.md`, `docs/project-analysis.md`, and `docs/modernization-plan.md` before implementation.
+- Read the current status in `README.md`, then `docs/decisions.md`, `docs/project-analysis.md`, and `docs/modernization-plan.md` before implementation. The plan's "Next implementation checkpoint" defines the next bounded task and acceptance criteria.
 - Read `docs/testing-and-release.md` before running the application, database commands, or tests.
 - The initial assessment covers `develop` at `93d6e04d9efb3a905097c1973edad74813549e34`. Check current code and Git status rather than assuming that snapshot is still current.
-- The owner subsequently authorized publishing the documentation on `codex/refactor-simple-store`. Tag `1.0` preserves the inspected `develop` source baseline; deployed-code parity remains unverified. Application implementation is the next task, not part of documentation publication; follow subsequent user instructions when scope changes.
+- Tag `1.0` preserves the inspected baseline; work is on `codex/refactor-simple-store`. The owner subsequently authorized restoring `ForKIDS.zip`, replacing the Docker setup, and deploying staging at `forkids.tail.mk` with a dedicated `stg_forkids` database. Read `docs/environments.md` for current operation. Laravel/dependency upgrades are still pending. The 198 compared source files match the supplied backup, not necessarily today's live deployment.
 
 ## Product requirements
 
@@ -19,11 +19,15 @@
 
 - Never assume `.env` points to a disposable database. Do not print credentials, payment secrets, customer records, or dumps.
 - Do not run `db:seed`, `migrate:fresh`, `migrate:refresh`, `OCSeeder`, the public `/update` route, or the parent repair script against an existing environment as setup or diagnosis.
-- The stock feature suite uses `RefreshDatabase`; its database override is commented out. Establish isolation before running it.
+- `tests/bootstrap.php` forces SQLite `:memory:` across all environment sources, and `tests/CreatesApplication.php` rejects another effective database before `RefreshDatabase`. Run tests inside the app container; never remove this guard to get a test passing. Legacy auth tests still need route alignment.
 - Use local fakes and provider sandbox services. Do not send test payments, email, backups, or search writes to production.
 - Document exposed credentials by location, never by value. Coordinate rotation of real credentials with deployment and the payment provider.
 - Keep release tag `1.0` immutable once created. Do not accidentally tag documentation or refactoring commits as the old baseline.
-- Retain OpenCart files until inventory, URL checks, backups, and cutover verification pass.
+- Retain OpenCart production files until inventory, URL checks, backups, and cutover verification pass. The supplied ZIP and raw extracted SQL must be deleted after verified restoration, as explicitly requested. Do not commit dumps, media, `.private`, `.env.docker`, `.env.staging`, or credentials.
+- Keep `STORE_SANDBOX=true` locally and on staging. Do not enable bank callbacks, scheduled jobs, tracking, or real integration credentials there. These environment controls are not fixes for the documented production vulnerabilities.
+- Staging HTTP Basic authentication was removed at the owner's request. Keep the storefront public and application admin authentication enabled; do not reintroduce an HTTP password as a default deployment step.
+- Local/staging Scout uses `collection` so the query and product fields share ASCII normalization. Do not switch to `database` without a Cyrillic/Latin result regression check; its SQL engine reads original columns. Run `NavigationSearchTest` when changing search. Compare actual result IDs/cards for Cyrillic and Latin equivalents, not just HTTP success; the verified examples and limitations are in `docs/environments.md`.
+- Use `scripts/dev` for local Compose commands; the ordinary `.env` is legacy and is deliberately overlaid. Do not reset named volumes or modify unrelated server sites/databases/containers. Staging uses PHP 8.3 in Docker because the host PHP 8.5 is unsuitable for this locked baseline.
 
 ## Implementation expectations
 
