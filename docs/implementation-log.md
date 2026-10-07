@@ -30,3 +30,9 @@ Update this file at every release checkpoint with versions, commits, tests, depl
 ### Framework checkpoint: Laravel 12.69.3 / Carbon 3.14.2
 
 46 tests / 158 assertions pass with security blocking enabled and no Composer security advisories. Existing explicit filesystem/session settings and legacy application structure retained. Next, replace the unsupported cart dependency before Laravel 13.
+
+### Framework checkpoint: Laravel 13.35 / PHPUnit 12.5.38 / backup 10.3.3
+
+48 tests / 170 assertions pass; Composer reports no security advisories. Replaced unsupported darryldecode/cart with app-owned scalar session IDs and immutable order snapshots. Preserves one unit per product and guest checkout, rechecks availability/current price, uses the actual product discount with integer minor-unit totals, prevents empty orders and updates corrected delivery details. Finished orders are not overwritten. Session serialization is now JSON: **this staging release starts fresh sessions/carts**; any later production rollout must explicitly accept that session reset or add a separate legacy-cart migration. Removed obsolete cart configuration. Updated Laravel 13 request-forgery middleware and disabled cached object deserialization. No production deployment performed.
+
+Upgrade references: [Laravel 11](https://raw.githubusercontent.com/laravel/docs/11.x/upgrade.md), [Laravel 12](https://laravel.com/docs/12.x/upgrade), [Laravel 13](https://laravel.com/docs/13.x/upgrade), [backup package](https://github.com/spatie/laravel-backup/blob/main/UPGRADING.md).

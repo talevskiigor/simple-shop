@@ -84,6 +84,33 @@ class StorefrontTest extends TestCase
         $this->assertDatabaseCount('orders', 0);
     }
 
+    public function test_cart_uses_actual_discount_and_refreshes_price_and_stock(): void
+    {
+        $product = Product::factory()->create(['price' => 1000, 'discount' => 20]);
+        $this->post('/cart', ['productId' => $product->id]);
+        $this->get('/cart')->assertViewHas('cart', fn ($cart) => $cart->getTotal() === 800.0);
+        $product->update(['price' => 1200]);
+        $this->get('/cart')->assertViewHas('cart', fn ($cart) => $cart->getTotal() === 960.0);
+        $product->update(['quantity' => 0]);
+        $this->post('/order', $this->delivery())->assertRedirect('/cart');
+        $this->assertDatabaseCount('orders', 0);
+    }
+
+    public function test_same_total_order_refreshes_delivery_details_and_completed_orders_are_immutable(): void
+    {
+        $product = Product::factory()->create();
+        $this->post('/cart', ['productId' => $product->id]);
+        $this->post('/order', $this->delivery())->assertOk();
+        $this->post('/order', array_merge($this->delivery(), ['address' => 'Corrected address']))->assertOk();
+        $this->assertDatabaseCount('orders', 1);
+        $order = Order::firstOrFail();
+        $this->assertSame('Corrected address', $order->address);
+        $order->forceFill(['finished' => true])->save();
+        $this->post('/order', $this->delivery())->assertOk();
+        $this->assertDatabaseCount('orders', 2);
+        $this->assertSame('Corrected address', $order->fresh()->address);
+    }
+
     private function delivery(): array
     {
         return ['first' => 'Test', 'last' => 'Guest', 'address' => 'Test address', 'city' => 'Test city', 'phone' => '070000000', 'email' => 'guest@example.test'];

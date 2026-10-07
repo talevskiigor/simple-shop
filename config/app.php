@@ -170,7 +170,6 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         // external
-        Darryldecode\Cart\CartServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Jorenvh\Share\Providers\ShareServiceProvider::class,
@@ -190,7 +189,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
-        'Cart' => Darryldecode\Cart\Facades\CartFacade::class,
+        'Cart' => App\Services\Cart::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Share' => Jorenvh\Share\ShareFacade::class,
         'Img' => \App\Helpers\Image::class,

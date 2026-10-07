@@ -3,6 +3,8 @@
 use Illuminate\Support\Str;
 
 return [
+    // Versioned scalar cart sessions; this release deliberately starts fresh sessions.
+    'serialization' => 'json',
 
     /*
     |--------------------------------------------------------------------------

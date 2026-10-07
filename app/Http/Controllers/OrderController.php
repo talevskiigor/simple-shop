@@ -64,23 +64,16 @@ class OrderController extends Controller
         $cartId = session(ShoppingCart::SHOPPING_CART_ID, Uuid::uuid4()->toString());
         $cart = Cart::session($cartId);
 
-        $data = $request->all();
+        if ($cart->isEmpty()) {
+            return redirect('/cart');
+        }
+        $data = $request->validated();
         $data['items'] = $cart->getContent()->toJson();
         $data['total'] = $cart->getTotal();
-
-        $orderId = $request->session()->get(ShoppingCart::ORDER_ID);
-//        dd($orderId);
-        if (!$orderId) {
-            $order = Order::create($data);
-            $request->session()->put(ShoppingCart::ORDER_ID, $order->id);
-        } else {
-            $order = Order::find($orderId);
-            // if cart is changed then update the order
-            if ($cart->getTotal() != $order->total) {
-                $order->fill($data);
-                $order->save();
-            }
-        }
+        $order = Order::where('finished', false)->find($request->session()->get(ShoppingCart::ORDER_ID));
+        $order = $order ?? new Order;
+        $order->fill($data)->save();
+        $request->session()->put(ShoppingCart::ORDER_ID, $order->id);
 
         return view('order.confirm', [
             'cart' => $cart,
