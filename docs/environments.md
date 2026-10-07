@@ -136,7 +136,7 @@ Both environments use log mail, local storage/cache/sessions, and Scout's collec
 Verified release results:
 
 - Composer strict manifest validation and full Composer/npm audits pass; no advisories were reported. Node 24 builds the locked frontend. Bootstrap emits Sass deprecation warnings, without build failures.
-- The full suite passes locally: **61 tests / 309 assertions**. Staging passed the 60-test / 297-assertion feature suite before the final search regression was added; run the complete suite from the packaged revision as the final deployment check. The test bootstrap forces SQLite `:memory:` before migrations.
+- The full suite passes locally, on staging and in CI: **61 tests / 309 assertions**. The packaged release was activated and checked at revision `42144f7`; later documentation-only revisions are recorded by the deployed `RELEASE` file. The test bootstrap forces SQLite `:memory:` before migrations.
 - Public home/search/category/product/page and representative assets/media work. Admin access requires an explicitly authorized account; public registration/import are absent. The storefront has no HTTP authentication challenge.
 - Authenticated administration, guest cart/order confirmation with payment disabled, actual video upload/range requests, image generation and ETag responses were exercised. Disposable browser and checkout/upload fixtures were removed afterward.
 - The scheduler reports no tasks. Payment-provider acceptance and current production security findings remain separate work.
