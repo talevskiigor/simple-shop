@@ -6,8 +6,8 @@ $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 if (!config('store.sandbox') || !in_array(config('database.connections.'.config('database.default').'.database'), ['local_forkids', 'stg_forkids'], true)) throw new RuntimeException('Isolated copies only.');
 $results = [];
 foreach (['трицикл'=>'tricikl','количка'=>'kolicka','коцки'=>'kocki'] as $cyrillic => $latin) {
-    $a = App\Models\Product::search(Illuminate\Support\Str::ascii($cyrillic))->get()->modelKeys();
-    $b = App\Models\Product::search(Illuminate\Support\Str::ascii($latin))->get()->modelKeys();
+    $a = App\Models\Product::search(Illuminate\Support\Str::ascii($cyrillic))->query(fn ($query) => $query->where('active', true))->get()->modelKeys();
+    $b = App\Models\Product::search(Illuminate\Support\Str::ascii($latin))->query(fn ($query) => $query->where('active', true))->get()->modelKeys();
     sort($a); sort($b);
     if ($a !== $b) throw new RuntimeException('Cyrillic search mismatch.');
     $results[$cyrillic.'/'.$latin] = count($a);

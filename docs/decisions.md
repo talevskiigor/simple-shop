@@ -35,19 +35,19 @@ See [Environments](environments.md) for verified results and operational details
 - Preserve payment without a customer account. Later add durable guest carts, optional accounts, Google/Facebook login, and social features including Facebook/Instagram.
 - Keep documentation useful for future Codex development.
 
-## Proposed defaults
+## Implemented choices — October 7, 2026
 
-- **Architecture:** extend Laravel/Blade/Bootstrap; no separate SPA, ecommerce platform replacement, or general page builder.
-- **Upgrade:** Laravel 13, PHP 8.4, Node 24 LTS, through separately tested framework majors. Resolve cart compatibility before 13; use 12 only as a time-limited fallback.
-- **Admin:** a small explicit staff role and policies. Public customer registration must never grant management access.
-- **Editor:** evaluate upgrading the existing TinyMCE integration with one shared media picker. Confirm license/deployment constraints before committing to editor details.
-- **Media:** extend app-owned storage/metadata, retain originals, order gallery images, and track usage. Basic playable video support, not a transcoding platform.
-- **Money:** integer minor-unit amounts and explicit currency for new calculations, with reconciled migration and preserved historical snapshots.
-- **Cart quantity:** preserve the existing one-unit rule during the framework upgrade. Decide multiple-unit behavior before stock/cart feature changes.
-- **Guest retention:** 30 days is an initial proposal, not an accepted business requirement.
-- **URLs/content:** preserve slugs, Macedonian content, current MKD currency, and guest flow until deliberately changed.
+- **Architecture:** existing Laravel/Blade/Bootstrap application; no SPA or page-builder rewrite.
+- **Runtime:** Laravel 13.35 on PHP 8.3 containers, MariaDB 11.8 and Node 24. Framework majors were independently tested. Unsupported cart and image packages were replaced with focused application services.
+- **Admin:** one explicitly provisioned administrator account type, no role system, no public registration or automatic promotion of restored users.
+- **Content:** flat categories, one Macedonian storefront, explicit product visibility, ordered galleries with a required cover image, draft/published pages and server-sanitized HTML. Existing slugs are preserved unless deliberately edited; no automatic redirect is created for a manually changed product/page slug.
+- **Editor:** locally bundled MIT Tiptap 3 with a shared media picker, replacing the old TinyMCE dependency/key. Basic images and MP4/WebM video, 32 MB uploads and a 20-megapixel image limit; no transcoding service.
+- **Money/cart:** decimal persisted amounts and integer minor-unit cart totals, current product discount, availability revalidation, corrected delivery details and immutable finished-order snapshots. Retain one unit per product. JSON sessions intentionally reset old sessions/carts during this staging upgrade.
+- **Media:** retain originals outside Git, source-aware bounded WebP variants, audited hash deduplication and unused-file removal, compatibility aliases and protected recovery copies. Both environments now retain 306 originals; the ten absent originals remain documented.
+- **OpenCart:** importer/connection/settings/backup dependency removed; local/staging operate independently. Original production is unchanged and must have a separate reconciled cutover.
+- **Access:** staging storefront stays public without Basic Auth; management requires admin login. No live payment/mail/tracking/scheduled tasks in isolated copies.
 
-## Inputs needed before implementation and release
+## Inputs needed before production and later work
 
 ### Before production deployment
 
@@ -66,14 +66,9 @@ These affect production rollout, not the ability to start synthetic test isolati
 - Should customers buy several units when stock permits, or retain one unit per product? How should reservations, failed payments, cancellations, and refunds affect stock?
 - Which existing users are legitimate staff? Coordinate any real credential rotation without interrupting payment.
 
-### Before GUI and content migration
+### Content acceptance and production reconciliation
 
-- Are categories flat or hierarchical? Should public lists show sold-out products, or retain the current hiding behavior?
-- Is one Macedonian language sufficient? What source OpenCart language/store/prefix is authoritative?
-- What image/video count, disk volume, maximum file size, and video format are needed? Are assets hosted outside the known OpenCart directory?
-- What editor licensing/deployment constraints exist? Is preview plus draft/publish sufficient initially, or is revision history needed?
-- What data is maintained directly in Laravel today versus OpenCart? Stock, discounts, and native edits need explicit ownership.
-- The supplied Laravel database/media snapshot has been restored and its raw ZIP deleted. When can the ten missing originals and any required OpenCart database snapshot be supplied for reconciliation, and what final cutover/retention window is acceptable?
+The native GUI/editor/media decisions above are implemented. Owner testing should verify the workflows before production cutover. Recover the ten missing originals from an authorized newer media copy or provide replacements; do not rerun OpenCart import. Establish the final live-data capture, authoring freeze, retention and rollback window without overwriting new production orders or stock changes.
 
 ### Before customer and social phases
 
@@ -86,9 +81,7 @@ The local/staging runtime and access choices above are resolved. Production runt
 
 ## Next agreed direction
 
-The owner requested documentation of completed work and the next step. The recommended sequence is a reviewed environment checkpoint, focused catalog/cart/guest-checkout regression fixtures and CI, then Laravel 10 → 11 in a separate change. The [implementation checkpoint](modernization-plan.md#next-implementation-checkpoint) records acceptance criteria and the later 12/13, GUI/media, OpenCart-retirement, and account/social phases. Those later features have not started.
-
-The original analysis commit and baseline tag are published. At this handoff, the environment/search/access updates are deployed on staging but their repository changes remain uncommitted; the outer Docker-wrapper repository also needs a separate checkpoint. Do not confuse a working staging deployment with a published source release.
+The owner authorized the complete implementation, commits, pushes and staging deployment for this session. The environment/tests, framework upgrade, admin/editor/media, OpenCart removal and cleanup are complete. Next is owner acceptance on staging, missing-original recovery, then provider-approved payment work and a separately prepared production rollout. Customer/social features remain later scope. See [implementation-log.md](implementation-log.md) for the executed release evidence and [admin-and-media.md](admin-and-media.md) for acceptance steps.
 
 ## Scope boundaries
 

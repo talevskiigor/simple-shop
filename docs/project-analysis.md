@@ -6,7 +6,7 @@ This existing Laravel store should be modernized incrementally. The storefront a
 
 Reviewed October 6, 2026, America/Phoenix, against `develop` at `93d6e04d9efb3a905097c1973edad74813549e34`. The working tree was initially clean. Local `origin/develop` points to the same commit; the remote was not refreshed. No local tags existed. Production functionality is reported by the owner; deployed source, runtime, and database parity remain unverified.
 
-## Subsequent environment evidence
+## Historical restoration evidence
 
 After the initial analysis, the owner supplied the October 6, 2026 backup and authorized local/staging restoration. Its 198 compared application, route, configuration, migration, view, and dependency-manifest files matched this source baseline. The database contains 220 products, 15 categories, 1,806 media rows, four pages, 86 orders, and 11 users. Copies have anonymized customer data and new credentials. All 384 supplied original media files were recovered; ten referenced filenames were absent. See [Environments](environments.md) for details.
 
@@ -14,7 +14,7 @@ PHP 8.3 containers now run the locked Laravel 10 application locally and on stag
 
 Current follow-ups: navigation search now uses Scout's `collection` driver locally/on staging, applying the same ASCII transliteration to query and model fields. Cyrillic/Latin result parity is verified; see [search details](environments.md#cyrillic-and-latin-navigation-search). Staging HTTP Basic authentication was removed at the owner's request; the storefront is public and app management still requires login. F07's unsafe test configuration has been addressed with forced SQLite isolation and an effective-database guard. The combined search/safety suite passes 16 tests with 54 assertions; broader commerce/auth and payment-provider coverage remains pending.
 
-## Architecture and source map
+## Original baseline architecture and source map
 
 The application is a server-rendered Laravel monolith with Blade, Bootstrap 5, Axios, jQuery, and Vite. Public browsing largely uses route closures; cart, checkout, callbacks, contact, and administration use controllers. A separate frontend application is unnecessary for the stated requirements.
 
@@ -45,7 +45,7 @@ This maps code and documented dependencies, not a verified live deployment.
 - `app/Helpers/Image.php`, resize route, `public/cached-media`: image URLs and synchronous conversions.
 - `config/filesystems.php`, `config/backup.php`, `app/Console/Kernel.php`: storage and scheduled backups.
 
-## Current functionality
+## Functionality at the original baseline
 
 ### Storefront and content
 

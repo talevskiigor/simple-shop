@@ -19,7 +19,7 @@ Decisions:
 - Outer Docker cleanup: `f7ef363` committed/pushed on the same-named branch in the separate `simple-docker` repository.
 - Staging recovery snapshot: `/srv/forkids-staging/backups/20261007-modernization-baseline` complete (391 MB, protected database/media/app/config copies with checksums).
 - Regression checkpoint: 46 tests / 158 assertions pass on Laravel 10.31 / PHP 8.3, including Cyrillic/Latin search, guest checkout and authentication. Repaired missing password/profile form components; added isolated GitHub Actions tests and frontend build.
-- Framework upgrade complete. Native administration, editor/media, resizer repair and OpenCart retirement implemented and under final release verification. Local media cleanup completed; staging deployment/cleanup next.
+- Framework upgrade, native administration, editor/media, resizer repair and OpenCart retirement are deployed to staging. Local and staging media cleanup are complete. Owner acceptance testing is next.
 
 Update this file at every release checkpoint with versions, commits, tests, deployment evidence, and remaining limitations. Never include credentials or customer records.
 
@@ -46,8 +46,26 @@ Replaced Intervention Image 2 with bounded GD transformations and source-aware, 
 
 Browser QA locally: administrator login, visual editor, Cyrillic text, library image insertion, publication and storefront rendering, plus real image upload succeeded. No admin-page browser errors observed. Disposable account/page/upload were removed after verification.
 
-Local cleanup completed in maintenance mode: 384 → 306 originals; 74 unused originals and four duplicate copies, 38,217,946 bytes archived/removed. Recovery: app runtime `storage/app/media-recovery/20261007-native-admin` (protected metadata snapshots, checksums, originals and completion manifest). Follow-up audit: zero unused/duplicate candidates; the original ten absent filenames remain reported. Existing published duplicate URLs resolve through aliases. Staging has not yet received this feature release at this log checkpoint.
+Local cleanup completed in maintenance mode: 384 → 306 originals; 74 unused originals and four duplicate copies, 38,217,946 bytes archived/removed. Recovery: app runtime `storage/app/media-recovery/20261007-native-admin` (protected metadata snapshots, checksums, originals and completion manifest). Follow-up audit: zero unused/duplicate candidates; the original ten absent filenames remain reported. Existing published duplicate URLs resolve through aliases. Staging received the same verified cleanup after its separate pre-deployment backup.
 
 Outer repository OpenCart bootstrap removal committed/pushed as `ad5a8f1`; its untracked owner-maintained `repair.sh` was left untouched. Full frontend audit is now clean after updating the compatible picomatch patch. All production and development Composer/npm dependencies were checked.
 
 Final pre-deploy checks: 60 tests / 297 assertions pass, including a real MP4 fixture and byte-range delivery. Route caching/clearing passes. Composer strict validation and Composer/npm audits pass with no reported vulnerabilities. Local inventory remains 220 products / 15 categories / 4 pages / 86 orders / 11 users (one administrator); 316 media rows, 313 active library entries, 306 originals. Search counts remain 43 / 12 / 39 for the recorded Cyrillic/Latin pairs.
+
+### Staging activation and final verification — October 7, 2026 UTC
+
+Feature release `0b96a50` was committed/pushed and activated at <https://forkids.tail.mk>. Its [GitHub Actions run passed](https://github.com/talevskiigor/simple-shop/actions/runs/37591468025). The follow-up release includes the packaging-permission correction, an operational search-filter correction, extra search regression coverage, removal of the unused Intervention configuration, and these final documents. The deployed exact revision is `/srv/forkids-staging/app/RELEASE`; the release is built from the clean branch head.
+
+Immediately before activation, `/srv/forkids-staging/backups/20261007-native-admin-predeploy` captured the database, originals, secrets, Compose configuration and checksums; the prior entire app is retained there as `app/`. The earlier `20261007-modernization-baseline` snapshot remains available. Media cleanup also produced a separate protected per-file recovery directory and completion manifest inside the staging runtime volume. No production site/database was modified.
+
+Staging runs Laravel 13.35.0 on PHP 8.3.35, with the native administration migration applied and exactly one explicitly authorized administrator. Source stays read-only; the separate media mount is now writable for uploads. The old OpenCart environment keys were removed. Staging remains public without Basic Auth; real payments/callbacks, outgoing mail, tracking and the scheduler remain disabled.
+
+After removing the exact disposable smoke fixtures, staging has 220 products, 15 categories, four pages, **87 orders**, 11 users, 316 media records (313 active), and 306 originals. The extra order relative to the original 86-order backup already existed before this feature deployment and was preserved. Both final cleanup audits report zero unused or duplicate candidates and the same ten previously absent originals.
+
+Verification included authenticated admin screens, guest cart and order confirmation with payment suppression, real MP4 upload/byte-range playback, WebP generation and ETag 304 responses, anonymous admin redirects, and blocked importer/registration/callback endpoints. The staging container passed the 60-test / 297-assertion feature suite. A final search regression increases the local suite to **61 tests / 309 assertions**, covering sold-out cards plus hidden/archived exclusions; the release check runs the same suite on staging/CI.
+
+Actual rendered card titles match for `трицикл` / `tricikl` / `ТРИЦИКЛ` (43), `количка` / `kolicka` (12), and `коцки` / `kocki` (39), on both local and public staging. A final smoke script initially counted only purchasable product links (12 / 1 / 38); sold-out cards have no such link. Comparing all card titles resolved that check discrepancy; no catalog data or visibility flag was changed. The operational verifier now applies the same active-product filter as the public search route.
+
+Deployment lessons: the packaged app root must be mode 0755, while the archive and recovery data remain private. `scripts/package-release` now enforces that mode. In an SSH heredoc, noninteractive `docker compose exec -T` commands must receive `</dev/null` unless intentionally reading input, otherwise they may consume the remaining deployment script. Both issues were corrected and staging returned to service.
+
+Remaining work is owner acceptance, replacement/recovery of the ten missing originals, provider-approved payment hardening/verification, and a separately planned production cutover. Customer accounts/social login and durable anonymous carts remain later phases.

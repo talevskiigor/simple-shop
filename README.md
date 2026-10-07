@@ -26,7 +26,7 @@ Both environments disable real payments/callbacks, imports, scheduled tasks, out
 
 The environment, regression/CI and Laravel upgrades are committed. Native administration, visual editing, media management, OpenCart retirement and image cleanup are implemented; deployment evidence and exact release revisions are maintained in [the implementation log](docs/implementation-log.md).
 
-The recovered catalog contains 220 products, 15 categories, four pages and 86 anonymized orders. Cleanup on the local copy retained 306 originals, archived 74 unused files and four duplicate copies, and preserved ten missing-original records with placeholders. No live customer dump or media is committed. `ForKIDS.zip` and the raw extracted SQL were deleted after restoration.
+The recovered catalog contains 220 products, 15 categories and four pages. Local has 86 anonymized orders; staging has 87, preserving one additional pre-existing staging order. Cleanup on both copies retained 306 originals, archived 74 unused files and four duplicate copies, and preserved ten missing-original records with placeholders. No live customer dump or media is committed. `ForKIDS.zip` and the raw extracted SQL were deleted after restoration.
 
 Search supports **Macedonian Cyrillic and equivalent Latin text** (`трицикл` / `tricikl`, `количка` / `kolicka`, `коцки` / `kocki`) using Scout's collection engine and shared normalization. Keep matching-result regression checks when changing search drivers.
 

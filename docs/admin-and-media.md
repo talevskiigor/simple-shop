@@ -49,7 +49,7 @@ scripts/dev exec --user www-data app php artisan up
 
 Before any unlink, the command copies originals, verifies SHA-256, and saves metadata/reference snapshots plus a deletion plan in the private recovery directory. A completion manifest records successful removal. It reconciles repeated media rows and gallery links, updates duplicate cover paths, preserves published aliases and missing-file records, and normalizes HTML. Run the audit again afterward. Keep a complete database/media snapshot as well: restoring the database snapshots is an operational recovery action, not a daily admin function.
 
-Local cleanup on this release: 384 → 306 originals; 74 unused files and four duplicate copies archived/removed, reclaiming 38,217,946 bytes. The second audit reports zero unused/duplicate candidates. Ten filenames were absent from the supplied backup; their records remain and the storefront uses placeholders. Recover or replace those originals through the media library before production acceptance. Staging's final numbers and recovery paths are recorded in `implementation-log.md`.
+Local and staging cleanup on this release: 384 → 306 originals; 74 unused files and four duplicate copies archived/removed, reclaiming 38,217,946 bytes. The second audit reports zero unused/duplicate candidates. Ten filenames were absent from the supplied backup; their records remain and the storefront uses placeholders. Recover or replace those originals through the media library before production acceptance. Staging's final numbers and recovery paths are recorded in `implementation-log.md`.
 
 ## Removed OpenCart dependencies
 
@@ -57,4 +57,13 @@ The public `/update` importer, `OCSeeder`, OpenCart database connection/environm
 
 ## Next acceptance stage
 
-The owner should test catalog editing, multiple gallery images, video playback, Cyrillic text/search, draft/public pages, administrator management, and guest checkout on staging. Real payments remain disabled there. Before any production release, rotate the previously exposed production credentials and complete provider-approved callback authenticity, idempotency, concurrency and stock-reservation tests. This stage does not claim those legacy payment weaknesses are fixed. Customer accounts, Google/Facebook login, social enhancements and carts surviving the ordinary guest session remain later work.
+Start at <https://forkids.tail.mk/admin/login>. Credentials are in `.private/access-credentials.json`; local and staging passwords differ. The storefront has no HTTP password prompt. This is the deployed acceptance environment; edits persist in its separate database/media storage.
+
+1. Create a category and product with Macedonian text, price/discount and stock. Upload two images, change their order, and verify the cover/product page. Hide the product and confirm it disappears from search and its direct URL.
+2. Edit a product description and a page with headings, links, a library image and a short MP4/WebM. Save the page as draft, then publish and verify its footer link and playback.
+3. Search with Cyrillic and Latin equivalents. The unchanged recovered examples yield 43 cards for `трицикл` / `tricikl`, 12 for `количка` / `kolicka`, and 39 for `коцки` / `kocki`; counts include sold-out cards and change after catalog edits.
+4. Create another administrator, sign in with it, update its password, and remove it from another administrator account. Confirm public registration stays unavailable. No customer roles exist.
+5. Sign out and complete guest delivery details. Verify cart changes and order confirmation; staging displays the payment-disabled notice and does not send money.
+6. Review the ten missing originals listed in [environments.md](environments.md#restored-snapshot-and-media-exceptions), then supply or upload replacements and reselect affected gallery entries. Existing missing references use placeholders rather than fabricated images.
+
+Real payments remain disabled there. Before any production release, rotate the previously exposed production credentials and complete provider-approved callback authenticity, idempotency, concurrency and stock-reservation tests. This stage does not claim those legacy payment weaknesses are fixed. Customer accounts, Google/Facebook login, social enhancements and carts surviving the ordinary guest session remain later work.

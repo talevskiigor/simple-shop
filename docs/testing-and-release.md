@@ -2,9 +2,11 @@
 
 > **October 7 modernization update:** Laravel 13, native administrator/content/media management, server-sanitized visual editing, resizer repair and OpenCart retirement are implemented. The earlier baseline/next-step sections below are historical. Current status, executed tests, cleanup results and deployment evidence are authoritative in [implementation-log.md](implementation-log.md) and [admin-and-media.md](admin-and-media.md). Payment-provider acceptance and production rollout remain separate.
 
-Use an isolated environment to establish behavior before upgrading or migrating this production store. The new container/test setup provides isolation; the legacy application `.env` must still be treated as potentially live. The release-baseline example documents the baseline preparation; it was not executed during the initial analysis. The later publication status is recorded below.
+The current full suite passes locally: **61 tests / 309 assertions**, including commerce, authentication/authorization, Cyrillic search, native content/media and resizer/cleanup behavior. CI installs locked dependencies, builds assets, runs the isolated suite and Composer/npm audits. Feature release `0b96a50` passed CI and its 60-test / 297-assertion suite on staging; the follow-up adds the sold-out/hidden search case. Deployment history is in [implementation-log.md](implementation-log.md).
 
-## What was verified during analysis
+The following analysis and initial-environment results are historical checkpoints. Current production callback/provider acceptance remains pending; a passing app suite does not establish bank authenticity or stock-concurrency safety.
+
+## Historical analysis verification
 
 On October 6, 2026, America/Phoenix:
 
@@ -16,7 +18,7 @@ On October 6, 2026, America/Phoenix:
 
 No feature tests, migrations, seeding, live database queries, payment requests, uploads, emails, backups, deployment, or Git release operations were performed.
 
-## Environment implementation checks
+## Historical environment implementation checks
 
 Run the new safety tests with:
 
@@ -34,9 +36,9 @@ The targeted safety suite passes (six tests, 13 assertions). The navigation-sear
 
 The staging storefront is public at the owner's request. Verify `/` and `/admin/login` return 200 without an HTTP authentication challenge, and `/admin/product` redirects an anonymous visitor to `/admin/login`. The management route is singular `product`. `/update`, `/admin/register`, and payment callbacks remain blocked in sandbox mode; `/bank/ok` was checked with POST and returned 404. The HTTP-authentication removal did not enable real payment submission or scheduled tasks.
 
-Existing evidence covers restored-copy row counts/media hashes, the locked dependency install and asset build, navigation search results, environment safety, and manual guest/admin smoke checks. It does not establish a passing full legacy suite, correct bank callback verification, or complete staff authorization.
+Current checks cover restored counts/media, dependency installation/build/audits, the complete synthetic suite, manual editor/media workflows and authenticated admin/anonymous checkout on staging. Real provider verification, current production parity, missing-original recovery and production cutover remain pending. Owner acceptance steps are in [the admin guide](admin-and-media.md#next-acceptance-stage).
 
-The [next implementation checkpoint](modernization-plan.md#next-implementation-checkpoint) defines the work to add synthetic catalog/cart/guest-order fixtures and CI before the first framework upgrade. Preserve each verified behavior with assertions on product IDs, cart contents, order data, redirects, or payment suppression as applicable; a successful page response alone is insufficient. Documentation-only updates do not require rerunning unchanged application tests; the recorded test counts describe the last executed checks.
+Run `scripts/dev exec --user www-data app vendor/bin/phpunit --do-not-cache-result` for the full suite. Use `scripts/verify-release.php` for read-only catalog/count/search checks on the named sandbox databases, and `media:reconcile` without `--apply` for a media audit. Do not reset or seed restored data.
 
 ## Safe local and CI environment
 
@@ -45,10 +47,10 @@ The [next implementation checkpoint](modernization-plan.md#next-implementation-c
 3. Configure testing explicitly: application environment, separate application key, database connection/name, array/test mail, fake/local storage, test queue behavior, and disabled/fake Scout. Force these settings so inherited shell variables cannot redirect tests.
 4. Add a bootstrap guard before any `RefreshDatabase`/migration operation. Assert effective environment, allowed connection/host/database, and absence of cached production configuration. Fail closed for unknown databases. `APP_ENV=testing` alone is not a safety check.
 5. Block outbound production integration access. Fake the bank adapter and mail/search/storage clients; disable scheduled jobs and external queue consumers. The existing bank form URL and credentials are hardcoded, so environment overrides alone cannot make today's payment path safe to click.
-6. Create dedicated synthetic fixtures/factories for products, categories, media, pages, carts, orders, and staff. Current product/order factories are empty. Do not reuse `DatabaseSeeder` or `OCSeeder` for routine testing.
+6. Create dedicated synthetic fixtures/factories for products, categories, media, pages, carts, orders, and staff. The current factories contain synthetic data and the default seeder does nothing. The OpenCart seeder has been removed; never reintroduce it for routine testing.
 7. Install dependencies from lockfiles, build assets, and run the agreed suite. Add CI with the same isolation, runtime versions, lint/build steps, commerce tests, and advisory checks. Record tool/package versions with results.
 
-The initial `phpunit.xml` omitted DB isolation. This has now been replaced by forced test settings and an effective-database guard in `CreatesApplication`; keep both when changing test infrastructure. Legacy authentication tests still use routes that do not match the `/admin` prefix, so the full suite is not an established passing baseline. The parent `repair.sh` also clears queues and caches; it is not a setup script.
+The initial `phpunit.xml` omitted DB isolation. This has now been replaced by forced test settings and an effective-database guard in `CreatesApplication`; keep both when changing test infrastructure. Authentication tests have been aligned with `/admin` and the full suite passes. The parent `repair.sh` also clears queues and caches; it is not a setup script.
 
 ## Regression coverage
 

@@ -73,6 +73,23 @@ class NavigationSearchTest extends TestCase
             ->assertSee('Нема резултати.');
     }
 
+    public function test_search_includes_sold_out_cards_but_excludes_hidden_and_archived_products(): void
+    {
+        Product::findOrFail(1)->update(['quantity' => 0]);
+        Product::factory()->create(['name' => 'Hidden tricikl', 'active' => false]);
+        Product::factory()->create(['name' => 'Archived tricikl'])->delete();
+
+        foreach (['трицикл', 'tricikl'] as $query) {
+            $this->get('/search?'.http_build_query(['find' => $query]))
+                ->assertOk()
+                ->assertViewHas('items', fn ($items) => $items->modelKeys() === [1])
+                ->assertSee('Трицикл Playtime')
+                ->assertSee('Нема на залиха.')
+                ->assertDontSee('Hidden tricikl')
+                ->assertDontSee('Archived tricikl');
+        }
+    }
+
     public function test_navigation_form_and_empty_search_remain_usable(): void
     {
         $this->get('/')->assertOk()
