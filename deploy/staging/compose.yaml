@@ -9,7 +9,7 @@ services:
     volumes:
       - ./app:/var/www/html:ro
       - ./secrets/app.env:/var/www/html/.env:ro
-      - ./media:/var/www/html/public/media/images:ro
+      - ./media:/var/www/html/public/media/images
       - ./cached-media:/var/www/html/public/cached-media
       - /run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock
       - runtime:/var/www/html/storage

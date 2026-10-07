@@ -31,7 +31,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Category extends Model
 {
+    protected $guarded = [];
     use HasFactory;
+    use \Illuminate\Database\Eloquent\SoftDeletes;
 
     public function product():BelongsToMany
     {

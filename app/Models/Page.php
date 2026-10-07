@@ -10,7 +10,10 @@ use Spatie\Sitemap\Tags\Url;
 
 class Page extends Model implements Sitemapable
 {
+    protected $guarded = [];
+    protected $casts = ['published' => 'boolean'];
     use HasFactory;
+    use \Illuminate\Database\Eloquent\SoftDeletes;
 
     public function toSitemapTag(): Url | string | array
     {

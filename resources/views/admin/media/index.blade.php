@@ -1,34 +1,14 @@
 @extends('layouts.admin')
-
-@section('header_section')
-
-@endsection
-
-
+@section('title', 'Media library')
 @section('content')
-
-    <div class="row">
-
-        @foreach($files as $file)
-            <div  class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3" >
-                <div class="card h-100" >
-                    <div class="card-header">
-                        {!! dump($file) !!}
-                       <small> {{$file->getBasename()}}</small>
-                    </div>
-                    <div class="card-body text-center ">
-                        <img src="{!! \Img::get($file->getPathname(), \Img::W256,\Img::W256)!!}" class="img-thumbnail" alt="...">
-
-
-
-                    </div>
-                    <div class="card-footer bg-white ">
-                        <p class="card-text "></p>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-
-
-    </div>
+<h1>Media library</h1><p class="text-secondary">Reuse images and videos across products and pages. Identical uploads share one original.</p>
+<form class="card card-body mb-4" method="post" enctype="multipart/form-data" action="{{ route('media.store') }}">@csrf
+<div class="row g-2 align-items-end"><div class="col-md-7"><label class="form-label" for="file">Upload image or video</label><input class="form-control" id="file" type="file" name="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" required><div class="form-text">JPG, PNG, WebP, GIF, MP4 or WebM. Up to 32 MB; images up to 20 megapixels.</div></div><div class="col-md-3"><label class="form-label" for="alt">Image description (alt text)</label><input class="form-control" name="alt" id="alt" maxlength="255"></div><div class="col-md-2"><button class="btn btn-primary w-100">Upload</button></div></div>
+</form>
+<form class="d-flex gap-2 mb-3"><input class="form-control" name="q" type="search" placeholder="Find media by name" aria-label="Search media" value="{{ request('q') }}"><select class="form-select w-auto" name="type" aria-label="Media type"><option value="">All types</option><option value="image" @selected(request('type')==='image')>Images</option><option value="video" @selected(request('type')==='video')>Videos</option></select><button class="btn btn-outline-primary">Search</button></form>
+<div class="row g-3 mb-4">@forelse($items as $item)<div class="col-sm-6 col-md-4 col-xl-3"><div class="card h-100"><div class="card-body">
+@if($item->type === 'image')<a href="{{ app(\App\Services\MediaFiles::class)->url($item->path) }}" target="_blank" rel="noopener"><img class="media-thumb" src="{{ \App\Helpers\Image::get($item->path,256) }}" alt="{{ $item->alt }}" loading="lazy"></a>@else<video class="media-thumb" controls preload="metadata" src="{{ app(\App\Services\MediaFiles::class)->url($item->path) }}"></video>@endif
+<form class="mt-3" method="post" action="{{ route('media.update',$item) }}">@csrf @method('put')<label class="form-label small" for="name-{{ $item->id }}">Name</label><input class="form-control form-control-sm mb-2" name="name" id="name-{{ $item->id }}" value="{{ $item->name }}" required><label class="form-label small" for="alt-{{ $item->id }}">Image description</label><input class="form-control form-control-sm mb-2" name="alt" id="alt-{{ $item->id }}" value="{{ $item->alt }}"><div class="small text-secondary mb-2">{{ $item->type }} @if($item->bytes) · {{ number_format($item->bytes / 1024) }} KB @endif</div><button class="btn btn-sm btn-outline-primary">Save details</button></form>
+<form class="mt-2" method="post" action="{{ route('media.destroy',$item) }}" data-confirm="Remove this unused file from the library? Files still in use are protected.">@csrf @method('delete')<button class="btn btn-sm btn-outline-danger">Remove</button></form>
+</div></div></div>@empty<p>No media found. Upload your first file above.</p>@endforelse</div>{{ $items->links() }}
 @endsection

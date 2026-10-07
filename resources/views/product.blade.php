@@ -10,11 +10,11 @@
             </div>
             <div class="col col-sm-2 text-sm-end">
                 <div  class="btn btn-success position-relative">
-                    @if($item->discount & $item->quantity > 0)
+                    @if($item->discount && $item->quantity > 0)
                     <del>{{number_format($item->price,2,',','.')}}</del>
                     @endif
                     {{number_format($item->getPrice(),0,',','.')}},<small>oo</small> ден
-                        @if($item->discount & $item->quantity > 0)
+                        @if($item->discount && $item->quantity > 0)
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
 -{{$item->discount}}%
   </span>
@@ -61,7 +61,11 @@
                     <div class="carousel-inner">
                         @foreach($item->media as $media)
                             <div class="carousel-item @if($loop->first) active @endif">
-                                <img src="{{  \App\Helpers\Image::get($media->path,768) }}" class="d-block w-100" alt="{{$media->name}}">
+                                @if($media->type === 'video')
+                                <video controls preload="metadata" class="d-block w-100" src="{{ app(\App\Services\MediaFiles::class)->url($media->path) }}"></video>
+                                @else
+                                <img src="{{ \App\Helpers\Image::get($media->path,768) }}" class="d-block w-100" alt="{{ $media->alt ?: $media->name }}">
+                                @endif
                             </div>
                         @endforeach
 
@@ -83,7 +87,7 @@
 </div>
                 <p>&nbsp;</p>
 
-                {!! html_entity_decode($item->description) !!}
+                <div class="store-content">{!! app(\App\Services\ContentHtml::class)->clean(html_entity_decode($item->description ?? '')) !!}</div>
 
         <div class="row">
             <div class="col-sm-12"><hr></div>

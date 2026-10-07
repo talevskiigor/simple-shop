@@ -19,7 +19,7 @@ Decisions:
 - Outer Docker cleanup: `f7ef363` committed/pushed on the same-named branch in the separate `simple-docker` repository.
 - Staging recovery snapshot: `/srv/forkids-staging/backups/20261007-modernization-baseline` complete (391 MB, protected database/media/app/config copies with checksums).
 - Regression checkpoint: 46 tests / 158 assertions pass on Laravel 10.31 / PHP 8.3, including Cyrillic/Latin search, guest checkout and authentication. Repaired missing password/profile form components; added isolated GitHub Actions tests and frontend build.
-- Pending: framework upgrades, complete admin/content/media authoring, image resizer repair, OpenCart retirement, media reconciliation/cleanup, final staging deployment and verification.
+- Framework upgrade complete. Native administration, editor/media, resizer repair and OpenCart retirement implemented and under final release verification. Local media cleanup completed; staging deployment/cleanup next.
 
 Update this file at every release checkpoint with versions, commits, tests, deployment evidence, and remaining limitations. Never include credentials or customer records.
 
@@ -36,3 +36,18 @@ Update this file at every release checkpoint with versions, commits, tests, depl
 48 tests / 170 assertions pass; Composer reports no security advisories. Replaced unsupported darryldecode/cart with app-owned scalar session IDs and immutable order snapshots. Preserves one unit per product and guest checkout, rechecks availability/current price, uses the actual product discount with integer minor-unit totals, prevents empty orders and updates corrected delivery details. Finished orders are not overwritten. Session serialization is now JSON: **this staging release starts fresh sessions/carts**; any later production rollout must explicitly accept that session reset or add a separate legacy-cart migration. Removed obsolete cart configuration. Updated Laravel 13 request-forgery middleware and disabled cached object deserialization. No production deployment performed.
 
 Upgrade references: [Laravel 11](https://raw.githubusercontent.com/laravel/docs/11.x/upgrade.md), [Laravel 12](https://laravel.com/docs/12.x/upgrade), [Laravel 13](https://laravel.com/docs/13.x/upgrade), [backup package](https://github.com/spatie/laravel-backup/blob/main/UPGRADING.md).
+
+
+### Native administration / media release
+
+Implemented administrator-only authorization/provisioning/management, protected account deletion, POST logout, product/category/page authoring, ordered image/video galleries, draft/public pages, locally bundled Tiptap editor, Symfony server-side HTML sanitization, validated deduplicated uploads and protected media removal. Converted price/discount/order totals to decimal columns with a forward migration. Missing records remain visible for replacement; archived catalog data/order snapshots are preserved.
+
+Replaced Intervention Image 2 with bounded GD transformations and source-aware, atomic WebP caching. Removed OpenCart routes/importer/connection/settings/backup path and public diagnostics. Removed duplicated tracked branding files with URL redirects. Full suite: 60 tests / 297 assertions at the latest run; frontend build and production-package audit pass. The Laravel 13 checkpoint also passed [GitHub Actions](https://github.com/talevskiigor/simple-shop/actions/runs/37586250655).
+
+Browser QA locally: administrator login, visual editor, Cyrillic text, library image insertion, publication and storefront rendering, plus real image upload succeeded. No admin-page browser errors observed. Disposable account/page/upload were removed after verification.
+
+Local cleanup completed in maintenance mode: 384 → 306 originals; 74 unused originals and four duplicate copies, 38,217,946 bytes archived/removed. Recovery: app runtime `storage/app/media-recovery/20261007-native-admin` (protected metadata snapshots, checksums, originals and completion manifest). Follow-up audit: zero unused/duplicate candidates; the original ten absent filenames remain reported. Existing published duplicate URLs resolve through aliases. Staging has not yet received this feature release at this log checkpoint.
+
+Outer repository OpenCart bootstrap removal committed/pushed as `ad5a8f1`; its untracked owner-maintained `repair.sh` was left untouched. Full frontend audit is now clean after updating the compatible picomatch patch. All production and development Composer/npm dependencies were checked.
+
+Final pre-deploy checks: 60 tests / 297 assertions pass, including a real MP4 fixture and byte-range delivery. Route caching/clearing passes. Composer strict validation and Composer/npm audits pass with no reported vulnerabilities. Local inventory remains 220 products / 15 categories / 4 pages / 86 orders / 11 users (one administrator); 316 media rows, 313 active library entries, 306 originals. Search counts remain 43 / 12 / 39 for the recorded Cyrillic/Latin pairs.

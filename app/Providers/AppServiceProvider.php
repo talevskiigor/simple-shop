@@ -57,6 +57,7 @@ class AppServiceProvider extends ServiceProvider
             \Illuminate\Support\Facades\URL::forceRootUrl(config('app.url'));
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
+        \Illuminate\Pagination\Paginator::useBootstrapFive();
         $this->loadGoogleStorageDriver();
         //
     }

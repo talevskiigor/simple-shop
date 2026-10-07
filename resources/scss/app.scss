@@ -1,1 +1,16 @@
 @import 'bootstrap/scss/bootstrap';
+
+.admin-shell { background: #f5f7fa; color: #17253d; }
+.admin-shell h1 { font-size: 1.85rem; font-weight: 650; }
+.admin-shell .card { border-color: #dee4ed; border-radius: .65rem; }
+.media-thumb { width: 100%; height: 180px; object-fit: contain; background: #f5f7fa; border-radius: .4rem; }
+.media-dialog { width: min(940px, 94vw); max-height: 90vh; padding: 1.5rem; }
+.media-dialog::backdrop { background: rgba(15, 23, 42, .55); }
+.editor-surface .tiptap { min-height: 300px; padding: 1.2rem; background: white; outline: none; }
+.editor-surface .tiptap:focus { box-shadow: inset 0 0 0 2px #86b7fe; }
+.editor-surface img, .editor-surface video, .store-content img, .store-content video { max-width: 100%; height: auto; }
+.editor-surface table, .store-content table { width: 100%; border-collapse: collapse; }
+.editor-surface td, .editor-surface th, .store-content td, .store-content th { border: 1px solid #cbd5e1; padding: .5rem; }
+.editor-surface blockquote { border-left: 3px solid #94a3b8; padding-left: 1rem; }
+.editor-surface { max-height: 600px; overflow: auto; }
+.editor-surface img, .editor-surface video { max-height: 420px; object-fit: contain; }

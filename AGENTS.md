@@ -2,10 +2,12 @@
 
 ## Read first
 
+- Current implementation and verification: `docs/implementation-log.md` and `docs/admin-and-media.md`. Historical analysis sections describe the preserved 1.0 baseline, not the present implementation.
+
 - Read the current status in `README.md`, then `docs/decisions.md`, `docs/project-analysis.md`, and `docs/modernization-plan.md` before implementation. The plan's "Next implementation checkpoint" defines the next bounded task and acceptance criteria.
 - Read `docs/testing-and-release.md` before running the application, database commands, or tests.
 - The initial assessment covers `develop` at `93d6e04d9efb3a905097c1973edad74813549e34`. Check current code and Git status rather than assuming that snapshot is still current.
-- Tag `1.0` preserves the inspected baseline; work is on `codex/refactor-simple-store`. The owner subsequently authorized restoring `ForKIDS.zip`, replacing the Docker setup, and deploying staging at `forkids.tail.mk` with a dedicated `stg_forkids` database. Read `docs/environments.md` for current operation. Laravel/dependency upgrades are still pending. The 198 compared source files match the supplied backup, not necessarily today's live deployment.
+- Tag `1.0` preserves the inspected baseline; work is on `codex/refactor-simple-store`. The owner subsequently authorized restoring `ForKIDS.zip`, replacing the Docker setup, and deploying staging at `forkids.tail.mk` with a dedicated `stg_forkids` database. Read `docs/environments.md` for current operation. Laravel 13 and native administration are implemented; read `docs/implementation-log.md` and `docs/admin-and-media.md` for current state. The 198 compared source files match the supplied backup, not necessarily today's live deployment.
 
 ## Current authorized implementation
 
@@ -23,7 +25,7 @@ The owner authorized the complete work recorded in `docs/implementation-log.md`,
 
 - Never assume `.env` points to a disposable database. Do not print credentials, payment secrets, customer records, or dumps.
 - Do not run `db:seed`, `migrate:fresh`, `migrate:refresh`, `OCSeeder`, the public `/update` route, or the parent repair script against an existing environment as setup or diagnosis.
-- `tests/bootstrap.php` forces SQLite `:memory:` across all environment sources, and `tests/CreatesApplication.php` rejects another effective database before `RefreshDatabase`. Run tests inside the app container; never remove this guard to get a test passing. Legacy auth tests still need route alignment.
+- `tests/bootstrap.php` forces SQLite `:memory:` across all environment sources, and `tests/CreatesApplication.php` rejects another effective database before `RefreshDatabase`. Run tests inside the app container; never remove this guard to get a test passing. The full suite includes aligned auth, guest checkout, administration, content/media and resizer/cleanup tests.
 - Use local fakes and provider sandbox services. Do not send test payments, email, backups, or search writes to production.
 - Document exposed credentials by location, never by value. Coordinate rotation of real credentials with deployment and the payment provider.
 - Keep release tag `1.0` immutable once created. Do not accidentally tag documentation or refactoring commits as the old baseline.

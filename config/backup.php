@@ -16,7 +16,6 @@ return [
                  */
                 'include' => [
                     base_path(),
-                    '/var/www/forkids.mk/image/catalog',
                 ],
 
                 /*
@@ -27,6 +26,7 @@ return [
                 'exclude' => [
                     storage_path(),
                     base_path('.git'),
+                    base_path('.private'),
                     base_path('.idea'),
                     base_path('vendor'),
                     base_path('node_modules'),

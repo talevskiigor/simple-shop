@@ -59,11 +59,12 @@ class PasswordResetTest extends TestCase
             $response = $this->post('/admin/reset-password', [
                 'token' => $notification->token,
                 'email' => $user->email,
-                'password' => 'password',
-                'password_confirmation' => 'password',
+                'password' => 'NewPassword123!',
+                'password_confirmation' => 'NewPassword123!',
             ]);
 
             $response->assertSessionHasNoErrors();
+            $this->assertTrue(\Illuminate\Support\Facades\Hash::check('NewPassword123!', $user->fresh()->password));
 
             return true;
         });

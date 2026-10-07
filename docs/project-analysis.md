@@ -1,5 +1,7 @@
 # Simple Shop application analysis
 
+> **October 7 modernization update:** Laravel 13, native administrator/content/media management, server-sanitized visual editing, resizer repair and OpenCart retirement are implemented. The earlier baseline/next-step sections below are historical. Current status, executed tests, cleanup results and deployment evidence are authoritative in [implementation-log.md](implementation-log.md) and [admin-and-media.md](admin-and-media.md). Payment-provider acceptance and production rollout remain separate.
+
 This existing Laravel store should be modernized incrementally. The storefront and guest payment flow provide a useful foundation; administration is incomplete and OpenCart remains a content and media dependency. A framework upgrade alone will not resolve the authorization, payment-state, and data-integrity findings below.
 
 Reviewed October 6, 2026, America/Phoenix, against `develop` at `93d6e04d9efb3a905097c1973edad74813549e34`. The working tree was initially clean. Local `origin/develop` points to the same commit; the remote was not refreshed. No local tags existed. Production functionality is reported by the owner; deployed source, runtime, and database parity remain unverified.

@@ -11,7 +11,6 @@
         "php": "^8.3",
         "guzzlehttp/guzzle": "^7.2",
         "http-interop/http-factory-guzzle": "^1.2",
-        "intervention/image": "^2.7",
         "jorenvanhocht/laravel-share": "^4.2",
         "laravel/framework": "^13.0",
         "laravel/sanctum": "^4.0",
@@ -20,7 +19,8 @@
         "masbug/flysystem-google-drive-ext": "^2.4",
         "meilisearch/meilisearch-php": "^1.4",
         "spatie/laravel-backup": "^10.0",
-        "spatie/laravel-sitemap": "^7.0"
+        "spatie/laravel-sitemap": "^7.0",
+        "symfony/html-sanitizer": "^7.4"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.0",

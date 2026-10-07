@@ -1,0 +1,6 @@
+<dialog id="media-picker" class="media-dialog border-0 rounded shadow-lg" aria-labelledby="media-picker-title">
+<div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h4 mb-0" id="media-picker-title">Choose media</h2><button type="button" class="btn-close" data-close-picker aria-label="Close media library"></button></div>
+<form data-picker-search class="d-flex gap-2 mb-3"><input type="search" name="q" class="form-control" aria-label="Search library" placeholder="Search library"><button class="btn btn-outline-primary">Search</button></form>
+<form data-picker-upload class="border rounded p-3 mb-3"><label class="form-label" for="picker-upload">Upload a new file</label><div class="d-flex gap-2"><input class="form-control" id="picker-upload" name="file" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" required><button class="btn btn-primary">Upload</button></div><small>Up to 32 MB. Images: JPG, PNG, WebP, GIF. Videos: MP4, WebM.</small></form>
+<div data-picker-status role="status" class="mb-2"></div><div data-picker-results class="row g-3"></div><button type="button" data-picker-more class="btn btn-outline-primary mt-3" hidden>Load more</button>
+</dialog>

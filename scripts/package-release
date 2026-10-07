@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+project_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$project_dir"
+if [[ -n "$(git status --porcelain)" ]]; then
+    echo 'Commit or resolve working-tree changes before packaging a release.' >&2
+    exit 1
+fi
+mkdir -p .private
+chmod 700 .private
+release_dir="$(mktemp -d /tmp/forkids-release.XXXXXX)"
+trap 'rm -rf -- "$release_dir"' EXIT
+git archive HEAD | tar -x -C "$release_dir"
+# Export the container dependency volume, not the unrelated host vendor directory.
+scripts/dev exec -T app tar -C /var/www/html -cf - vendor | tar -x -C "$release_dir"
+cp -a public/build "$release_dir/public/build"
+mkdir -p "$release_dir/storage" "$release_dir/bootstrap/cache" "$release_dir/public/media/images" "$release_dir/public/cached-media"
+touch "$release_dir/.env"
+git rev-parse HEAD > "$release_dir/RELEASE"
+tar -czf .private/staging-release.tar.gz -C "$release_dir" .
+chmod 600 .private/staging-release.tar.gz
+sha256sum .private/staging-release.tar.gz

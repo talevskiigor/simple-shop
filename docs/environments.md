@@ -1,5 +1,7 @@
 # Local and staging environments
 
+> **October 7 modernization update:** Laravel 13, native administrator/content/media management, server-sanitized visual editing, resizer repair and OpenCart retirement are implemented. The earlier baseline/next-step sections below are historical. Current status, executed tests, cleanup results and deployment evidence are authoritative in [implementation-log.md](implementation-log.md) and [admin-and-media.md](admin-and-media.md). Payment-provider acceptance and production rollout remain separate.
+
 Implemented October 6, 2026, America/Phoenix (October 7 UTC), after the owner authorized using then deleting `ForKIDS.zip`, replacing the old Docker setup, and creating staging at `forkids.tail.mk`.
 
 ## What runs where
@@ -180,3 +182,14 @@ The combined suite passed **16 tests with 54 assertions** locally and in the sta
 The outer `/home/unknown/Code/simple-store` repository is separate from this application repository. Its old Compose, Ubuntu/Xdebug/supervisor build files, Meilisearch Dockerfile, and obsolete environment template were removed. Its `start.sh`, `build.sh`, `shell.sh`, and `show.sh` now call `www/html/scripts/dev`; a README explains the move. The old `.env`, `opencart.sql`, user-owned `repair.sh`, legacy volumes, and unrelated running projects were retained. These outer-repository changes need their own review/commit.
 
 Next, follow the [implementation checkpoint](modernization-plan.md#next-implementation-checkpoint): review/version the current environment changes, capture catalog/cart/guest-order behavior with synthetic regression fixtures, then start the Laravel 10 → 11 upgrade as a separate dependency change. Keep the current restored environment available for comparison, and resolve the cart package's later Laravel compatibility before progressing to 13.
+
+
+## Native administration deployment procedure
+
+After a clean committed checkout, `scripts/package-release` creates `.private/staging-release.tar.gz` from Git, the running container's locked vendor volume, and built frontend assets. It excludes secrets/dumps/media/runtime data by construction. A `RELEASE` file records the exact commit. Verify the printed SHA-256 after transfer.
+
+For the native-media release, install the updated `deploy/staging/compose.yaml`: the separate media mount becomes writable by container `www-data` (UID 1000). Keep application source read-only and all ports loopback-only. Preserve a private DB/media/app snapshot, enter maintenance mode, activate the prepared release, recreate only the staging app container, clear caches, and apply forward migrations. Run `admin:manage admin@forkids.test --promote-existing` once to authorize the restored staging administrator; no other restored accounts are promoted. Do not run the sanitizer again.
+
+Run `media:reconcile` first in dry-run mode. With maintenance mode active, apply it with a new private path under `storage/app/media-recovery`, then repeat the dry run. Verify the copies/checksums/completion manifest before clearing legacy derivative caches. Return the application to service, run `scripts/verify-release.php`, and check the full test suite inside the staging container (the test bootstrap still forces in-memory SQLite). Inspect public home/search/media, unauthenticated admin redirects and authenticated admin/media APIs; keep sandbox payment/mail/scheduler controls enabled.
+
+Rollback before accepting user edits: stop only the staging app, restore the matching database/media/app snapshot from `/srv/forkids-staging/backups/20261007-modernization-baseline`, restore the old Compose media mount if required, then recreate the staging app and clear caches. Once new data has been entered, take a fresh backup and reconcile those edits before a database rollback. Do not use a blind `migrate:rollback` as a substitute for a matched database/media recovery.

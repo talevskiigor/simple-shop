@@ -54,10 +54,12 @@ use Spatie\Sitemap\Tags\Url;
 class Product extends Model implements Sitemapable
 {
     use HasFactory;
+    use \Illuminate\Database\Eloquent\SoftDeletes;
 
     use Searchable;
 
     protected $guarded = [];
+    protected $casts = ['price' => 'float', 'discount' => 'float', 'active' => 'boolean', 'quantity' => 'integer'];
 
     /**
      * Get the indexable data array for the model.
@@ -93,7 +95,7 @@ class Product extends Model implements Sitemapable
 
     public function media(): BelongsToMany
     {
-        return $this->belongsToMany(Media::class);
+        return $this->belongsToMany(Media::class)->withPivot('position')->orderByPivot('position');
     }
 
     public function category(): BelongsToMany
@@ -109,7 +111,7 @@ class Product extends Model implements Sitemapable
             ->addImage(\App\Helpers\Image::get($this->image,768),$this->name);
 
             foreach ($this->media as $item){
-                if($item->type='image'){
+                if($item->type === 'image'){
                     $url->addImage( \App\Helpers\Image::get($item->path,768),$item->name );
                 }
 

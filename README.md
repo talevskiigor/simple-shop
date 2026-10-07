@@ -1,10 +1,10 @@
 # Simple Shop
 
-A Laravel store already used in production, with products, categories, HTML descriptions, guest checkout, and CaSys/cPay payment. Native content/media administration and the Laravel upgrade remain planned work.
+A simple Laravel 13 store with native administrator management, products/categories, rich-text pages, image/video media library, Cyrillic/Latin search and guest checkout. The existing CaSys/cPay integration remains disabled in isolated local/staging environments pending provider acceptance.
 
 ## Local development
 
-The Docker setup now lives in this repository. It uses PHP 8.3, MariaDB 11.8, and Node 24. Laravel remains at the locked **10.31.0** baseline.
+The Docker setup now lives in this repository. It uses PHP 8.3, MariaDB 11.8, and Node 24. The locked framework is **Laravel 13.35**, upgraded through separately tested 11 and 12 checkpoints.
 
 ```bash
 scripts/init-local                 # once; preserves existing settings
@@ -13,7 +13,7 @@ scripts/dev exec --user www-data app composer install --no-interaction --prefer-
 scripts/dev --profile tools run --rm node
 ```
 
-A fresh installation also needs the isolated database/media restore described in [Environments](docs/environments.md). Do not seed the legacy importer. This workspace already has the recovered, anonymized copy.
+For an empty installation, run forward migrations and `php artisan admin:manage` inside the app container. This workspace already has a recovered, anonymized database/media copy; do not reimport or reset it. See [Environments](docs/environments.md).
 
 - Local store: <http://localhost:8088>
 - Staging: <https://forkids.tail.mk> (public storefront; admin login required for management)
@@ -24,20 +24,20 @@ Both environments disable real payments/callbacks, imports, scheduled tasks, out
 
 ## Current status and next work
 
-The local Docker environment and staging deployment are working. The supplied backup restored 220 products, 15 categories, four pages, 86 anonymized orders, and 384 original media files. `ForKIDS.zip`, the raw extracted SQL, and temporary deployment archives were deleted after verification. Ten referenced image files were absent from the backup and still need recovery.
+The environment, regression/CI and Laravel upgrades are committed. Native administration, visual editing, media management, OpenCart retirement and image cleanup are implemented; deployment evidence and exact release revisions are maintained in [the implementation log](docs/implementation-log.md).
 
-Staging has a public storefront with no HTTP password prompt. Management still uses `/admin/login`. Sandbox controls keep payments/callbacks, imports, outgoing mail, tracking, and scheduled tasks disabled. This environment work has not changed production.
+The recovered catalog contains 220 products, 15 categories, four pages and 86 anonymized orders. Cleanup on the local copy retained 306 originals, archived 74 unused files and four duplicate copies, and preserved ten missing-original records with placeholders. No live customer dump or media is committed. `ForKIDS.zip` and the raw extracted SQL were deleted after restoration.
 
-Navigation search supports **Macedonian Cyrillic and equivalent Latin text**. For example, `трицикл` / `tricikl`, `количка` / `kolicka`, and `коцки` / `kocki` return the same respective result sets. The initial database-driver mismatch was corrected using Scout's collection driver. See [search behavior, limitations, and verification](docs/environments.md#cyrillic-and-latin-navigation-search).
+Search supports **Macedonian Cyrillic and equivalent Latin text** (`трицикл` / `tricikl`, `количка` / `kolicka`, `коцки` / `kocki`) using Scout's collection engine and shared normalization. Keep matching-result regression checks when changing search drivers.
 
-The combined search/safety suite passes **16 tests and 54 assertions**. Broader commerce/auth tests, the Laravel upgrade, the new administration GUI/WYSIWYG/media library, and OpenCart retirement remain unfinished.
+Staging is public, without HTTP Basic authentication. Management requires administrator login. Sandbox controls disable real payments/callbacks, outgoing mail, tracking and scheduled tasks. Production is unchanged. This release deliberately starts new JSON sessions; existing sessions/carts reset during this staging upgrade.
 
-**Next:** establish a reviewed Git checkpoint for the environment work, add focused catalog/cart/guest-checkout tests, then upgrade Laravel **10 → 11** in a separate change. Continue to 12 and 13 after compatible dependencies and regression checks are confirmed. The [next implementation checkpoint](docs/modernization-plan.md#next-implementation-checkpoint) defines the concrete scope and acceptance criteria.
-
-At this handoff, tag `1.0` and the initial analysis commit are published; the environment/search/access changes are deployed to staging but remain uncommitted locally. The outer Docker-wrapper repository has separate pending changes. Check both working trees before starting the next change.
+**Next:** owner acceptance testing on staging using the [admin and media guide](docs/admin-and-media.md), recovery/replacement of the ten missing originals, then payment-provider verification and production-cutover planning. Customer accounts/social login and longer-lived guest carts remain later work.
 
 ## Project documentation
 
+- [Admin, editor and media guide](docs/admin-and-media.md): daily management, image delivery, cleanup and recovery.
+- [Implementation log](docs/implementation-log.md): completed checkpoints and release evidence.
 - [Environments and recovery](docs/environments.md): Docker commands, staging operations, restored data, media exceptions, and private files.
 - [Application analysis](docs/project-analysis.md): original architecture, data, features, dependencies, and findings, with subsequent evidence noted.
 - [Modernization plan](docs/modernization-plan.md): Laravel upgrade, administration, media, payments, OpenCart retirement, and customer features.
@@ -49,6 +49,6 @@ Tag `1.0` preserves `develop` at `93d6e04d9efb3a905097c1973edad74813549e34`. Wor
 
 ## Media and data boundaries
 
-Recovered original files are now independent copies under `public/media/images` locally and `/srv/forkids-staging/media` on staging. They are private runtime data, outside Git. Ten referenced image files were absent from the supplied backup; see the recovery report. OpenCart application dependencies remain in source until native administration and a complete cutover are verified.
+Recovered original files are now independent copies under `public/media/images` locally and `/srv/forkids-staging/media` on staging. They are private runtime data, outside Git. Ten referenced image files were absent from the supplied backup; see the recovery report. Active application dependencies on OpenCart are removed. Original production files are preserved outside this staging rollout.
 
 Never use `db:seed`, `migrate:fresh`, `migrate:refresh`, `/update`, or the old parent `repair.sh` on the restored databases. Tests force an independent SQLite in-memory database and reject other database settings before Laravel test traits run.

@@ -25,4 +25,6 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: vendor/bin/phpunit --do-not-cache-result
-      - run: composer validate
+      - run: composer validate --strict
+      - run: composer audit --locked
+      - run: npm audit

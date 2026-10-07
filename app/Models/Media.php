@@ -40,7 +40,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Media extends Model
 {
+    protected $guarded = [];
     use HasFactory;
+    use \Illuminate\Database\Eloquent\SoftDeletes;
 
 //    protected function path(): Attribute
 //    {

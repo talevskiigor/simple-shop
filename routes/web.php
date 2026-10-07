@@ -1,135 +1,44 @@
 <?php
 
-use App\Http\Controllers\PageController;
-use App\Models\Category;
-use App\Models\Product;
+use App\Models\{Category, Product, Page};
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-Route::group(['middleware' => ['web']], function () {
-
-    Route::get('/', function () {
-
-        $items = Product::where('quantity','>',0)->get();
-
-        return view('home', [
-            'items' => $items
-        ]);
-
-    });
-
-    Route::get('/categories/{slug?}', function (string|null $slug) {
-
-        $category = Category::with('product')->where('slug', $slug)->first();
-
-        $category = Category::with(['product' => function ($query) {
-            $query->where('quantity','>',0);
-        }])->where('slug', $slug)->first();
-
-        if(!$category){
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
-        }
-        $items = $category->product;
-
-        return view('home', [
-            'items' => $items
-        ]);
-
-    });
-
-    Route::get('/product/{slug?}', function (string|null $slug) {
-        $item = Product::where('slug', $slug)->with('media')->with('category')->first();
-        return view('product', [
-            'item' => $item
-        ]);
-
-    })->name('product.show');
-
-    Route::get('search', function () {
-        $needed =  \request()->get('find');
-
-        $items = Product::search(Str::ascii($needed))->get();
-        return view('home', [
-            'items' => $items
-        ]);
-
-    });
-
-    Route::get('/pages/{slug?}', function (string|null $slug) {
-        $page = \App\Models\Page::where('slug', $slug)->first();
-        return view('helpers.page', ['page' => $page]);
-
-    });
-    Route::resource('/order', \App\Http\Controllers\OrderController::class);
-    Route::resource('/cart', \App\Http\Controllers\CartController::class);
-
-
-
-    Route::resource('/contact', \App\Http\Controllers\ContactController::class);
-
-
-    Route::get('admin', function () {
-        return redirect(route('dashboard'));
-    });
-
-    Route::get('update', function () {
-        $cmd = 'db:seed --class=OCSeeder --force';
-        \Illuminate\Support\Facades\Artisan::call($cmd);
-        return \Carbon\Carbon::now()->toString();
-    });
-
-
-    Route::get('/media-resize/{slug?}', function (?string $slug = null) {
-        $w = request('w', 'null');
-        $h = request('h', 'null');
-        $q = request('q', 100);
-
-        $file = public_path('media/' . $slug);
-        $newExtension = 'webp';
-
-        $name = basename($file, '.' . explode('.', $file)[1],);
-        $newFile = sprintf('%s/%s-%sX_%s_%s.%s', dirname($file), $name, $w, $h, $q, $newExtension);
-        $newFile = str_replace('media', 'cached-media', $newFile);
-//        dump($newFile);
-        if (File::exists($newFile)) {
-            $img = Image::make($newFile);
-        } else {
-            try {
-                $d = dirname($newFile);
-                if (!File::isDirectory($d)) {
-                    File::makeDirectory($d,493,true);
-                }
-                $img = Image::make($file)->resize($w, $h, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $img->save($newFile, 50, $newExtension);
-            }catch (Throwable $e){
-                Log::error($e);
-                return redirect(url('media/' . $slug));
-                return (Image::make($originFile))->response();
-            }
-
-        }
-        return $img->response();
-    })->where('slug', '.*');
-
-    Route::post('/bank/ok', [\App\Http\Controllers\BankController::class, 'ok']);
-    Route::post('/bank/fail', [\App\Http\Controllers\BankController::class, 'fail']);
-
+Route::get('/', fn () => view('home', ['items' => Product::where('active', true)->where('quantity', '>', 0)->get()]));
+Route::get('/categories/{slug}', function (string $slug) {
+    $category = Category::where('slug', $slug)->firstOrFail();
+    return view('home', ['items' => $category->product()->where('active', true)->where('quantity', '>', 0)->get()]);
 });
+Route::get('/product/{slug}', function (string $slug) {
+    return view('product', ['item' => Product::where('active', true)->where('slug', $slug)->with(['media', 'category'])->firstOrFail()]);
+})->name('product.show');
+Route::get('/search', function (Request $request) {
+    $data = $request->validate(['find' => 'nullable|string|max:200']);
+    return view('home', ['items' => Product::search(Str::ascii(trim($data['find'] ?? '')))->query(fn ($query) => $query->where('active', true))->get()]);
+});
+Route::get('/pages/{slug}', fn (string $slug) => view('helpers.page', ['page' => Page::where('published', true)->where('slug', $slug)->firstOrFail()]));
+Route::resource('order', \App\Http\Controllers\OrderController::class)->only(['index', 'store']);
+Route::resource('cart', \App\Http\Controllers\CartController::class)->only(['index', 'store', 'destroy']);
+Route::resource('contact', \App\Http\Controllers\ContactController::class)->only(['index', 'store']);
 
+// Preserve the previously published logo URLs while storing each original once.
+Route::get('/logo/{file}', function (string $file) {
+    // Dots are part of the filename, not configuration nesting.
+    $target = config('legacy_media')[$file] ?? null;
+    abort_unless($target, 404);
+    return redirect(\App\Helpers\Image::get($target[0], $target[1]));
+});
+Route::get('/media-resize/{slug}', fn (Request $request, string $slug) => app(\App\Services\ImageVariants::class)->response($request, $slug))->where('slug', '.*')->middleware('throttle:240,1');
+Route::get('/media/{slug}', function (string $slug) {
+    $file = app(\App\Services\MediaFiles::class)->resolve($slug);
+    abort_unless($file, 404);
+    $mime = mime_content_type($file);
+    abort_unless(in_array($mime, ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/x-icon', 'image/vnd.microsoft.icon', 'video/mp4', 'video/webm']), 404);
+    return response()->file($file, ['Content-Type' => $mime, 'X-Content-Type-Options' => 'nosniff']);
+})->where('slug', '.*');
+Route::post('/bank/ok', [\App\Http\Controllers\BankController::class, 'ok']);
+Route::post('/bank/fail', [\App\Http\Controllers\BankController::class, 'fail']);
 
-
-
-require __DIR__ . '/auth.php';
-require __DIR__ . '/admin.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/admin.php';

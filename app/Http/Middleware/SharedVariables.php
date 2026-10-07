@@ -20,7 +20,7 @@ class SharedVariables
     {
         View::share('cartCount', 0);
         View::share('categories', Category::all());
-        View::share('pages', Page::all());
+        View::share('pages', Page::where('published', true)->get());
 
         return $next($request);
     }

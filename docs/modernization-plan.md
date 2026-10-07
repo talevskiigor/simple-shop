@@ -1,5 +1,7 @@
 # Simple Shop modernization plan
 
+> **October 7 modernization update:** Laravel 13, native administrator/content/media management, server-sanitized visual editing, resizer repair and OpenCart retirement are implemented. The earlier baseline/next-step sections below are historical. Current status, executed tests, cleanup results and deployment evidence are authoritative in [implementation-log.md](implementation-log.md) and [admin-and-media.md](admin-and-media.md). Payment-provider acceptance and production rollout remain separate.
+
 Upgrade the existing Laravel application, complete native store administration, and retire OpenCart after a verified data/media cutover. Preserve guest checkout and the functioning payment integration throughout. This is the implementation sequence; current progress is recorded below.
 
 **Current progress:** tag `1.0` and branch `codex/refactor-simple-store` are published. The owner then authorized the isolated Docker environment, restored database/media, and staging deployment. Those Phase 0 foundations are implemented as documented in [Environments](environments.md), including payment/import containment, a database guard for tests, and corrected Cyrillic/Latin navigation search. Staging is public after the requested HTTP-password removal; admin authentication remains enabled. The search/safety suite passes 16 tests with 54 assertions. Laravel remains 10.31.0 with unchanged lockfiles. The broader commerce regression suite, critical production findings, and current production deployment verification remain open.

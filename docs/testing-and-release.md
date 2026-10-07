@@ -1,5 +1,7 @@
 # Simple Shop testing and release guide
 
+> **October 7 modernization update:** Laravel 13, native administrator/content/media management, server-sanitized visual editing, resizer repair and OpenCart retirement are implemented. The earlier baseline/next-step sections below are historical. Current status, executed tests, cleanup results and deployment evidence are authoritative in [implementation-log.md](implementation-log.md) and [admin-and-media.md](admin-and-media.md). Payment-provider acceptance and production rollout remain separate.
+
 Use an isolated environment to establish behavior before upgrading or migrating this production store. The new container/test setup provides isolation; the legacy application `.env` must still be treated as potentially live. The release-baseline example documents the baseline preparation; it was not executed during the initial analysis. The later publication status is recorded below.
 
 ## What was verified during analysis

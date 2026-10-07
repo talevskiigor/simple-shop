@@ -11,9 +11,10 @@ class Image
 
     public static function get(string $slug, int|null $width = null, int|null $height = null, int $quality = 100): string
     {
-        $slug = str_replace(public_path('media/'),'',$slug);
-        $imagepath = '/media-resize/' . $slug . sprintf('?w=%s&h=%s&q=%s', $width, $height, $quality);
-        return url($imagepath);
+        $slug = ltrim(str_replace(public_path('media/'), '', $slug), '/');
+        if (!$slug) return url('/assets/image-unavailable.svg');
+        $path = implode('/', array_map('rawurlencode', explode('/', $slug)));
+        return url('/media-resize/'.$path).'?'.http_build_query(['w' => $width, 'h' => $height, 'q' => $quality]);
     }
 
 

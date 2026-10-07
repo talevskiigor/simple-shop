@@ -1,5 +1,7 @@
 # Simple Shop decisions and open questions
 
+> **October 7 modernization update:** Laravel 13, native administrator/content/media management, server-sanitized visual editing, resizer repair and OpenCart retirement are implemented. The earlier baseline/next-step sections below are historical. Current status, executed tests, cleanup results and deployment evidence are authoritative in [implementation-log.md](implementation-log.md) and [admin-and-media.md](admin-and-media.md). Payment-provider acceptance and production rollout remain separate.
+
 This is the decision register for the initial October 6, 2026 analysis. It separates the owner's requirements from proposed implementation choices. The environment work, search correction, and staging access change are implemented; the decisions below distinguish them from the pending framework and feature work.
 
 ## Publication decision
