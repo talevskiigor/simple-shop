@@ -18,7 +18,7 @@
         </include>
     </source>
     <php>
-        <env name="APP_ENV" value="testing" force="true"/>
+        <!-- tests/bootstrap.php rejects production before setting APP_ENV=testing. -->
         <env name="APP_CONFIG_CACHE" value="/tmp/forkids-tests-no-config-cache.php" force="true"/>
         <env name="STORE_SANDBOX" value="true" force="true"/>
         <env name="BCRYPT_ROUNDS" value="4"/>

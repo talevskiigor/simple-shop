@@ -12,6 +12,7 @@ class Cpay
         $value = config('payments.test_amount_mkd');
         if ($value === null || $value === '') return false;
         if ((string) $value !== '1') throw new \RuntimeException('PAYMENT_TEST_AMOUNT_MKD must be 1 or unset.');
+        if (app()->isProduction()) throw new \RuntimeException('Payment test mode is not permitted in production.');
         return true;
     }
     public function prepare(Order $order): PaymentAttempt {
@@ -21,7 +22,10 @@ class Cpay
             $order = Order::lockForUpdate()->findOrFail($order->id);
             abort_if($order->finished, 409, 'This order is already complete.');
             $existing = PaymentAttempt::where('order_id', $order->id)->latest('id')->first();
-            if ($existing && $existing->status !== 'failed') return $existing;
+            if ($existing && $existing->status !== 'failed') {
+                abort_if(app()->isProduction() && $existing->is_test, 409, 'This test checkout has expired. Please start a new order.');
+                return $existing;
+            }
             $test = $this->testMode();
             $amount = $test ? 100 : (int) round((float) $order->total * 100);
             // The merchant protocol accepts whole MKD only. Never silently alter a normal total.

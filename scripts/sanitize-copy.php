@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 $database = DB::connection()->getDatabaseName();
-if (!config('store.sandbox') || !in_array($database, ['local_forkids', 'stg_forkids'], true)) {
+if ($app->isProduction() || !config('store.sandbox') || !in_array($database, ['local_forkids', 'stg_forkids'], true)) {
     fwrite(STDERR, "Refusing to sanitize a database outside the sandbox allowlist.\n");
     exit(1);
 }

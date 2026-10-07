@@ -1,5 +1,7 @@
 # Simple Shop decisions and open questions
 
+> **Latest owner decision, October 7:** the domain cutover is live and 1-denar testing has ended. Use normal totals, the two requested real administrators, private recovery before test-data removal, and local/isolated staging for all future tests. Preserve the unclassified unpaid order #88 unless the owner identifies it as a test. Existing email settings and DNS remain untouched. The old staging hostname, server paths and database now identify production. Earlier rollout restrictions and pending-cutover statements below are historical; [current operations](payments-backups-search.md) take precedence.
+
 > **October 7 modernization update:** Laravel 13, native administrator/content/media management, server-sanitized visual editing, resizer repair and OpenCart retirement are implemented. The earlier baseline/next-step sections below are historical. Current status, executed tests, cleanup results and deployment evidence are authoritative in [implementation-log.md](implementation-log.md) and [admin-and-media.md](admin-and-media.md). Payment-provider acceptance and production rollout remain separate.
 
 This is the decision register for the initial October 6, 2026 analysis. It separates the owner's requirements from proposed implementation choices. The environment work, search correction, and staging access change are implemented; the decisions below distinguish them from the pending framework and feature work.

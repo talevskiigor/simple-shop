@@ -2,10 +2,11 @@
 
 ## Authorized operating changes
 
-The owner requested real-card tests because there is no bank sandbox merchant. This supersedes the earlier blanket staging payment/mail/scheduler prohibition. Keep `STORE_SANDBOX=true` for integration/tracking containment; enable each authorized integration independently. The October 7 domain cutover serves this deployment at `https://forkids.mk`, with `www.forkids.mk` and the old hostname redirecting browser navigation. Original production files/data remain untouched. The domain change preserved all mail configuration and mail DNS records, and retained 1-denar payment mode. The owner subsequently authorized public search-engine indexing with `STORE_ALLOW_INDEXING=true`, while explicitly keeping 1-denar mode until their manual test and later removal instruction.
+**Current production instruction — October 7, 2026:** the owner has ended live testing. `forkids.mk` now uses `APP_ENV=production`, `STORE_SANDBOX=false`, enabled payments at full order totals and public indexing. `PAYMENT_TEST_AMOUNT_MKD` is commented out, with its `=1` reference retained only for future local/isolated staging. Production rejects a configured test amount and reuse of a prior test attempt. PHPUnit also refuses a production environment before applying test overrides.
 
-Staging admin credentials remain in `.private/access-credentials.json`, email `admin@forkids.test`. They were supplied directly to the owner on request; never commit them.
+Live administrators are `d.trpkovski@yahoo.com` and `igor.talevski@gmail.com`, provisioned with the password supplied privately by the owner, without a trailing space. No password is stored in documentation. The temporary `admin@forkids.test` and anonymized copied accounts are removed from live. Identified test orders and payment attempts are privately archived before deletion, including the bank reference on the returned-success test payment; this does not refund or reverse a bank transaction. The unclassified unpaid order #88 is preserved pending the owner's identification.
 
+The older real-card staging authorization below is historical and applies only to isolated environments in future. Do not run tests, create fixtures, or make test payments on production. `forkids.tail.mk` redirects to live; there is currently no independent staging deployment at that address. Internal deployment/database/backup names still contain `staging` and must never be used to infer safety. Email configuration and DNS are preserved. The internal `APP_NAME` remains unchanged because the existing mail sender name references it. `STORE_TRACKING_ENABLED=false` retains the previously disabled tracking after promotion.
 ## Public search-engine indexing
 
 `STORE_ALLOW_INDEXING=true` permits indexing of the public storefront, categories, products, published information pages and media. It is independent of `PAYMENTS_ENABLED`, `PAYMENT_TEST_AMOUNT_MKD` and `STORE_SANDBOX`; do not turn off the sandbox or test amount just to enable indexing. Set the value to the literal lowercase `true`, as both Laravel and Apache read it. Local/test environments keep the default `false`.
@@ -14,7 +15,7 @@ The host proxy no longer forces a global noindex header. The app container uses 
 
 `GET /sitemap.xml` is generated from current active products (including publicly viewable sold-out products), non-archived categories and published pages. Hidden/archived products and draft/archived pages are excluded. The old unused `dummy:run` static generator was retired. Do not place an old static `public/sitemap.xml` in a release, as Apache would serve that file instead of the current route. Indexing permission is not a guarantee of when search engines will crawl or list the site.
 
-## One-denar payment switch
+## One-denar payment switch — local or isolated staging only
 
 ```dotenv
 PAYMENTS_ENABLED=true
@@ -24,7 +25,7 @@ CPAY_MERCHANT_NAME="your-registered-merchant-name"
 CPAY_SECRET=your-private-checksum-key
 ```
 
-`PAYMENT_TEST_AMOUNT_MKD=1` charges **one denar for the whole order**, represented as `AmountToPay=100` in cPay. Remove or empty this variable for normal totals. Any other nonempty value is rejected. Product prices, discounts, cart contents and the order's original total remain unchanged. The confirmation page prominently identifies a real-card test and the 1-denar charge. Card data is entered only on cPay, never on this application.
+`PAYMENT_TEST_AMOUNT_MKD=1` charges **one denar for the whole order**, represented as `AmountToPay=100` in cPay. Production keeps this variable commented out for normal totals and rejects any active 1-denar override. Any other nonempty value is rejected. Product prices, discounts, cart contents and the order's original total remain unchanged. The confirmation page prominently identifies a real-card test and the 1-denar charge. Card data is entered only on cPay, never on this application.
 
 Payment attempts have unique ten-character references, fixed charge amounts, test flags, immutable outgoing fields and random return tokens. Changing the environment afterward does not change an existing attempt. Edited customer/cart details start a separate order when the previous snapshot has already been prepared for the bank. Repeated unchanged confirmation reuses the attempt. Normal totals must be whole MKD as required by the merchant protocol; no silent rounding is performed.
 
@@ -40,16 +41,16 @@ The available cPay v2.9 protocol signs the echoed payment fields but does not in
 
 This deliberately avoids pretending that a browser redirect proves settlement. A future authenticated provider status API/push integration can automate reconciliation once its current merchant-specific credentials/protocol are available. Stock reservation, refunds and complete production concurrency acceptance remain separate work.
 
-Test procedure:
+Test procedure (isolated staging only; never on `forkids.mk` or its aliases):
 
 1. Add real catalog products, complete guest delivery details, and check both the original total and the **1 denar total charge** notice.
 2. Open the bank's hosted card page. Confirm its displayed amount before entering your own card. The developer checks do not submit a card or make a charge.
 3. Complete/cancel payment and return. Check the attempt reference in Admin → Orders and compare it with cPay's actual transaction record.
-4. Confirm the test receipt after checking cPay; verify stock and original prices are unchanged. Keep the real bank reference for reconciliation; do not delete or fabricate a paid test result.
+4. Confirm the test receipt after checking cPay; verify stock and original prices are unchanged. Keep the real bank reference for reconciliation. The owner-authorized production cleanup preserves this evidence in a private encrypted archive before removing the live test rows; never fabricate a paid result.
 
 New payment attempts use `https://forkids.mk` for bank return URLs; existing attempts preserve their original signed fields and old-host POST callbacks remain reachable. Never bypass the bank's domain checks or spoof a referrer. A successfully generated form is not evidence of a completed card payment. The release log records how far the hosted-bank check reached.
 
-**Last provider check, before the domain switch (October 7, 2026):** the hosted check reached `https://vpos.cpay.com.mk/mk-MK/ErrorHandle/Error`, displaying a generic processing error before card entry. The public legacy gateway forwards to `https://vpos.cpay.com.mk/mk-MK`; a diagnostic confirmed every signed field survives unchanged, with the provider adding `isSimple` and `OriginalReferrer`. This does not identify the underlying merchant/configuration error. Obtain the current **Redirect code template**, **Redirect Integration Specification**, and provider error details through the merchant portal, and check that the staging domain is approved. Do not claim a successful real payment until the owner completes and reconciles one. No card was entered or charged during developer verification.
+**Historical developer provider check, before the domain switch (October 7, 2026):** the hosted check reached `https://vpos.cpay.com.mk/mk-MK/ErrorHandle/Error`, displaying a generic processing error before card entry. The public legacy gateway forwards to `https://vpos.cpay.com.mk/mk-MK`; a diagnostic confirmed every signed field survives unchanged, with the provider adding `isSimple` and `OriginalReferrer`. This does not identify the underlying merchant/configuration error. Obtain the current **Redirect code template**, **Redirect Integration Specification**, and provider error details through the merchant portal, and check that the staging domain is approved. Do not claim a successful real payment until the owner completes and reconciles one. No card was entered or charged during developer verification.
 
 References: [cPay's published amount/redirect specification](https://www.cpay.com.mk/repository/documents/cPay_Merchant_Params.pdf), [cPay-authored v2.9 specification mirrored on Scribd](https://www.scribd.com/document/526497083/cPay-Merchant-integration-specification-v2-9), [merchant portal](https://merchant.cpay.com.mk/en-US). Reconcile against the bank's current merchant documentation before production.
 
@@ -75,7 +76,7 @@ BACKUP_ARCHIVE_PASSWORD=private-generated-password
 
 The dedicated server cron entry in `/etc/cron.d/forkids-staging` invokes Laravel's scheduler every minute inside the PHP container. Jobs run at **03:15 backup, 04:15 retention cleanup, 04:30 health check**, Europe/Skopje. Locks prevent overlapping execution. The application default leaves scheduling disabled until explicitly configured. Templates are `deploy/staging/cron` and `deploy/staging/logrotate`.
 
-Encrypted ZIP archives live at `/srv/forkids-staging/scheduled-backups/forkids-staging`, mounted at `storage/app/backups`; permissions are private and the directory is outside the web root. The decryption password is in the private credentials file under `staging_backup_archive_password`. They include the database, application/configuration and original media, including future uploads. They exclude runtime sessions/logs, Git, private workspace data, dependency directories and regenerable image derivatives. Compiled frontend assets are included. Recover Composer dependencies from the committed lockfile; the release marker and deploy templates are backed up with source.
+Encrypted ZIP archives live at `/srv/forkids-staging/scheduled-backups/forkids-staging`, mounted at `storage/app/backups`; permissions are private and the directory is outside the web root. The decryption password is in the private credentials file under `staging_backup_archive_password`. They include the database, application/configuration and original media, including future uploads. The live cleanup archive is separately retained at `/srv/forkids-staging/scheduled-backups/recovery-20261007-production/test-records.json.enc`; decrypt it with Laravel Crypt using the matching private application key. It is outside automatic ZIP retention. They exclude runtime sessions/logs, Git, private workspace data, dependency directories and regenerable image derivatives. Compiled frontend assets are included. Recover Composer dependencies from the committed lockfile; the release marker and deploy templates are backed up with source.
 
 The host `secrets/` directory remains private. Its mounted `app.env` must be owned by `root:1000` with mode `0640`, so the container's `www-data` group can read it for encrypted backup; the mount remains read-only. Root-only `0600` still permits injected environment variables but makes full-file ZIP creation fail. Keep backup destination directories `0700`, archives `0600`, and the host scheduler/logrotate files `root:root 0644`.
 

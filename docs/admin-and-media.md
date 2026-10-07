@@ -1,17 +1,17 @@
 # Native administration and media
 
-> The subsequent [payment testing and operations update](payments-backups-search.md) enables explicit 1-denar staging tests, mail copies, backups and live search. Its current instructions supersede older payment-disabled statements in this initial admin guide.
+> **Current live operation:** use [the live admin login](https://forkids.mk/admin/login) with `d.trpkovski@yahoo.com` or `igor.talevski@gmail.com` and the password supplied by the owner. The temporary test administrator is removed. Live payments use full order totals. Keep all testing and disposable content in local or independent staging; the old `forkids.tail.mk` address redirects to production. See [current operations](payments-backups-search.md).
 
 ## Daily management
 
-Open `/admin/login` and use an explicitly provisioned administrator. There is one account type and no roles system. Public registration is removed. Existing restored accounts do not automatically gain access. The restored `admin@forkids.test` is explicitly authorized separately in each sandbox; its passwords are in the existing private credential file.
+Open `/admin/login` and use an explicitly provisioned administrator. There is one account type and no roles system. Public registration is removed. Existing restored accounts do not automatically gain access. The restored `admin@forkids.test` now belongs only to local development; its old live credentials are retired.
 
 - **Products:** add/edit name, stable URL, model/SKU, MKD price, percentage discount, stock quantity, visibility and categories. Select one or more media files; the first must be an image and becomes the cover. Move gallery items with the arrows. Videos may follow the cover. Zero stock means unavailable; hidden products are excluded from browsing/search/direct product URLs. Archive removes a product from the storefront while retaining media and order history.
 - **Categories:** create/edit categories. Move active products before removing their category. Preserve existing URL names to retain shared links; renaming URLs intentionally changes their address.
 - **Pages:** edit with the visual editor or HTML view, insert library images/videos, and save as draft or published. Published pages appear in the storefront footer. Drafts are not publicly accessible.
 - **Media:** upload JPG, PNG, WebP, GIF, MP4 or WebM; maximum 32 MB, images maximum 20 megapixels. Files use content-hash names; repeat uploads reuse the same original. Name and alternative text are editable. Files referenced by catalog content, archived content, templates or orders cannot be removed. Library removal archives the row; physical files are handled through audited cleanup.
 - **Administrators:** add/edit administrator accounts and passwords (minimum 12 characters). Administrators have full store management access. You cannot delete your own account or the last administrator. A changed password invalidates the affected account's existing authenticated sessions through Laravel's session-authentication middleware.
-- **Orders:** browse existing order snapshots. This stage does not add manual payment approval or order fulfillment automation.
+- **Orders:** review actual order snapshots and verify returned bank payments in the merchant portal before explicit administrator confirmation. Normal confirmed orders update stock once. A browser return alone is not settlement; see the payment operations guide.
 
 The editor uses locally bundled Tiptap 3 (MIT), including headings, lists, links, tables, undo/redo and media insertion. No Tiny Cloud subscription/key is required. Symfony HTML Sanitizer runs on saved content and on storefront rendering; scripts, event handlers, unsafe links and unsupported active embeds are removed. Existing imported HTML is normalized during media reconciliation. Backups retain pre-normalization content. GIF thumbnails show the first frame; originals remain available. Videos are stored and played directly, without transcoding.
 
@@ -59,7 +59,7 @@ The public `/update` importer, `OCSeeder`, OpenCart database connection/environm
 
 ## Next acceptance stage
 
-Start at <https://forkids.mk/admin/login> after the October 7 domain cutover. Credentials are in `.private/access-credentials.json`; local and deployed passwords differ. The storefront has no HTTP password prompt. Edits persist in the same existing database/media storage. The newer operations guide supersedes the historical payment-disabled acceptance steps below.
+The following acceptance workflows are for local or independently isolated staging only. Do not follow them on `forkids.mk` or either alias: those are live. Provision isolated staging with separate database, media, credentials and disabled integrations before using it. The currently available local store is `http://localhost:8088`.
 
 1. Create a category and product with Macedonian text, price/discount and stock. Upload two images, change their order, and verify the cover/product page. Hide the product and confirm it disappears from search and its direct URL.
 2. Edit a product description and a page with headings, links, a library image and a short MP4/WebM. Save the page as draft, then publish and verify its footer link and playback.

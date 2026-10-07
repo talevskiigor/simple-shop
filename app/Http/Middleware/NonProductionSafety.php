@@ -10,10 +10,7 @@ class NonProductionSafety
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!config('store.sandbox')) {
-            return $next($request);
-        }
-
+        // Keep these controls in production as well as isolated environments.
         $blocked = $request->is('update', 'admin/register')
             || ($request->is('bank', 'bank/*') && !config('payments.enabled'));
         $response = $blocked

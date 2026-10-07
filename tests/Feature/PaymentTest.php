@@ -23,6 +23,23 @@ class PaymentTest extends TestCase {
         $normal = app(Cpay::class)->prepare(Order::factory()->create(['total' => 2500]));
         $this->assertSame(250000, $normal->amount_minor); $this->assertFalse($normal->is_test);
     }
+    public function test_production_rejects_one_denar_configuration(): void {
+        app()->instance('env', 'production');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Payment test mode is not permitted in production.');
+        app(Cpay::class)->testMode();
+    }
+    public function test_production_uses_normal_totals_and_rejects_old_test_attempts(): void {
+        $test = $this->attempt();
+        config(['payments.test_amount_mkd' => null, 'store.sandbox' => false]);
+        app()->instance('env', 'production');
+        $normal = app(Cpay::class)->prepare(Order::factory()->create(['total' => 2500]));
+        $this->assertSame(250000, $normal->amount_minor);
+        $this->assertFalse($normal->is_test);
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectExceptionMessage('This test checkout has expired.');
+        app(Cpay::class)->prepare($test->order);
+    }
     public function test_signed_return_is_idempotent_and_never_fulfills_test_orders(): void {
         $p = Product::factory()->create(['quantity' => 5]); $a = $this->attempt();
         $body = $this->returnFields($a);

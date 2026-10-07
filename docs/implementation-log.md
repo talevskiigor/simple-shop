@@ -1,5 +1,15 @@
 # Modernization implementation log
 
+## Production payment mode and test-data cleanup — October 7, 2026
+
+The owner ended live testing, requested full-price payments, two named administrators and removal of identified test data. The supplied password has no trailing space. Source now rejects the 1-denar override and reuse of old test attempts in production, preserves private-page noindex and payment form controls after sandbox mode is disabled, and keeps tracking disabled independently. HTTPS URL generation follows the configured canonical URL in production as well as staging.
+
+The test bootstrap rejects an inherited production environment before applying isolated test settings. PHPUnit no longer overwrites that environment before the guard can inspect it. The copy sanitizer explicitly rejects production. All future tests and synthetic workflows must use local or independent staging; the old staging hostname redirects to live, and server/database/backup names retain their historical staging labels.
+
+Local verification passed **79 tests / 420 assertions**, covering normal production totals, refusal of test mode and old attempts, and private indexing/form controls. A separate invocation of the actual PHPUnit runner with `APP_ENV=production` was refused locally before tests ran. No test suite or synthetic checkout was run on live for this release.
+
+Before cleanup, full encrypted backup `ForKIDS-Staging_2026-10-07-17-36-51.zip` completed at **339,955,100 bytes**. All **628** file entries decrypted with AES-256; all **306** original media hashes and the current environment matched, and the compressed SQL was valid with no cross-database directives. The previous app, environment, Compose and host Apache configuration are also retained privately under `/srv/forkids-staging/backups/20261007-live-cutover`. Deployment and cleanup results will be recorded below after activation.
+
 ## Public indexing with 1-denar payments retained — October 7, 2026
 
 The owner explicitly requested enabling search-engine indexing while leaving the real-card 1-denar charge in place for their manual acceptance test. Added `STORE_ALLOW_INDEXING`, independent of sandbox/payment configuration, with a disabled default for local/test environments. The host Apache override was removed and the container's default header now follows this setting. Compose mounts the versioned container Apache configuration read-only, preserving the change across recreation without replacing the runtime image. Admin/cart/order/bank/payment-result responses retain noindex, and `robots.txt` excludes these paths for all crawlers. No mail or payment settings were changed by the implementation.

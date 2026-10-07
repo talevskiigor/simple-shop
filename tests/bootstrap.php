@@ -1,5 +1,10 @@
 <?php
 
+// Check before overriding APP_ENV: the live container must never run this suite.
+if (in_array('production', [getenv('APP_ENV'), $_ENV['APP_ENV'] ?? null, $_SERVER['APP_ENV'] ?? null], true)) {
+    throw new RuntimeException('Tests are prohibited on production. Use local or isolated staging.');
+}
+
 // Container variables also populate $_SERVER, which precedes getenv() in Dotenv.
 // Force every source before Laravel boots; never let RefreshDatabase select the restored copy.
 $settings = [
@@ -9,6 +14,7 @@ $settings = [
     'APP_DEBUG' => 'false',
     'STORE_SANDBOX' => 'true',
     'STORE_ALLOW_INDEXING' => 'false',
+    'STORE_TRACKING_ENABLED' => 'false',
     'PAYMENTS_ENABLED' => 'false',
     'PAYMENT_TEST_AMOUNT_MKD' => '',
     'CPAY_SECRET' => '',

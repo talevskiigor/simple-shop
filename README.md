@@ -1,6 +1,6 @@
 # Simple Shop
 
-A simple Laravel 13 store with native administrator management, products/categories, rich-text pages, image/video media library, Cyrillic/Latin search and guest checkout. CaSys/cPay supports explicitly enabled real-card 1-denar staging tests with signed return verification and administrator reconciliation.
+A simple Laravel 13 store with native administrator management, products/categories, rich-text pages, image/video media library, Cyrillic/Latin search and guest checkout. CaSys/cPay uses full order totals on production, signed return verification and administrator reconciliation. The optional 1-denar mode is reserved for local or isolated staging.
 
 ## Local development
 
@@ -20,19 +20,19 @@ For an empty installation, run forward migrations and `php artisan admin:manage`
 - Admin: `/admin/login` on either environment
 - Credentials in this workspace: `.private/access-credentials.json`; never commit or paste its contents into chat.
 
-Local disables external integrations by default. The deployed store explicitly enables 1-denar payment tests, outgoing email with owner BCC, and daily encrypted backups; tracking/import remain disabled. The October 7 domain cutover keeps the existing `/srv/forkids-staging` deployment and `stg_forkids` database. The owner subsequently enabled public catalog indexing while retaining 1-denar payments for manual acceptance. `/sitemap.xml` now reflects current public catalog/content URLs. Admin, cart, checkout and payment pages remain noindex. See [domain operation](docs/environments.md#public-domain-cutover--october-7-2026).
+Local disables external integrations by default. Production uses `APP_ENV=production`, normal payment totals, outgoing email with the existing owner BCC, and daily encrypted backups. Public indexing and `/sitemap.xml` are enabled; admin/cart/order/payment pages remain noindex. Tracking stays disabled. The existing `/srv/forkids-staging` deployment and `stg_forkids` database are **live despite their legacy names**. `forkids.tail.mk` is a live redirect, not an isolated staging site. All further tests must run locally or on separately isolated staging. See [current operations](docs/payments-backups-search.md).
 
 ## Current status and next work
 
 The environment, regression/CI and Laravel upgrades are committed. Native administration, visual editing, media management, OpenCart retirement and image cleanup are implemented; deployment evidence and exact release revisions are maintained in [the implementation log](docs/implementation-log.md).
 
-The recovered catalog contains 220 products, 15 categories and four pages. Local has 86 anonymized orders; staging has 87, preserving one additional pre-existing staging order. Cleanup on both copies retained 306 originals, archived 74 unused files and four duplicate copies, and preserved ten missing-original records with placeholders. No live customer dump or media is committed. `ForKIDS.zip` and the raw extracted SQL were deleted after restoration.
+The recovered catalog contains 220 products, 15 categories and four pages. Local retains anonymized development data. Production cleanup removes the 86 copied orders and three explicitly marked test checkouts, preserving the unclassified pre-launch order #88. Cleanup on both copies retained 306 originals, archived 74 unused files and four duplicate copies, and preserved ten missing-original records with placeholders. No live customer dump or media is committed. `ForKIDS.zip` and the raw extracted SQL were deleted after restoration.
 
 Search supports **Macedonian Cyrillic and equivalent Latin text** (`трицикл` / `tricikl`, `количка` / `kolicka`, `коцки` / `kocki`) using Scout's collection engine and shared normalization. Keep matching-result regression checks when changing search drivers.
 
 The deployed storefront is public, without HTTP Basic authentication. Management requires administrator login. Current payment/mail/backup settings are documented in [the operations guide](docs/payments-backups-search.md); older blanket sandbox prohibitions are superseded by the owner’s new request. The original production server files and database remain untouched; the public domains now serve this deployment. The earlier framework release started new JSON sessions; the domain change also requires visitors to establish cookies on the new hostname.
 
-**Next:** owner acceptance testing on staging using the [admin and media guide](docs/admin-and-media.md), recovery/replacement of the ten missing originals, then payment-provider verification and production-cutover planning. Customer accounts/social login and longer-lived guest carts remain later work.
+**Next:** independent staging for future acceptance testing, recovery/replacement of the ten missing originals, and off-host recovery storage. Payment reconciliation continues through the merchant portal. Customer accounts/social login and longer-lived guest carts remain later work.
 
 ## Project documentation
 

@@ -1,4 +1,4 @@
-# Local and staging environments
+# Local, production and isolated staging environments
 
 Current base-environment guide. The subsequent [payment/mail/backup/search update](payments-backups-search.md) supersedes older claims below that all payments, mail and scheduled jobs are disabled. Deployment history and checks are in [implementation-log.md](implementation-log.md); daily use and acceptance steps are in [admin-and-media.md](admin-and-media.md).
 
@@ -8,7 +8,7 @@ Implemented October 6, 2026, America/Phoenix (October 7 UTC), after the owner au
 
 - **Local:** `http://localhost:8088`, Compose project `forkids-local`, PHP/Apache app and MariaDB containers. Only the app's port is published, bound to localhost. Database: `local_forkids`.
 - **Deployed store:** `https://forkids.mk`, SSH `italevski@server.tail.mk`, root `/srv/forkids-staging`. `www.forkids.mk` and the previous `forkids.tail.mk` redirect browser requests to the main domain. An exact-host Apache vhost proxies to the PHP container at `127.0.0.1:8086`. The existing Cloudflare tunnel supplies public HTTPS. The storefront is publicly accessible; application admin authentication remains enabled.
-- **Staging database:** `stg_forkids`, account `stg_forkids` restricted to that database on localhost. PHP connects through the server MariaDB Unix socket, mounted into the container. No new database network listener was exposed.
+- **Live database (legacy name):** `stg_forkids`, account `stg_forkids` restricted to that database on localhost. PHP connects through the server MariaDB Unix socket, mounted into the container. No new database network listener was exposed.
 - **Current runtime:** PHP 8.3.35, Laravel 13.35.0, MariaDB 11.8.9 locally / 11.8.6 on staging, Node 24 for asset builds. The server's existing PHP 8.5 and other sites were retained. Docker was installed on the server; both PHP 8.3 runtimes passed the release suite.
 - **Runtime image identities:** both environments use the tag `forkids-runtime:php8.3`. The verified local image ID is `sha256:ef519c014d342c4ca23e3563d040e6e69614979e436c5cc4f35ca27657532f62`; the running staging image ID is `sha256:7f501a68c4e0c3fa747f6d2b14f98b39db01d8199cb3f52f250267d514791333`. These are distinct builds, both checked with PHP 8.3.35 and the full suite. A shared tag does not prove identical image bytes; inspect and record the running image digest on each future release.
 
@@ -16,7 +16,7 @@ The restored baseline has been upgraded through Laravel 11 and 12 to 13, with up
 
 ## Public-domain cutover — October 7, 2026
 
-**Subsequent owner instruction:** public storefront indexing is now enabled through `STORE_ALLOW_INDEXING=true`; 1-denar payment mode stays enabled until the owner manually tests it and requests removal. `STORE_SANDBOX=true` still contains tracking/integration behavior. The details below record the initial cutover; its original noindex state is superseded by [the indexing operations guide](payments-backups-search.md#public-search-engine-indexing).
+**Latest owner instruction:** live testing has ended. Production uses `APP_ENV=production`, `STORE_SANDBOX=false`, `PAYMENTS_ENABLED=true`, `STORE_ALLOW_INDEXING=true`, `STORE_TRACKING_ENABLED=false`, and a commented-out `PAYMENT_TEST_AMOUNT_MKD=1` reference. Full order totals apply. All tests must use local or independently isolated staging; `forkids.tail.mk` redirects to live. Internal staging names, including `.env.staging`, identify production and must not be treated as test targets. The details below record the initial cutover; its original noindex state is superseded by [the indexing operations guide](payments-backups-search.md#public-search-engine-indexing).
 
 The owner authorized switching `forkids.tail.mk` to `forkids.mk` and adding `www.forkids.mk`, with email configuration explicitly preserved.
 
@@ -36,9 +36,9 @@ The historical initial-environment procedure below must be read with this sectio
 
 This workspace contains `.private/access-credentials.json` with local/staging admin logins and staging DB credentials. It is mode 0600 inside a mode 0700 directory. Open it locally to retrieve passwords; do not paste them into chat, logs, tickets, commits, or command-line arguments.
 
-Local settings are in `.env.docker`; the database root password is separately stored in `.private/database-root-password` and mounted as a Docker secret into the database only. `.env.staging` is the protected local copy of staging settings. The server uses `/srv/forkids-staging/secrets/app.env`. The former staging HTTP password file is no longer used.
+Local settings are in `.env.docker`; the database root password is separately stored in `.private/database-root-password` and mounted as a Docker secret into the database only. `.env.staging` is the protected local copy of **live production** settings, despite its filename. The server uses `/srv/forkids-staging/secrets/app.env`. The former staging HTTP password file is no longer used.
 
-The app login is `/admin/login`; there is no separate HTTP password prompt. Both app administrators use `admin@forkids.test` with separate generated passwords. The other restored user accounts have anonymized names/emails and reset, unknown passwords.
+The app login is `/admin/login`; there is no separate HTTP password prompt. Local retains its `admin@forkids.test` account. Production uses the two owner-requested administrators, `d.trpkovski@yahoo.com` and `igor.talevski@gmail.com`; their passwords were supplied by the owner and are not recorded here. The former temporary administrator and anonymized users have been removed from live. Historical credentials in the private workspace file must not be mistaken for current live access.
 
 The ZIP, raw extracted SQL, and temporary deployment archives were deleted after verification. The anonymized `.private/sanitized.sql`, checksum manifest, restore reports, and private credentials are retained locally for recovery. Media is under `public/media/images` locally and `/srv/forkids-staging/media` on the server. These files are ignored by Git and must stay outside commits and Docker build contexts. Do not copy the backup's production `.env` or cached configuration into either environment.
 
@@ -78,7 +78,7 @@ Check the target database and confirm it has no tables before importing; the dum
 scripts/dev exec -T --user www-data app php scripts/sanitize-copy.php < .private/new-admin-password
 ```
 
-Remove that temporary password file after saving the credential securely. The sanitizer accepts only `local_forkids` or `stg_forkids` with `STORE_SANDBOX=true`; it preserves catalog and order counts, anonymizes customers and bank references, resets users, and clears sessions/tokens/queued jobs. It is an intentional copy-preparation operation, not a routine startup command.
+Remove that temporary password file after saving the credential securely. The sanitizer rejects production and accepts only an isolated `local_forkids` or `stg_forkids` with `STORE_SANDBOX=true`; the currently live `stg_forkids` is not an authorized target. In an isolated copy it it preserves catalog and order counts, anonymizes customers and bank references, resets users, and clears sessions/tokens/queued jobs. It is an intentional copy-preparation operation, not a routine startup command.
 
 ## Staging layout and operations
 

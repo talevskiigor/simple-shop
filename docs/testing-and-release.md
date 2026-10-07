@@ -1,6 +1,6 @@
 # Simple Shop testing and release guide
 
-> **Latest indexing release:** 77 tests / 411 assertions pass locally and on the deployed store, including sitemap visibility, public/private indexing headers and 1-denar checkout with `forkids.mk` callback URLs. The owner will complete the real-bank acceptance test manually. See the latest entry in [implementation-log.md](implementation-log.md).
+> **Current production policy:** all further tests run locally or in independently isolated staging. `forkids.mk`, `www.forkids.mk`, `forkids.tail.mk`, `/srv/forkids-staging` and `stg_forkids` are production. Do not run PHPUnit or create synthetic users, content, orders or payments there. The latest local suite passes **79 tests / 420 assertions**; the actual PHPUnit runner was also verified locally to refuse `APP_ENV=production`. Production payment overrides and reuse of old test attempts are rejected. The server receives only deployment/configuration/read-only health checks and real operational backups.
 
 > **October 7 modernization update:** Laravel 13, native administrator/content/media management, server-sanitized visual editing, resizer repair and OpenCart retirement are implemented. The earlier baseline/next-step sections below are historical. Current status, executed tests, cleanup results and deployment evidence are authoritative in [implementation-log.md](implementation-log.md) and [admin-and-media.md](admin-and-media.md). Payment-provider acceptance and production rollout remain separate.
 
@@ -152,7 +152,7 @@ Before a production upgrade:
 3. Build a versioned release from locked dependencies on the selected runtimes. Verify production PHP extensions, web PHP/CLI consistency, writable disks, server document root, asset manifest, and worker/scheduler configuration.
 4. Back up production DB, original media, and configuration securely. Confirm restore access and define the maintenance/ordering window. Handle in-flight payments and provider retries throughout the switch; do not casually block callback delivery.
 5. Apply only reviewed forward migrations, activate release/configuration/assets, and restart long-running workers as required. Rebuild search/sitemap when the change requires it.
-6. Smoke-test public pages, admin login/roles, image delivery, guest cart, and the permitted payment verification process. Never make an unapproved real payment as a deployment check.
+6. Verify live public health, redirects, indexing headers and effective configuration without creating records or submitting checkout. Exercise login/roles, editing, cart/payment and synthetic workflows only locally or in isolated staging. Never run the test suite or create test records on live.
 7. Monitor application errors, payment outcomes/retries, stock anomalies, missing media, queue failures, and backups. Record who owns response and the agreed observation period.
 
 ## Rollback and recovery

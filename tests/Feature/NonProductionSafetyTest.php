@@ -42,13 +42,18 @@ class NonProductionSafetyTest extends TestCase
         $this->assertSame('Cart', $response->getContent());
     }
 
-    public function test_middleware_preserves_behavior_when_sandbox_is_disabled(): void
+    public function test_production_preserves_private_indexing_and_form_safety(): void
     {
-        config(['store.sandbox' => false]);
-        $response = (new NonProductionSafety())->handle(Request::create('/update'), fn () => response('Passed through'));
+        config(['store.sandbox' => false, 'store.allow_indexing' => true]);
+        $response = (new NonProductionSafety())->handle(Request::create('/'), fn () => response('Passed through'));
 
         $this->assertSame('Passed through', $response->getContent());
-        $this->assertFalse($response->headers->has('Content-Security-Policy'));
+        $this->assertSame("form-action 'self'; frame-src 'none'", $response->headers->get('Content-Security-Policy'));
         $this->assertFalse($response->headers->has('X-Robots-Tag'));
+
+        $private = (new NonProductionSafety())->handle(Request::create('/admin/login'), fn () => response('Private'));
+        $this->assertSame('noindex, nofollow, noarchive', $private->headers->get('X-Robots-Tag'));
+        $this->get('/update')->assertNotFound();
+        $this->post('/bank/ok')->assertNotFound();
     }
 }

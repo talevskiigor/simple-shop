@@ -8,16 +8,17 @@ Upgrade the existing Laravel application, complete native store administration, 
 
 ## Next implementation checkpoint
 
-The next stage is **owner acceptance on staging**, using the concrete steps in [the admin guide](admin-and-media.md#next-acceptance-stage). Check real editing workflows, gallery ordering, Cyrillic content/search, publishing, videos, administrator accounts and guest checkout. Staging payments remain disabled.
+The domain cutover and production promotion are complete under the owner's authorization. Current live behavior and release evidence belong in [the implementation log](implementation-log.md). No further test data or test payments may be created on live, including its old staging alias.
 
-After acceptance:
+Future work, after the current production cleanup:
 
-1. Recover or replace the ten originals absent from the supplied backup, preserving intended product imagery and URLs.
-2. Obtain the merchant's cPay sandbox/protocol and implement authenticated, atomic, idempotent payment handling and stock-concurrency behavior; coordinate real credential rotation. The existing provider integration was preserved, but its known production weaknesses are not claimed fixed.
-3. Reconcile a current production snapshot and rehearse matched database/media rollback, backup restoration and cutover. Decide how to handle the JSON-session/cart reset and in-flight payments. Do not deploy the staging snapshot over live orders.
-4. Plan longer-lived anonymous carts, then optional customer accounts/Google/Facebook login and agreed sharing features. Guest checkout must remain available.
+1. Provision an independent staging deployment with separate database, media and credentials before any remote acceptance testing; local remains available now. Confirm that staging cannot access live storage or payment/email configuration by accident.
+2. Recover or replace the ten missing originals while preserving intended product imagery and URLs.
+3. Keep merchant-portal reconciliation for real payments; coordinate credential rotation and any future authenticated provider status integration. Exercise payment/stock-concurrency scenarios only in isolation.
+4. Configure independent off-host backup storage and rehearse restores away from live.
+5. Plan longer-lived anonymous carts and optional customer/social features separately.
 
-The phase design below is retained as the original roadmap, including options superseded by the implemented choices. Its phase 0/1/admin/media work is complete for staging; provider security, complete missing-media recovery, production cutover and phase 5 are still outstanding. Use the current implementation log and decisions rather than repeating completed steps or reinstalling retired packages.
+The phase design below is the historical roadmap. Read it with the latest production rules and implementation log rather than repeating completed steps or testing on live.
 
 ## Scope and architecture decisions
 
