@@ -1,5 +1,13 @@
 # Modernization implementation log
 
+## Public indexing with 1-denar payments retained — October 7, 2026
+
+The owner explicitly requested enabling search-engine indexing while leaving the real-card 1-denar charge in place for their manual acceptance test. Added `STORE_ALLOW_INDEXING`, independent of sandbox/payment configuration, with a disabled default for local/test environments. The host Apache override was removed and the container's default header now follows this setting. Compose mounts the versioned container Apache configuration read-only, preserving the change across recreation without replacing the runtime image. Admin/cart/order/bank/payment-result responses retain noindex, and `robots.txt` excludes these paths for all crawlers. No mail or payment settings were changed by the implementation.
+
+Added a dynamic `/sitemap.xml` containing current active products, categories and published pages on the configured domain; hidden/draft/archived records are excluded and visible sold-out products remain listed. Retired the unused static `dummy:run` generator. The obsolete local generated sitemap, containing localhost URLs, was preserved privately so it cannot shadow the dynamic route. The deployed tree had no static sitemap file.
+
+Local verification passed **77 tests / 411 assertions**, including current sitemap membership, private-page exclusion, preserved sandbox/admin controls and a 1-denar guest checkout that keeps the original total and uses `https://forkids.mk` bank return URLs. Local Apache syntax validation passed. Deployment verification is recorded below after activation. The owner's manual bank transaction remains pending; these tests do not claim a completed card charge.
+
 ## Public-domain cutover and backup verification — October 7, 2026
 
 The owner authorized replacing the staging hostname with `forkids.mk`, adding `www.forkids.mk`, and verifying scheduled backups. They expressly required email configuration to remain unchanged. The existing deployment/database/media were retained; original production files and data were not modified.

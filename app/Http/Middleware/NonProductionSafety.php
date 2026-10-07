@@ -19,7 +19,12 @@ class NonProductionSafety
         $response = $blocked
             ? response('Not Found', 404)
             : $next($request);
-        $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+        if (!config('store.allow_indexing') || $request->is(
+            'admin', 'admin/*', 'cart', 'cart/*', 'order', 'order/*',
+            'bank', 'bank/*', 'payment', 'payment/*'
+        )) {
+            $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+        }
         $bank = config('payments.enabled') ? ' https://www.cpay.com.mk' : '';
         $response->headers->set('Content-Security-Policy', "form-action 'self'{$bank}; frame-src 'none'");
 

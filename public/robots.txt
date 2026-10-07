@@ -1,7 +1,9 @@
-User-agent: Googlebot
-Disallow: /admin/
-
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /cart
+Disallow: /order
+Disallow: /bank
+Disallow: /payment
 
 Sitemap: https://forkids.mk/sitemap.xml

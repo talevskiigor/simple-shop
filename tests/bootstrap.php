@@ -8,6 +8,7 @@ $settings = [
     'APP_KEY' => 'base64:'.base64_encode(str_repeat('t', 32)),
     'APP_DEBUG' => 'false',
     'STORE_SANDBOX' => 'true',
+    'STORE_ALLOW_INDEXING' => 'false',
     'PAYMENTS_ENABLED' => 'false',
     'PAYMENT_TEST_AMOUNT_MKD' => '',
     'CPAY_SECRET' => '',

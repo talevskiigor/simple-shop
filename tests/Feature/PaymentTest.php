@@ -78,11 +78,17 @@ class PaymentTest extends TestCase {
         $this->assertSame('confirmed', $a->fresh()->status);
     }
     public function test_real_guest_cart_remains_unchanged_while_checkout_charges_one_denar(): void {
+        config(['store.allow_indexing' => true]);
+        \Illuminate\Support\Facades\URL::forceRootUrl('https://forkids.mk');
+        \Illuminate\Support\Facades\URL::forceScheme('https');
         $p = Product::factory()->create(['price'=>1500, 'discount'=>20]);
         $this->post('/cart', ['productId'=>$p->id]);
         $data = ['first'=>'Тест', 'last'=>'Купувач', 'address'=>'Тест адреса', 'city'=>'Скопје', 'phone'=>'070000000', 'email'=>'guest@example.test'];
-        $this->post('/order', $data)->assertOk()->assertSee('1 денар вкупно')->assertSee('name=\'AmountToPay\' value=\'100\'', false);
+        $this->post('/order', $data)->assertOk()->assertSee('1 денар вкупно')->assertSee('name=\'AmountToPay\' value=\'100\'', false)
+            ->assertHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
         $order = Order::firstOrFail(); $this->assertEquals(1200, $order->total); $original = PaymentAttempt::firstOrFail();
+        $this->assertStringStartsWith('https://forkids.mk/bank/ok?token=', $original->request_fields['PaymentOKURL']);
+        $this->assertStringStartsWith('https://forkids.mk/bank/fail?token=', $original->request_fields['PaymentFailURL']);
         $this->post('/order', $data)->assertOk();
         $this->assertDatabaseCount('orders', 1);
         $this->assertDatabaseCount('payment_attempts', 1);

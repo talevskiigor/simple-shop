@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
+Route::get('/sitemap.xml', \App\Http\Controllers\SitemapController::class);
 Route::get('/', fn () => view('home', ['items' => Product::where('active', true)->where('quantity', '>', 0)->get()]));
 Route::get('/categories/{slug}', function (string $slug) {
     $category = Category::where('slug', $slug)->firstOrFail();

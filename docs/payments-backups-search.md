@@ -2,9 +2,17 @@
 
 ## Authorized operating changes
 
-The owner requested real-card tests because there is no bank sandbox merchant. This supersedes the earlier blanket staging payment/mail/scheduler prohibition. Keep `STORE_SANDBOX=true` for noindex/tracking containment; enable each authorized integration independently. The October 7 domain cutover serves this deployment at `https://forkids.mk`, with `www.forkids.mk` and the old hostname redirecting browser navigation. Original production files/data remain untouched. The domain change preserved all mail configuration and mail DNS records, and retained 1-denar payment mode.
+The owner requested real-card tests because there is no bank sandbox merchant. This supersedes the earlier blanket staging payment/mail/scheduler prohibition. Keep `STORE_SANDBOX=true` for integration/tracking containment; enable each authorized integration independently. The October 7 domain cutover serves this deployment at `https://forkids.mk`, with `www.forkids.mk` and the old hostname redirecting browser navigation. Original production files/data remain untouched. The domain change preserved all mail configuration and mail DNS records, and retained 1-denar payment mode. The owner subsequently authorized public search-engine indexing with `STORE_ALLOW_INDEXING=true`, while explicitly keeping 1-denar mode until their manual test and later removal instruction.
 
 Staging admin credentials remain in `.private/access-credentials.json`, email `admin@forkids.test`. They were supplied directly to the owner on request; never commit them.
+
+## Public search-engine indexing
+
+`STORE_ALLOW_INDEXING=true` permits indexing of the public storefront, categories, products, published information pages and media. It is independent of `PAYMENTS_ENABLED`, `PAYMENT_TEST_AMOUNT_MKD` and `STORE_SANDBOX`; do not turn off the sandbox or test amount just to enable indexing. Set the value to the literal lowercase `true`, as both Laravel and Apache read it. Local/test environments keep the default `false`.
+
+The host proxy no longer forces a global noindex header. The app container uses the environment-controlled Apache template, mounted read-only through Compose so this behavior persists across recreation. Laravel still sends noindex on admin, cart, order, bank and payment-result responses. `robots.txt` permits public crawling and excludes those private paths for all crawlers.
+
+`GET /sitemap.xml` is generated from current active products (including publicly viewable sold-out products), non-archived categories and published pages. Hidden/archived products and draft/archived pages are excluded. The old unused `dummy:run` static generator was retired. Do not place an old static `public/sitemap.xml` in a release, as Apache would serve that file instead of the current route. Indexing permission is not a guarantee of when search engines will crawl or list the site.
 
 ## One-denar payment switch
 
@@ -39,9 +47,9 @@ Test procedure:
 3. Complete/cancel payment and return. Check the attempt reference in Admin → Orders and compare it with cPay's actual transaction record.
 4. Confirm the test receipt after checking cPay; verify stock and original prices are unchanged. Keep the real bank reference for reconciliation; do not delete or fabricate a paid test result.
 
-The bank may require `forkids.tail.mk` to be registered/allowed for the merchant. Never bypass its domain checks or spoof the production referrer. A successfully generated form is not evidence of a completed card payment. The release log records how far the hosted-bank check reached.
+New payment attempts use `https://forkids.mk` for bank return URLs; existing attempts preserve their original signed fields and old-host POST callbacks remain reachable. Never bypass the bank's domain checks or spoof a referrer. A successfully generated form is not evidence of a completed card payment. The release log records how far the hosted-bank check reached.
 
-**Current acceptance blocker (October 7, 2026):** the hosted check reached `https://vpos.cpay.com.mk/mk-MK/ErrorHandle/Error`, displaying a generic processing error before card entry. The public legacy gateway forwards to `https://vpos.cpay.com.mk/mk-MK`; a diagnostic confirmed every signed field survives unchanged, with the provider adding `isSimple` and `OriginalReferrer`. This does not identify the underlying merchant/configuration error. Obtain the current **Redirect code template**, **Redirect Integration Specification**, and provider error details through the merchant portal, and check that the staging domain is approved. Do not claim a successful real payment until the owner completes and reconciles one. No card was entered or charged during developer verification.
+**Last provider check, before the domain switch (October 7, 2026):** the hosted check reached `https://vpos.cpay.com.mk/mk-MK/ErrorHandle/Error`, displaying a generic processing error before card entry. The public legacy gateway forwards to `https://vpos.cpay.com.mk/mk-MK`; a diagnostic confirmed every signed field survives unchanged, with the provider adding `isSimple` and `OriginalReferrer`. This does not identify the underlying merchant/configuration error. Obtain the current **Redirect code template**, **Redirect Integration Specification**, and provider error details through the merchant portal, and check that the staging domain is approved. Do not claim a successful real payment until the owner completes and reconciles one. No card was entered or charged during developer verification.
 
 References: [cPay's published amount/redirect specification](https://www.cpay.com.mk/repository/documents/cPay_Merchant_Params.pdf), [cPay-authored v2.9 specification mirrored on Scribd](https://www.scribd.com/document/526497083/cPay-Merchant-integration-specification-v2-9), [merchant portal](https://merchant.cpay.com.mk/en-US). Reconcile against the bank's current merchant documentation before production.
 

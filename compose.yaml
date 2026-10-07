@@ -12,6 +12,7 @@ services:
     volumes:
       - .:/var/www/html
       - ./.env.docker:/var/www/html/.env:ro
+      - ./docker/apache/site.conf:/etc/apache2/sites-available/000-default.conf:ro
       - vendor:/var/www/html/vendor
       - runtime:/var/www/html/storage
       - bootstrap_cache:/var/www/html/bootstrap/cache

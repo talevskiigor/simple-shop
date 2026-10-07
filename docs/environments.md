@@ -16,6 +16,8 @@ The restored baseline has been upgraded through Laravel 11 and 12 to 13, with up
 
 ## Public-domain cutover — October 7, 2026
 
+**Subsequent owner instruction:** public storefront indexing is now enabled through `STORE_ALLOW_INDEXING=true`; 1-denar payment mode stays enabled until the owner manually tests it and requests removal. `STORE_SANDBOX=true` still contains tracking/integration behavior. The details below record the initial cutover; its original noindex state is superseded by [the indexing operations guide](payments-backups-search.md#public-search-engine-indexing).
+
 The owner authorized switching `forkids.tail.mk` to `forkids.mk` and adding `www.forkids.mk`, with email configuration explicitly preserved.
 
 - Cloudflare Tunnel **USA-HOME** (`4ed6ca22-1c8e-44ff-b57d-f4801567c7c7`) has two additional published applications, `forkids.mk` and `www.forkids.mk`, both pointing to `http://127.0.0.1:80`. All pre-existing tunnel routes remain intact.
@@ -83,6 +85,7 @@ Remove that temporary password file after saving the credential securely. The sa
 The source templates are `deploy/staging/compose.yaml` and `deploy/staging/apache.conf`. On the server:
 
 - `/srv/forkids-staging/app`: application source, locked Composer dependencies, and compiled assets; mounted read-only.
+- `/srv/forkids-staging/app/docker/apache/site.conf`: read-only container Apache configuration mount. `STORE_ALLOW_INDEXING=true` removes its default noindex header while local environments remain excluded. The existing runtime image is unchanged; future builds include the same template. Apache's [conditional headers](https://httpd.apache.org/docs/2.4/mod/mod_headers.html) read the process environment with [`osenv`](https://httpd.apache.org/docs/2.4/expr.html#functions).
 - `/srv/forkids-staging/media`: originals and new uploads, writable by container `www-data` (UID 1000).
 - `/srv/forkids-staging/cached-media`: writable image derivatives.
 - `/srv/forkids-staging/secrets`: environment, protected verification manifest, and Apache template; outside the web root.

@@ -20,7 +20,7 @@ For an empty installation, run forward migrations and `php artisan admin:manage`
 - Admin: `/admin/login` on either environment
 - Credentials in this workspace: `.private/access-credentials.json`; never commit or paste its contents into chat.
 
-Local disables external integrations by default. The deployed store explicitly enables 1-denar payment tests, outgoing email with owner BCC, and daily encrypted backups; tracking/import remain disabled. The October 7 domain cutover keeps the existing `/srv/forkids-staging` deployment and `stg_forkids` database. It does not change payment mode, noindex controls or mail settings. See [domain operation](docs/environments.md#public-domain-cutover--october-7-2026).
+Local disables external integrations by default. The deployed store explicitly enables 1-denar payment tests, outgoing email with owner BCC, and daily encrypted backups; tracking/import remain disabled. The October 7 domain cutover keeps the existing `/srv/forkids-staging` deployment and `stg_forkids` database. The owner subsequently enabled public catalog indexing while retaining 1-denar payments for manual acceptance. `/sitemap.xml` now reflects current public catalog/content URLs. Admin, cart, checkout and payment pages remain noindex. See [domain operation](docs/environments.md#public-domain-cutover--october-7-2026).
 
 ## Current status and next work
 
