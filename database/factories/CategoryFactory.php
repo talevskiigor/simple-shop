@@ -17,7 +17,8 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => 'Test category '.fake()->unique()->numberBetween(1, 100000),
+            'slug' => fake()->unique()->slug(),
         ];
     }
 }

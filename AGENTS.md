@@ -7,6 +7,10 @@
 - The initial assessment covers `develop` at `93d6e04d9efb3a905097c1973edad74813549e34`. Check current code and Git status rather than assuming that snapshot is still current.
 - Tag `1.0` preserves the inspected baseline; work is on `codex/refactor-simple-store`. The owner subsequently authorized restoring `ForKIDS.zip`, replacing the Docker setup, and deploying staging at `forkids.tail.mk` with a dedicated `stg_forkids` database. Read `docs/environments.md` for current operation. Laravel/dependency upgrades are still pending. The 198 compared source files match the supplied backup, not necessarily today's live deployment.
 
+## Current authorized implementation
+
+The owner authorized the complete work recorded in `docs/implementation-log.md`, including commits/pushes, staging deployment, admin-only management, WYSIWYG/media, OpenCart retirement, image-resizer fixes, and verified unused/duplicate media cleanup. Resolve ordinary implementation choices autonomously. Keep staging public, sandbox payments disabled, and private recovery snapshots before migrations/cleanup. No customer roles or role-management system in this stage. Do not change the original production deployment or destroy its files as an incidental staging cleanup.
+
 ## Product requirements
 
 - Keep a simple store: products, categories, one or more images per product, HTML descriptions, price, and availability.

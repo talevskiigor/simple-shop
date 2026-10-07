@@ -1,29 +1,19 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
-        </div>
-    </div>
-</x-app-layout>
+@extends('layouts.admin')
+@section('content')
+<div class="container" style="max-width:760px">
+<h1>My account</h1>
+@if(session('status'))<div class="alert alert-success">Changes saved.</div>@endif
+@include('profile.partials.update-profile-information-form')
+<hr>
+@include('profile.partials.update-password-form')
+<hr>
+<form method="post" action="{{ route('profile.destroy') }}">
+@csrf @method('delete')
+<h2>Delete account</h2>
+<label for="delete-password">Confirm your password</label>
+<input class="form-control mb-3" type="password" name="password" id="delete-password" required autocomplete="current-password">
+<x-input-error :messages="$errors->userDeletion->get('password')" />
+<button class="btn btn-outline-danger">Delete my account</button>
+</form>
+</div>
+@endsection

@@ -17,7 +17,9 @@ class PageFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'title' => 'Test page '.fake()->unique()->numberBetween(1, 100000),
+            'slug' => fake()->unique()->slug(),
+            'body' => '<p>Test page content.</p>',
         ];
     }
 }

@@ -54,6 +54,7 @@ src="https://www.facebook.com/tr?id=1766783437487841&ev=PageView&noscript=1"
 <hr class="hr" style="margin-top: 86px">
 <div class="container">
     {{-- nav bar END   --}}
+    {{ $slot ?? '' }}
     @yield('content')
 </div>
 
