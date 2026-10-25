@@ -12,7 +12,8 @@ services:
       - ./app/docker/apache/site.conf:/etc/apache2/sites-available/000-default.conf:ro
       - ./media:/var/www/html/public/media/images
       - ./cached-media:/var/www/html/public/cached-media
-      - /run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock
+      # Mount the directory so MariaDB socket replacement survives service restarts.
+      - /run/mysqld:/run/mysqld:ro
       - ./scheduled-backups:/var/www/html/storage/app/backups
       - runtime:/var/www/html/storage
       - bootstrap_cache:/var/www/html/bootstrap/cache

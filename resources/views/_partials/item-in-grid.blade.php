@@ -3,7 +3,7 @@
         <div class="card-header">
             <p class="card-text">{{$item->model}}</p>
         </div>
-        <img src="{{  \App\Helpers\Image::get($item->image,256) }}" class="card-img-top img-thumbnail" alt="Card Image">
+        <img src="{{  \App\Helpers\Image::get($item->image,256) }}" class="card-img-top img-thumbnail" alt="{{ $item->name }}" loading="{{ isset($loop) && $loop->index < 4 ? 'eager' : 'lazy' }}" decoding="async">
         @if($item->discount && $item->quantity)
             <span
                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">-{{$item->discount}}%  </span>

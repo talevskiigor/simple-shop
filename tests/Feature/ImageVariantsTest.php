@@ -47,6 +47,17 @@ class ImageVariantsTest extends TestCase
         $this->get('/logo/visa-128X_null_100.webp')->assertRedirect(\App\Helpers\Image::get('images/visa.png', 128));
         $this->get('/logo/unknown-file.png')->assertNotFound();
     }
+    public function test_existing_sources_have_a_separate_bounded_pixel_limit(): void {
+        config(['media.max_pixels' => 70000, 'media.max_source_pixels' => 80000]);
+        $this->get('/media-resize/images/multi.part.png?w=100')->assertOk()->assertHeader('content-type', 'image/webp');
+        config(['media.max_source_pixels' => 79999]);
+        $this->get('/media-resize/images/multi.part.png?w=100')->assertOk()->assertHeader('content-type', 'image/svg+xml');
+        $this->assertSame(70000, config('media.max_pixels'));
+    }
+    public function test_generated_urls_use_balanced_quality_and_allow_explicit_overrides(): void {
+        $this->assertStringContainsString('q=80', \App\Helpers\Image::get('images/multi.part.png', 256));
+        $this->assertStringContainsString('q=95', \App\Helpers\Image::get('images/multi.part.png', 256, null, 95));
+    }
     public function test_aliases_preserve_published_media_urls(): void {
         DB::table('media_aliases')->insert(['path' => 'images/old.png','target'=>'images/multi.part.png','path_hash'=>hash('sha256','images/old.png')]);
         $this->get('/media/images/old.png')->assertOk()->assertHeader('content-type','image/png');

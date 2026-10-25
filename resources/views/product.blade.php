@@ -64,7 +64,7 @@
                                 @if($media->type === 'video')
                                 <video controls preload="metadata" class="d-block w-100" src="{{ app(\App\Services\MediaFiles::class)->url($media->path) }}"></video>
                                 @else
-                                <img src="{{ \App\Helpers\Image::get($media->path,768) }}" class="d-block w-100" alt="{{ $media->alt ?: $media->name }}">
+                                <img src="{{ \App\Helpers\Image::get($media->path,768) }}" class="d-block w-100" alt="{{ $media->alt ?: $media->name }}" loading="{{ $loop->first ? 'eager' : 'lazy' }}" decoding="async">
                                 @endif
                             </div>
                         @endforeach

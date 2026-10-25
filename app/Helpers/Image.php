@@ -9,7 +9,7 @@ class Image
     const W200 = 200;
     const W256 = 256;
 
-    public static function get(string $slug, int|null $width = null, int|null $height = null, int $quality = 100): string
+    public static function get(string $slug, int|null $width = null, int|null $height = null, int $quality = 80): string
     {
         $slug = ltrim(str_replace(public_path('media/'), '', $slug), '/');
         if (!$slug) return url('/assets/image-unavailable.svg');

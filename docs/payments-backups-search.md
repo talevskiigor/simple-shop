@@ -1,5 +1,13 @@
 # Payment testing, outgoing mail, backups and live search
 
+## October 25, 2026 outage repair
+
+ForKIDS returned HTTP 500 because its container retained an obsolete MariaDB socket inode after the host update/restart. MariaDB was active; the host socket inode was 103348 while the container's file bind mount retained 74238. The deployed runtime was already PHP 8.5.12; no PHP downgrade or application dependency changes were needed.
+
+Preserved `/srv/forkids-staging/compose.yaml.before-socket-fix-20261025`, changed the socket file bind to the read-only `/run/mysqld:/run/mysqld:ro` directory bind, and recreated only the application container. Both sides then resolved inode 103348. This allows replacement sockets in the existing directory to remain visible after future MariaDB restarts. The repository deployment template now uses the same mount.
+
+Read-only verification: home, admin login, sitemap and search returned 200 through Apache; public HTTPS returned 200 for forkids.mk, rx-advice.tail.mk, notarski.tail.mk, imd.tail.mk, my.gym.mk, mygymmk.tail.mk, cfsk.tail.mk and zamp.tail.mk after redirects. The ForKIDS aliases retained canonical redirects. ZAMP's direct local vhost root returned 404, but its public HTTPS endpoint returned 200; no speculative route changes were made. Apache configuration passed and systemd reported no failed units. No production tests, fixtures, payment submissions, database modifications or email configuration changes were performed.
+
 ## Authorized operating changes
 
 **Current production instruction — October 7, 2026:** the owner has ended live testing. `forkids.mk` now uses `APP_ENV=production`, `STORE_SANDBOX=false`, enabled payments at full order totals and public indexing. `PAYMENT_TEST_AMOUNT_MKD` is commented out, with its `=1` reference retained only for future local/isolated staging. Production rejects a configured test amount and reuse of a prior test attempt. PHPUnit also refuses a production environment before applying test overrides.

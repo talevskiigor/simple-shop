@@ -15,7 +15,7 @@ class ImageVariants
         $source = app(MediaFiles::class)->resolve($path);
         if (!$source) return $this->placeholder();
         $info = @getimagesize($source);
-        if (!$info || !in_array($info['mime'], ['image/jpeg', 'image/png', 'image/webp', 'image/gif']) || $info[0] * $info[1] > config('media.max_pixels')) return $this->placeholder();
+        if (!$info || !in_array($info['mime'], ['image/jpeg', 'image/png', 'image/webp', 'image/gif']) || $info[0] * $info[1] > config('media.max_source_pixels', config('media.max_pixels'))) return $this->placeholder();
         $key = hash('sha256', 'v2|'.$path.'|'.hash_file('sha256', $source)."|$width|$height|$quality");
         $directory = config('media.cache');
         File::ensureDirectoryExists($directory);
